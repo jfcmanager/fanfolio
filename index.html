@@ -433,14 +433,14 @@ input.form-control:not([type="hidden"]),select.form-control{height:52px;min-heig
 .memory-summary strong{font-size:15px;color:var(--accent-strong)}
 .memory-list{display:grid;gap:10px}
 .memory-card{width:100%;border:1px solid var(--line);border-radius:15px;background:var(--surface);padding:14px 15px;text-align:left}
-.memory-card-top{display:flex;align-items:flex-start;justify-content:space-between;gap:12px}
-.memory-title{font-size:15.5px;font-weight:750;color:var(--ink);line-height:1.4}
+.memory-card-top{display:flex;align-items:center;justify-content:space-between;gap:8px}.memory-card-top>div{min-width:0;flex:1}
+.memory-title{font-size:clamp(10.5px,2.7vw,12px);font-weight:750;color:var(--ink);line-height:1.35;white-space:nowrap;letter-spacing:-.02em}
 .memory-meta{font-size:12.5px;color:var(--muted);margin-top:4px;line-height:1.5}
 .memory-seat{font-size:12.5px;color:var(--accent-strong);margin-top:8px;font-weight:650}
 .memory-impression{font-size:13px;line-height:1.55;color:var(--ink);margin-top:8px;padding-top:8px;border-top:1px dashed var(--line)}
 .memory-empty{padding:18px;border:1px dashed var(--line-strong);border-radius:14px;text-align:center;color:var(--muted);font-size:13px;line-height:1.6;background:#faf8f4}
 .memory-toolbar{display:grid;grid-template-columns:1fr 1fr;gap:9px;margin-top:14px}
-.attendance-chip{display:inline-flex;align-items:center;border-radius:999px;padding:4px 8px;font-size:10.5px;font-weight:800;background:#e8eee8;color:#667866;white-space:nowrap}
+.attendance-chip{display:inline-flex;align-items:center;border-radius:999px;padding:3px 7px;font-size:9.5px;font-weight:800;background:#e8eee8;color:#667866;white-space:nowrap;flex:none}
 .attendance-chip.no{background:#efebe4;color:#8a8177}
 .event-type-dot.memory{background:#9aa89b}.calendar-color-note{font-size:11px;color:var(--muted);line-height:1.45;margin:-3px 0 12px;display:none}.calendar-color-note.show{display:block}
 
@@ -1261,7 +1261,7 @@ const BETA_ADMIN_KEY='fanfolio_beta_admin_enabled';
 const BETA_PLAN_OVERRIDE_KEY='fanfolio_beta_plan_override';
 const FREE_ACCESS_KEY='fanfolio_v1_free_access';
 const THEME_KEY='fanfolio_v1_theme';
-const APP_VERSION='0.22.1';
+const APP_VERSION='0.22.2';
 if(location.search.includes('__fanfolio_refresh')){try{const cleanUrl=new URL(location.href);cleanUrl.searchParams.delete('__fanfolio_refresh');history.replaceState(null,'',cleanUrl.pathname+(cleanUrl.searchParams.toString()?`?${cleanUrl.searchParams}`:'')+cleanUrl.hash)}catch{}}
 const BACKUP_SCHEMA_VERSION=1;
 const BACKUP_DATA_KEYS={oshi:OSHI_KEY,memberships:MEMBERSHIP_KEY,tours:TOUR_KEY,performances:PERFORMANCE_KEY,expenses:EXPENSE_KEY,memories:MEMORY_KEY,trades:TRADE_KEY,trips:TRIP_KEY,countdowns:COUNTDOWN_KEY};
