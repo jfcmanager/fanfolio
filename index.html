@@ -12,7 +12,7 @@
 <link rel="icon" type="image/png" sizes="32x32" href="./favicon-32.png" />
 <link rel="icon" type="image/png" sizes="192x192" href="./icon-192.png" />
 <meta name="mobile-web-app-capable" content="yes" />
-<title>FanFolio v0.20.7</title>
+<title>FanFolio v0.20.10</title>
 <style>
 :root{
   --bg:#f7f5f0;
@@ -581,7 +581,7 @@ body.security-locked{overflow:hidden!important}
 
       <div class="settings-section"><div class="section-title">アプリ・オフライン</div><div class="settings-card"><button class="setting-row setting-action" id="installAppBtn" type="button"><div><h3>ホーム画面に追加</h3><p id="installAppDescription">FanFolioをアプリのように起動できます。</p></div><span class="chev">›</span></button><div class="setting-row"><div><h3>起動モード</h3><div class="pwa-status"><span class="pwa-dot" id="pwaModeDot"></span><span class="pwa-status-text" id="pwaModeStatus">確認中</span></div></div></div><div class="setting-row"><div><h3>オフライン利用</h3><div class="pwa-status"><span class="pwa-dot" id="pwaOfflineDot"></span><span class="pwa-status-text" id="pwaOfflineStatus">確認中</span></div></div></div><div class="pwa-mini-note" id="pwaHelpText">HTTPSで一度開くと、通信がないときも保存済みのFanFolioを起動できます。</div></div></div>
 
-      <div class="settings-section"><div class="section-title">バージョン</div><div class="settings-card"><div class="setting-row" id="versionInfoRow"><div><h3>FanFolio</h3></div><div class="subtle">ver. 0.20.7</div></div><button class="setting-row setting-action" id="checkUpdateBtn" type="button"><div><h3>更新を確認</h3><p id="updateStatusText">サーバー上の最新版を確認します。</p></div><span class="chev">›</span></button></div></div>
+      <div class="settings-section"><div class="section-title">バージョン</div><div class="settings-card"><div class="setting-row" id="versionInfoRow"><div><h3>FanFolio</h3></div><div class="subtle" id="currentVersionLabel">ver. --</div></div><button class="setting-row setting-action" id="checkUpdateBtn" type="button"><div><h3>更新を確認</h3><p id="updateStatusText">サーバー上の最新版を確認します。</p></div><span class="chev">›</span></button></div></div>
       <div class="footer-note">— ✦ —<br><br>Made with ♡ by めいぷりん</div>
     </main>
   </section>
@@ -1082,7 +1082,7 @@ const BETA_ADMIN_KEY='fanfolio_beta_admin_enabled';
 const BETA_PLAN_OVERRIDE_KEY='fanfolio_beta_plan_override';
 const FREE_ACCESS_KEY='fanfolio_v1_free_access';
 const THEME_KEY='fanfolio_v1_theme';
-const APP_VERSION='0.20.9';
+const APP_VERSION='0.20.10';
 if(location.search.includes('__fanfolio_refresh')){try{const cleanUrl=new URL(location.href);cleanUrl.searchParams.delete('__fanfolio_refresh');history.replaceState(null,'',cleanUrl.pathname+(cleanUrl.searchParams.toString()?`?${cleanUrl.searchParams}`:'')+cleanUrl.hash)}catch{}}
 const BACKUP_SCHEMA_VERSION=1;
 const BACKUP_DATA_KEYS={oshi:OSHI_KEY,memberships:MEMBERSHIP_KEY,tours:TOUR_KEY,performances:PERFORMANCE_KEY,expenses:EXPENSE_KEY,memories:MEMORY_KEY,trades:TRADE_KEY,trips:TRIP_KEY,countdowns:COUNTDOWN_KEY};
@@ -1164,7 +1164,7 @@ const themePicker=document.getElementById('themePicker');const themeSwatches=[..
 const checkUpdateBtn=document.getElementById('checkUpdateBtn');
 const installAppBtn=document.getElementById('installAppBtn');const installAppDescription=document.getElementById('installAppDescription');const pwaModeDot=document.getElementById('pwaModeDot');const pwaModeStatus=document.getElementById('pwaModeStatus');const pwaOfflineDot=document.getElementById('pwaOfflineDot');const pwaOfflineStatus=document.getElementById('pwaOfflineStatus');const pwaHelpText=document.getElementById('pwaHelpText');const updateStatusText=document.getElementById('updateStatusText');const installModal=document.getElementById('installModal');const closeInstallModalBtn=document.getElementById('closeInstallModalBtn');const updateBanner=document.getElementById('updateBanner');const applyUpdateBtn=document.getElementById('applyUpdateBtn');const dismissUpdateBtn=document.getElementById('dismissUpdateBtn');const offlineBanner=document.getElementById('offlineBanner');
 const runIntegrityCheckBtn=document.getElementById('runIntegrityCheckBtn');const integrityCheckStatus=document.getElementById('integrityCheckStatus');
-const betaAdminPanel=document.getElementById('betaAdminPanel');const testAsFreeBtn=document.getElementById('testAsFreeBtn');const testAsPremiumBtn=document.getElementById('testAsPremiumBtn');const betaAdminStatus=document.getElementById('betaAdminStatus');const disableBetaAdminBtn=document.getElementById('disableBetaAdminBtn');const versionInfoRow=document.getElementById('versionInfoRow');
+const betaAdminPanel=document.getElementById('betaAdminPanel');const testAsFreeBtn=document.getElementById('testAsFreeBtn');const testAsPremiumBtn=document.getElementById('testAsPremiumBtn');const betaAdminStatus=document.getElementById('betaAdminStatus');const disableBetaAdminBtn=document.getElementById('disableBetaAdminBtn');const versionInfoRow=document.getElementById('versionInfoRow');const currentVersionLabel=document.getElementById('currentVersionLabel');
 const aboutToolBtn=document.getElementById('aboutToolBtn');const termsBtn=document.getElementById('termsBtn');const privacyBtn=document.getElementById('privacyBtn');const faqBtn=document.getElementById('faqBtn');const feedbackBtn=document.getElementById('feedbackBtn');
 const oshiColorPicker=document.getElementById('oshiColorPicker');const oshiColorButtons=[...document.querySelectorAll('#oshiColorPicker .oshi-color-btn')];const oshiColorNote=document.getElementById('oshiColorNote');
 
@@ -1255,7 +1255,7 @@ function renderPlanState(){
     const price=PREMIUM_PRICES[plan.region]||PREMIUM_PRICES.jp;currentPlanName.textContent='FanFolio Free';currentPlanPrice.textContent='¥0 ・ 広告なし';currentPlanBadge.textContent='CURRENT';currentPlanDescription.textContent=hasFreeOverflow()?'Freeの上限を超える既存データは削除されず、閲覧のみで保管されています。':'Premiumなら推し・公演・名義が無制限。メンカラ、取引、遠征、詳細分析も利用できます。';currentPlanFoot.innerHTML=`<span class="plan-foot-line">月額 ${price.monthly} ／ 年額 ${price.annual}</span><span class="plan-foot-line">Founding Member 初年度 ${price.founding}</span>`;upgradePlanBtn.textContent='Premiumにアップグレード';
   }
   if(moneyPlanBadge)moneyPlanBadge.textContent=tier==='premium'?'PREMIUM':'FREE';
-  if(oshiPremiumSection)oshiPremiumSection.hidden=tier==='premium';
+  if(oshiPremiumSection)oshiPremiumSection.hidden=false;
   if(oshiPremiumPreview)oshiPremiumPreview.hidden=false;
   if(moneyPremiumPreview)moneyPremiumPreview.hidden=tier==='premium';if(tripFreeView)tripFreeView.hidden=tier==='premium';if(tripPremiumView)tripPremiumView.hidden=tier!=='premium';if(tripLegend)tripLegend.hidden=tier!=='premium';
   moneyTabs?.querySelectorAll('button[data-money-tab]').forEach(btn=>{const gated=btn.dataset.moneyTab!=='expense';btn.classList.toggle('locked',gated&&tier!=='premium');btn.textContent=btn.dataset.moneyTab==='expense'?'支出':btn.dataset.moneyTab==='trade'?(tier==='premium'?'取引':'取引 🔒'):(tier==='premium'?'分析':'分析 🔒')});
@@ -1858,6 +1858,7 @@ function hideUpdateBanner(){if(updateBanner)updateBanner.hidden=true}
 function showAppInfo(){alert('FanFolio\n\n推し・名義・当落・カレンダー・マネーを、ひとつにまとめて管理できる推し活サポートツールです。\n\n現在はBeta版のため、利用規約・FAQ・お問い合わせ窓口は正式公開前に順次追加します。')}
 function showComingSoonDoc(name){showToast(`${name} は正式公開前に追加予定です。`)}
 function compareVersion(a,b){const pa=String(a||'').split('.').map(n=>Number(n)||0),pb=String(b||'').split('.').map(n=>Number(n)||0),len=Math.max(pa.length,pb.length);for(let i=0;i<len;i++){const diff=(pa[i]||0)-(pb[i]||0);if(diff)return diff>0?1:-1}return 0}
+function renderAppVersion(){if(currentVersionLabel)currentVersionLabel.textContent=`ver. ${APP_VERSION}`}
 async function fetchPublishedVersion(){
   const url=`./index.html?__fanfolio_version=${Date.now()}`;
   const response=await fetch(url,{cache:'no-store',headers:{'Cache-Control':'no-cache'}});
@@ -1942,6 +1943,7 @@ closePremiumBtn.addEventListener('click',closePremiumModal);
 premiumModal.addEventListener('click',e=>{if(e.target===premiumModal)closePremiumModal()});
 startPremiumBtn.addEventListener('click',()=>showToast('決済機能は正式公開前に接続します。料金プランはこの内容で確定しています。'));
 
+renderAppVersion();
 renderPlanState();
 renderIntegrityCheckStatus();
 initializeSecurityLock();
