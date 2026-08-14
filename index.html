@@ -267,14 +267,17 @@ html,body{
 .memo-preview{margin-top:10px;padding-top:10px;border-top:1px solid var(--line);font-size:12.5px;line-height:1.55;color:var(--muted);white-space:pre-wrap}
 .modal-backdrop{position:fixed;inset:0;z-index:100;background:rgba(38,35,31,.35);display:none;align-items:flex-end;justify-content:center;padding:18px 0 0}
 .modal-backdrop.open{display:flex}
-.modal-sheet{width:min(100%,430px);max-height:90vh;overflow:auto;background:var(--bg);border-radius:22px 22px 0 0;padding:18px 18px calc(22px + env(safe-area-inset-bottom));box-shadow:0 -10px 30px rgba(0,0,0,.12);box-sizing:border-box}
+.modal-sheet{width:min(100%,410px);max-height:90vh;overflow:auto;background:var(--bg);border-radius:22px 22px 0 0;padding:18px 16px calc(22px + env(safe-area-inset-bottom));box-shadow:0 -10px 30px rgba(0,0,0,.12);box-sizing:border-box}
 .modal-handle{width:38px;height:4px;border-radius:99px;background:#d4cec4;margin:0 auto 14px}
 .modal-title{font-size:20px;font-weight:800;margin:0 0 16px}
 .form-group{margin-bottom:15px}
 .form-label{display:block;font-size:12.5px;color:var(--accent-strong);font-weight:700;margin:0 0 7px 2px}
-.form-control{width:100%;max-width:100%;box-sizing:border-box;border:1px solid var(--line);border-radius:12px;background:var(--surface);padding:12px 13px;font-size:14px;outline:none}
+.form-control{display:block;width:100%;max-width:100%;min-width:0;box-sizing:border-box;border:1px solid var(--line);border-radius:12px;background:var(--surface);padding:11px 12px;font-size:14px;outline:none}
 .form-control:focus{border-color:var(--accent-strong);box-shadow:0 0 0 2px rgba(120,107,95,.08)}
 textarea.form-control{min-height:92px;resize:vertical;line-height:1.55}
+.form-control::placeholder{font-size:12.5px;line-height:1.45;color:#b4b0aa}
+input.form-control[type="date"],input.form-control[type="month"],input.form-control[type="number"],select.form-control{appearance:none;-webkit-appearance:none;min-width:0;width:100%;max-width:100%;font-size:14px}
+@media (max-width:390px){.form-label{font-size:12px}.form-control{font-size:13.5px;padding:10px 11px}.modal-title{font-size:20px}.ghost-btn,.solid-btn,.danger-btn{font-size:14px}}
 .photo-row{display:flex;align-items:center;gap:13px;min-width:0}
 .photo-preview{width:64px;height:64px;border-radius:50%;border:1px solid var(--line);background:var(--surface-soft);display:grid;place-items:center;color:var(--muted);background-size:cover;background-position:center;flex:none}
 .photo-row .ghost-btn{min-height:40px;padding:9px 12px;font-size:13px}
@@ -441,8 +444,10 @@ body.security-locked{overflow:hidden!important}
       <button class="solid-btn wide" id="addOshiBtn">＋ 推しを追加</button>
       <div class="premium-limit">Freeでは推しを3人まで登録できます</div>
       <div class="section-gap"></div>
-      <div class="section-title">Premium</div>
-      <div class="lock-preview" id="oshiPremiumPreview"><span class="badge lock">PREMIUM</span><strong>推しカルテをもっと詳しく</strong><p>メンカラ・写真・ファンサ・統計などをまとめて管理できます。</p><button class="ghost-btn premium-preview-btn" type="button">Premiumを見る</button></div>
+      <div id="oshiPremiumSection">
+        <div class="section-title">Premium</div>
+        <div class="lock-preview" id="oshiPremiumPreview"><span class="badge lock">PREMIUM</span><strong>推しカルテをもっと詳しく</strong><p>メンカラ・写真・ファンサ・統計などをまとめて管理できます。</p><button class="ghost-btn premium-preview-btn" type="button">Premiumを見る</button></div>
+      </div>
     </main>
   </section>
 
@@ -1077,7 +1082,7 @@ const BETA_ADMIN_KEY='fanfolio_beta_admin_enabled';
 const BETA_PLAN_OVERRIDE_KEY='fanfolio_beta_plan_override';
 const FREE_ACCESS_KEY='fanfolio_v1_free_access';
 const THEME_KEY='fanfolio_v1_theme';
-const APP_VERSION='0.20.8';
+const APP_VERSION='0.20.9';
 if(location.search.includes('__fanfolio_refresh')){try{const cleanUrl=new URL(location.href);cleanUrl.searchParams.delete('__fanfolio_refresh');history.replaceState(null,'',cleanUrl.pathname+(cleanUrl.searchParams.toString()?`?${cleanUrl.searchParams}`:'')+cleanUrl.hash)}catch{}}
 const BACKUP_SCHEMA_VERSION=1;
 const BACKUP_DATA_KEYS={oshi:OSHI_KEY,memberships:MEMBERSHIP_KEY,tours:TOUR_KEY,performances:PERFORMANCE_KEY,expenses:EXPENSE_KEY,memories:MEMORY_KEY,trades:TRADE_KEY,trips:TRIP_KEY,countdowns:COUNTDOWN_KEY};
@@ -1151,6 +1156,7 @@ const tripModal=document.getElementById('tripModal');const tripForm=document.get
 const memoryModal=document.getElementById('memoryModal');const memoryListView=document.getElementById('memoryListView');const memoryFormView=document.getElementById('memoryFormView');const memoryOshiName=document.getElementById('memoryOshiName');const memoryCount=document.getElementById('memoryCount');const memoryList=document.getElementById('memoryList');const closeMemoryBtn=document.getElementById('closeMemoryBtn');const addMemoryBtn=document.getElementById('addMemoryBtn');const backMemoryBtn=document.getElementById('backMemoryBtn');const memoryFormTitle=document.getElementById('memoryFormTitle');const memoryForm=document.getElementById('memoryForm');const memoryId=document.getElementById('memoryId');const memoryPerformance=document.getElementById('memoryPerformance');const memoryAttendance=document.getElementById('memoryAttendance');const memorySeat=document.getElementById('memorySeat');const memoryImpression=document.getElementById('memoryImpression');const cancelMemoryEditBtn=document.getElementById('cancelMemoryEditBtn');const deleteMemoryBtn=document.getElementById('deleteMemoryBtn');
 const premiumModal=document.getElementById('premiumModal');const premiumRegion=document.getElementById('premiumRegion');const monthlyPrice=document.getElementById('monthlyPrice');const annualPrice=document.getElementById('annualPrice');const annualMonthlyNote=document.getElementById('annualMonthlyNote');const foundingPrice=document.getElementById('foundingPrice');const closePremiumBtn=document.getElementById('closePremiumBtn');const startPremiumBtn=document.getElementById('startPremiumBtn');const currentPlanName=document.getElementById('currentPlanName');const currentPlanPrice=document.getElementById('currentPlanPrice');const currentPlanBadge=document.getElementById('currentPlanBadge');const currentPlanDescription=document.getElementById('currentPlanDescription');const currentPlanFoot=document.getElementById('currentPlanFoot');const upgradePlanBtn=document.getElementById('upgradePlanBtn');
 const oshiPremiumPreview=document.getElementById('oshiPremiumPreview');
+const oshiPremiumSection=document.getElementById('oshiPremiumSection');
 const manageFreeAccessBtn=document.getElementById('manageFreeAccessBtn');const freeAccessModal=document.getElementById('freeAccessModal');const freeAccessOshiSection=document.getElementById('freeAccessOshiSection');const freeAccessMembershipSection=document.getElementById('freeAccessMembershipSection');const freeAccessPerformanceSection=document.getElementById('freeAccessPerformanceSection');const freeAccessOshiList=document.getElementById('freeAccessOshiList');const freeAccessMembershipList=document.getElementById('freeAccessMembershipList');const freeAccessPerformanceList=document.getElementById('freeAccessPerformanceList');const freeAccessOshiCount=document.getElementById('freeAccessOshiCount');const freeAccessMembershipCount=document.getElementById('freeAccessMembershipCount');const freeAccessPerformanceCount=document.getElementById('freeAccessPerformanceCount');const cancelFreeAccessBtn=document.getElementById('cancelFreeAccessBtn');const saveFreeAccessBtn=document.getElementById('saveFreeAccessBtn');
 const exportBackupBtn=document.getElementById('exportBackupBtn');const importBackupBtn=document.getElementById('importBackupBtn');const exportBackupBadge=document.getElementById('exportBackupBadge');const importBackupBadge=document.getElementById('importBackupBadge');const backupMeta=document.getElementById('backupMeta');const backupFileInput=document.getElementById('backupFileInput');const backupRestoreModal=document.getElementById('backupRestoreModal');const backupRestoreInfo=document.getElementById('backupRestoreInfo');const backupRestoreSummary=document.getElementById('backupRestoreSummary');const cancelBackupRestoreBtn=document.getElementById('cancelBackupRestoreBtn');const confirmBackupRestoreBtn=document.getElementById('confirmBackupRestoreBtn');
 const securityCard=document.getElementById('securityCard');const launchLockRow=document.getElementById('launchLockRow');const launchLockSwitch=document.getElementById('launchLockSwitch');const launchLockDescription=document.getElementById('launchLockDescription');const passcodeSettingBtn=document.getElementById('passcodeSettingBtn');const passcodeDescription=document.getElementById('passcodeDescription');const autoLockRow=document.getElementById('autoLockRow');const autoLockSwitch=document.getElementById('autoLockSwitch');const securityStatus=document.getElementById('securityStatus');const securityPremiumBadges=[...document.querySelectorAll('.security-premium-badge')];const passcodeModal=document.getElementById('passcodeModal');const passcodeForm=document.getElementById('passcodeForm');const currentPinGroup=document.getElementById('currentPinGroup');const currentPin=document.getElementById('currentPin');const newPin=document.getElementById('newPin');const confirmPin=document.getElementById('confirmPin');const passcodeError=document.getElementById('passcodeError');const cancelPasscodeBtn=document.getElementById('cancelPasscodeBtn');const removePasscodeBtn=document.getElementById('removePasscodeBtn');const appLockScreen=document.getElementById('appLockScreen');const unlockForm=document.getElementById('unlockForm');const unlockPin=document.getElementById('unlockPin');const unlockError=document.getElementById('unlockError');
@@ -1249,7 +1255,8 @@ function renderPlanState(){
     const price=PREMIUM_PRICES[plan.region]||PREMIUM_PRICES.jp;currentPlanName.textContent='FanFolio Free';currentPlanPrice.textContent='¥0 ・ 広告なし';currentPlanBadge.textContent='CURRENT';currentPlanDescription.textContent=hasFreeOverflow()?'Freeの上限を超える既存データは削除されず、閲覧のみで保管されています。':'Premiumなら推し・公演・名義が無制限。メンカラ、取引、遠征、詳細分析も利用できます。';currentPlanFoot.innerHTML=`<span class="plan-foot-line">月額 ${price.monthly} ／ 年額 ${price.annual}</span><span class="plan-foot-line">Founding Member 初年度 ${price.founding}</span>`;upgradePlanBtn.textContent='Premiumにアップグレード';
   }
   if(moneyPlanBadge)moneyPlanBadge.textContent=tier==='premium'?'PREMIUM':'FREE';
-  if(oshiPremiumPreview)oshiPremiumPreview.hidden=tier==='premium';
+  if(oshiPremiumSection)oshiPremiumSection.hidden=tier==='premium';
+  if(oshiPremiumPreview)oshiPremiumPreview.hidden=false;
   if(moneyPremiumPreview)moneyPremiumPreview.hidden=tier==='premium';if(tripFreeView)tripFreeView.hidden=tier==='premium';if(tripPremiumView)tripPremiumView.hidden=tier!=='premium';if(tripLegend)tripLegend.hidden=tier!=='premium';
   moneyTabs?.querySelectorAll('button[data-money-tab]').forEach(btn=>{const gated=btn.dataset.moneyTab!=='expense';btn.classList.toggle('locked',gated&&tier!=='premium');btn.textContent=btn.dataset.moneyTab==='expense'?'支出':btn.dataset.moneyTab==='trade'?(tier==='premium'?'取引':'取引 🔒'):(tier==='premium'?'分析':'分析 🔒')});
   if(tier!=='premium'&&activeMoneyTab!=='expense')setMoneyTab('expense');
