@@ -12,7 +12,7 @@
 <link rel="icon" type="image/png" sizes="32x32" href="./favicon-32.png" />
 <link rel="icon" type="image/png" sizes="192x192" href="./icon-192.png" />
 <meta name="mobile-web-app-capable" content="yes" />
-<title>FanFolio v0.20.1</title>
+<title>FanFolio v0.20.2</title>
 <style>
 :root{
   --bg:#f7f5f0;
@@ -570,7 +570,7 @@ body.security-locked{overflow:hidden!important}
 
       <div class="settings-section"><div class="section-title">アプリ・オフライン</div><div class="settings-card"><button class="setting-row setting-action" id="installAppBtn" type="button"><div><h3>ホーム画面に追加</h3><p id="installAppDescription">FanFolioをアプリのように起動できます。</p></div><span class="chev">›</span></button><div class="setting-row"><div><h3>起動モード</h3><div class="pwa-status"><span class="pwa-dot" id="pwaModeDot"></span><span class="pwa-status-text" id="pwaModeStatus">確認中</span></div></div></div><div class="setting-row"><div><h3>オフライン利用</h3><div class="pwa-status"><span class="pwa-dot" id="pwaOfflineDot"></span><span class="pwa-status-text" id="pwaOfflineStatus">確認中</span></div></div></div><div class="pwa-mini-note" id="pwaHelpText">HTTPSで一度開くと、通信がないときも保存済みのFanFolioを起動できます。</div></div></div>
 
-      <div class="settings-section"><div class="section-title">バージョン</div><div class="settings-card"><div class="setting-row"><div><h3>FanFolio</h3></div><div class="subtle">ver. 0.20.1</div></div><button class="setting-row setting-action" id="checkUpdateBtn" type="button"><div><h3>更新を確認</h3><p id="updateStatusText">サーバー上の最新版を確認します。</p></div><span class="chev">›</span></button></div></div>
+      <div class="settings-section"><div class="section-title">バージョン</div><div class="settings-card"><div class="setting-row"><div><h3>FanFolio</h3></div><div class="subtle">ver. 0.20.2</div></div><button class="setting-row setting-action" id="checkUpdateBtn" type="button"><div><h3>更新を確認</h3><p id="updateStatusText">サーバー上の最新版を確認します。</p></div><span class="chev">›</span></button></div></div>
       <div class="footer-note">— ✦ —<br><br>Made with ♡ by めいぷりん</div>
     </main>
   </section>
@@ -1044,7 +1044,8 @@ const BACKUP_META_KEY='fanfolio_v1_backup_meta';
 const SECURITY_KEY='fanfolio_v1_security';
 const FREE_ACCESS_KEY='fanfolio_v1_free_access';
 const THEME_KEY='fanfolio_v1_theme';
-const APP_VERSION='0.20.1';
+const APP_VERSION='0.20.2';
+if(location.search.includes('__fanfolio_refresh')){try{const cleanUrl=new URL(location.href);cleanUrl.searchParams.delete('__fanfolio_refresh');history.replaceState(null,'',cleanUrl.pathname+(cleanUrl.searchParams.toString()?`?${cleanUrl.searchParams}`:'')+cleanUrl.hash)}catch{}}
 const BACKUP_SCHEMA_VERSION=1;
 const BACKUP_DATA_KEYS={oshi:OSHI_KEY,memberships:MEMBERSHIP_KEY,tours:TOUR_KEY,performances:PERFORMANCE_KEY,expenses:EXPENSE_KEY,memories:MEMORY_KEY,trades:TRADE_KEY,trips:TRIP_KEY};
 const PREMIUM_PRICES={
@@ -1794,39 +1795,50 @@ async function fetchPublishedVersion(){
 }
 function bindServiceWorkerRegistration(reg){
   if(!reg||reg.__fanfolioBound)return;reg.__fanfolioBound=true;
-  reg.addEventListener('updatefound',()=>{const worker=reg.installing;if(!worker)return;if(updateStatusText)updateStatusText.textContent='新しいバージョンをダウンロード中…';worker.addEventListener('statechange',()=>{if(worker.state==='installed'&&navigator.serviceWorker.controller)showUpdateBanner();if(worker.state==='activated')renderPwaStatus()})});
+  reg.addEventListener('updatefound',()=>{const worker=reg.installing;if(!worker)return;worker.addEventListener('statechange',()=>{if(worker.state==='activated')renderPwaStatus()})});
 }
 async function waitForWaitingWorker(reg,timeout=12000){
   if(reg?.waiting)return reg.waiting;
   return await new Promise(resolve=>{let done=false;const finish=worker=>{if(done)return;done=true;clearInterval(poll);clearTimeout(timer);resolve(worker||null)};const inspect=()=>{if(reg.waiting)return finish(reg.waiting);const worker=reg.installing;if(worker&&worker.state==='installed')return finish(reg.waiting||worker)};const poll=setInterval(inspect,120);const timer=setTimeout(()=>finish(reg.waiting||null),timeout);inspect()});
 }
 async function registerWorkerForVersion(version=APP_VERSION){
-  const reg=await navigator.serviceWorker.register(`./sw.js?v=${encodeURIComponent(version)}`,{updateViaCache:'none'});pwaRegistration=reg;bindServiceWorkerRegistration(reg);return reg;
+  const reg=await navigator.serviceWorker.register('./sw.js',{updateViaCache:'none'});pwaRegistration=reg;bindServiceWorkerRegistration(reg);return reg;
 }
 async function registerFanFolioServiceWorker(){
   if(!pwaCanRun()){renderPwaStatus();return}
   try{
-    const reg=await registerWorkerForVersion(APP_VERSION);renderPwaStatus();
-    if(reg.waiting&&navigator.serviceWorker.controller)showUpdateBanner();
-    navigator.serviceWorker.addEventListener('controllerchange',()=>{if(pwaRefreshing)return;pwaRefreshing=true;setTimeout(()=>location.reload(),80)});
+    await registerWorkerForVersion(APP_VERSION);renderPwaStatus();
   }catch(err){console.error(err);if(updateStatusText)updateStatusText.textContent='Service Workerを登録できませんでした。';renderPwaStatus()}
 }
+let pendingPublishedVersion='';
 async function checkForFanFolioUpdate(){
   if(!pwaCanRun()){showToast('公開後のHTTPS環境で更新を確認できます。');return}
   if(navigator.onLine===false){if(updateStatusText)updateStatusText.textContent='オフラインのため更新を確認できません。';showToast('オンラインにしてから更新を確認してください。');return}
   try{
     if(updateStatusText)updateStatusText.textContent='サーバー上の最新版を確認中…';
-    const latest=await fetchPublishedVersion();
+    const latest=await fetchPublishedVersion();pendingPublishedVersion=latest;
     if(compareVersion(latest,APP_VERSION)>0){
-      if(updateStatusText)updateStatusText.textContent=`v${latest} をダウンロード中…`;
-      const reg=await registerWorkerForVersion(latest);await reg.update().catch(()=>{});const waiting=await waitForWaitingWorker(reg);
-      if(waiting||reg.waiting){showUpdateBanner(latest);showToast(`v${latest} に更新できます。`);return}
-      if(updateStatusText)updateStatusText.textContent=`v${latest} を準備中です。数秒後にもう一度確認してください。`;showToast('新しいバージョンを準備しています。');return
+      showUpdateBanner(latest);showToast(`v${latest} に更新できます。`);return
     }
-    const reg=pwaRegistration||await registerWorkerForVersion(APP_VERSION);await reg.update().catch(()=>{});const waiting=await waitForWaitingWorker(reg,1800);
-    if((waiting||reg.waiting)&&navigator.serviceWorker.controller){showUpdateBanner(latest);showToast('更新の準備ができています。');return}
+    hideUpdateBanner();
     if(updateStatusText)updateStatusText.textContent=`現在のバージョン v${APP_VERSION} は最新です。`;showToast('最新版です。');
+    const reg=pwaRegistration||await registerWorkerForVersion(APP_VERSION);reg.update().catch(()=>{});
   }catch(err){console.error(err);if(updateStatusText)updateStatusText.textContent='更新を確認できませんでした。';showToast('更新を確認できませんでした。ネット接続をご確認ください。')}
+}
+async function forceReloadLatestFanFolio(){
+  if(navigator.onLine===false)throw new Error('offline');
+  const latest=pendingPublishedVersion||await fetchPublishedVersion();
+  const probeUrl=`./index.html?__fanfolio_probe=${Date.now()}`;
+  const probe=await fetch(probeUrl,{cache:'no-store',headers:{'Cache-Control':'no-cache'}});
+  if(!probe.ok)throw new Error(`update probe failed: ${probe.status}`);
+  const probeHtml=await probe.text();
+  const match=probeHtml.match(/const\s+APP_VERSION\s*=\s*['"]([^'"]+)['"]/i)||probeHtml.match(/FanFolio\s+v([0-9]+(?:\.[0-9]+)+)/i);
+  if(!match||compareVersion(match[1],APP_VERSION)<=0){pendingPublishedVersion='';hideUpdateBanner();if(updateStatusText)updateStatusText.textContent=`現在のバージョン v${APP_VERSION} は最新です。`;showToast('最新版です。');return}
+  if(updateStatusText)updateStatusText.textContent=`v${match[1]} に更新しています…`;
+  const reg=pwaRegistration||await navigator.serviceWorker.getRegistration();
+  if(reg)await reg.unregister().catch(()=>false);
+  if('caches' in window){const keys=await caches.keys();await Promise.all(keys.filter(key=>key.startsWith('fanfolio-')).map(key=>caches.delete(key)))}
+  const next=new URL('./index.html',location.href);next.searchParams.set('__fanfolio_refresh',Date.now().toString());location.replace(next.href);
 }
 exportBackupBtn?.addEventListener('click',downloadBackup);
 importBackupBtn?.addEventListener('click',chooseBackupFile);
@@ -1838,7 +1850,7 @@ backupRestoreModal?.addEventListener('click',e=>{if(e.target===backupRestoreModa
 runIntegrityCheckBtn?.addEventListener('click',showIntegrityReport);
 checkUpdateBtn?.addEventListener('click',checkForFanFolioUpdate);
 installAppBtn?.addEventListener('click',requestPwaInstall);closeInstallModalBtn?.addEventListener('click',closeInstallModal);installModal?.addEventListener('click',e=>{if(e.target===installModal)closeInstallModal()});
-applyUpdateBtn?.addEventListener('click',async()=>{try{const reg=pwaRegistration||await navigator.serviceWorker.getRegistration();const waiting=reg?.waiting;if(!waiting){hideUpdateBanner();await checkForFanFolioUpdate();return}if(applyUpdateBtn)applyUpdateBtn.disabled=true;if(updateStatusText)updateStatusText.textContent='更新を適用しています…';waiting.postMessage({type:'SKIP_WAITING'});setTimeout(()=>{if(!pwaRefreshing)location.reload()},3500)}catch(err){console.error(err);if(applyUpdateBtn)applyUpdateBtn.disabled=false;showToast('更新を適用できませんでした。もう一度お試しください。')}});dismissUpdateBtn?.addEventListener('click',hideUpdateBanner);
+applyUpdateBtn?.addEventListener('click',async()=>{try{if(applyUpdateBtn)applyUpdateBtn.disabled=true;await forceReloadLatestFanFolio()}catch(err){console.error(err);if(applyUpdateBtn)applyUpdateBtn.disabled=false;if(updateStatusText)updateStatusText.textContent='更新を適用できませんでした。';showToast('更新できませんでした。オンライン状態を確認してもう一度お試しください。')}});dismissUpdateBtn?.addEventListener('click',hideUpdateBanner);
 window.addEventListener('beforeinstallprompt',e=>{e.preventDefault();deferredInstallPrompt=e;renderPwaStatus()});window.addEventListener('appinstalled',()=>{deferredInstallPrompt=null;closeInstallModal();renderPwaStatus();showToast('FanFolioをホーム画面に追加しました。')});window.addEventListener('online',renderPwaStatus);window.addEventListener('offline',renderPwaStatus);
 
 manageFreeAccessBtn?.addEventListener('click',openFreeAccessModal);

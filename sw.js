@@ -1,4 +1,4 @@
-const VERSION='0.20.1';
+const VERSION='0.20.2';
 const CACHE_NAME=`fanfolio-v${VERSION}`;
 const APP_SHELL=['./','./index.html','./manifest.webmanifest','./icon-192.png','./icon-512.png','./apple-touch-icon.png','./favicon-32.png'];
 self.addEventListener('install',event=>{
@@ -6,7 +6,7 @@ self.addEventListener('install',event=>{
 });
 self.addEventListener('message',event=>{
   if(event.data&&event.data.type==='SKIP_WAITING')self.skipWaiting();
-  if(event.data&&event.data.type==='GET_VERSION'&&event.source)event.source.postMessage({type:'FANFOLIO_VERSION',version:VERSION});
+  if(event.data&&event.data.type==='GET_VERSION'){const reply={type:'FANFOLIO_VERSION',version:VERSION};if(event.ports&&event.ports[0])event.ports[0].postMessage(reply);else if(event.source)event.source.postMessage(reply);}
 });
 self.addEventListener('activate',event=>{
   event.waitUntil(caches.keys().then(keys=>Promise.all(keys.filter(key=>key.startsWith('fanfolio-')&&key!==CACHE_NAME).map(key=>caches.delete(key)))).then(()=>self.clients.claim()));
