@@ -328,6 +328,60 @@ input.form-control:not([type="hidden"]),select.form-control{height:52px;min-heig
 @media (min-width:431px){.modal-backdrop{align-items:center;padding:20px}.modal-sheet{border-radius:22px;max-height:84vh}}
 
 
+
+/* FanFolio v0.22.0 — 推しグループ整理 / 名義アコーディオン */
+.oshi-cluster{border:1px solid var(--line);border-radius:20px;background:rgba(255,253,250,.78);overflow:hidden;margin-bottom:14px}
+.oshi-cluster-head{width:100%;border:0;background:var(--surface);padding:16px 17px;display:flex;align-items:center;gap:12px;text-align:left;color:inherit}
+.oshi-cluster-head:active{background:var(--surface-soft)}
+.oshi-cluster-avatar{width:52px;height:52px;border-radius:50%;border:1px solid var(--line);background:var(--surface-soft);display:grid;place-items:center;flex:none;color:var(--accent-strong);font-size:20px;background-size:cover;background-position:center}
+.oshi-cluster-main{min-width:0;flex:1}
+.oshi-cluster-name{display:flex;align-items:center;gap:7px;font-size:18px;font-weight:800;line-height:1.3}
+.oshi-cluster-meta{display:block;margin-top:3px;color:var(--muted);font-size:12.5px;line-height:1.45}
+.oshi-cluster-stats{display:flex;gap:6px;flex-wrap:wrap;margin-top:7px}
+.oshi-stat-pill{display:inline-flex;align-items:center;min-height:24px;padding:3px 8px;border-radius:999px;background:var(--accent-pale);color:var(--accent-strong);font-size:10.5px;font-weight:750}
+.oshi-collapse-chevron{width:30px;height:30px;border-radius:50%;display:grid;place-items:center;color:var(--accent-strong);font-size:20px;transition:transform .18s ease;flex:none}
+.oshi-cluster.open>.oshi-cluster-head .oshi-collapse-chevron{transform:rotate(180deg)}
+.oshi-cluster-body{border-top:1px solid var(--line);padding:12px;background:rgba(247,245,240,.5)}
+.oshi-cluster-section-label{font-size:11.5px;font-weight:800;color:var(--accent-strong);margin:3px 4px 8px}
+.oshi-cluster-members{display:grid;gap:9px}
+.oshi-cluster .osh-card{margin-bottom:0;border-radius:16px;padding:14px 15px}
+.oshi-cluster .osh-card+.osh-card{margin-top:9px}
+.oshi-card-toggle{margin-left:auto;border:0;background:transparent;padding:2px;display:grid;place-items:center;color:var(--accent-strong)}
+.oshi-card-compact{display:flex;gap:6px;flex-wrap:wrap;margin-top:10px}
+.oshi-card-details{margin-top:12px;padding-top:2px}
+.osh-card:not(.open) .oshi-card-details{display:none}
+.osh-card.open .oshi-card-toggle .oshi-collapse-chevron{transform:rotate(180deg)}
+.oshi-standalone-wrap{margin-bottom:14px}.oshi-standalone-wrap .osh-card{margin-bottom:0}
+.oshi-cluster-empty-note{font-size:12px;color:var(--muted);padding:4px 5px 7px}
+@media(max-width:390px){.oshi-cluster-head{padding:14px}.oshi-cluster-avatar{width:46px;height:46px}.oshi-cluster-name{font-size:17px}.oshi-cluster-body{padding:10px}}
+
+.membership-list-tools{display:grid;gap:9px;margin:0 0 12px}
+.membership-search-box{height:44px;border:1px solid var(--line);border-radius:12px;background:var(--surface);display:flex;align-items:center;gap:8px;padding:0 11px;color:var(--muted)}
+.membership-search-box input{border:0;outline:0;background:transparent;width:100%;min-width:0;color:var(--ink);font-size:13px}
+.membership-search-box input::placeholder{color:#aaa39a}
+.membership-filter-row{display:grid;grid-template-columns:126px minmax(0,1fr);gap:8px;align-items:start}
+.membership-sort-select{height:38px;border:1px solid var(--line);border-radius:11px;background:var(--surface);color:var(--ink);padding:0 28px 0 10px;font-size:11.5px;max-width:100%}
+.membership-filter-chips{display:flex;gap:6px;overflow-x:auto;padding-bottom:2px;scrollbar-width:none}
+.membership-filter-chips::-webkit-scrollbar{display:none}
+.membership-filter-chips button{flex:none;border:1px solid var(--line);background:var(--surface);color:var(--muted);border-radius:999px;padding:8px 10px;font-size:10.5px;font-weight:750;white-space:nowrap}
+.membership-filter-chips button.active{background:var(--accent-pale);border-color:var(--line-strong);color:var(--accent-strong)}
+.membership-mini-stats{font-size:10.8px;color:var(--muted);line-height:1.5;padding:0 2px}
+.membership-card-head{width:100%;border:0;background:transparent;padding:0;text-align:left;color:inherit}
+.membership-card-head-row{display:flex;align-items:flex-start;gap:10px}
+.membership-card-head-main{min-width:0;flex:1}
+.membership-card-chevron{width:30px;height:30px;border:1px solid var(--line);border-radius:50%;display:grid;place-items:center;color:var(--accent-strong);font-size:18px;transition:transform .18s ease;flex:none}
+.membership-card.expanded .membership-card-chevron{transform:rotate(180deg)}
+.membership-compact-number{margin-top:10px;border-top:1px solid var(--line);padding-top:9px;display:grid;grid-template-columns:42px 1fr 32px;gap:8px;align-items:center}
+.membership-compact-number .membership-credential-value{text-align:left;font-size:13.5px}
+.membership-expanded{display:none;margin-top:12px;padding-top:12px;border-top:1px dashed var(--line)}
+.membership-card.expanded .membership-expanded{display:block}
+.membership-detail-grid{display:grid;gap:8px;margin-bottom:10px}
+.membership-detail-row{display:grid;grid-template-columns:78px 1fr;gap:10px;align-items:start;font-size:11.5px;line-height:1.5}
+.membership-detail-row dt{color:var(--muted);font-weight:650}.membership-detail-row dd{margin:0;color:var(--ink);overflow-wrap:anywhere}
+.membership-detail-memo{padding:9px 10px;border-radius:10px;background:var(--surface-soft);color:var(--muted);font-size:11.5px;line-height:1.55;white-space:pre-wrap}
+.membership-card .membership-credential-box{margin-top:10px}.membership-card-actions{padding-top:2px}
+@media(max-width:390px){.membership-filter-row{grid-template-columns:112px minmax(0,1fr)}.membership-sort-select{font-size:11px;padding-left:8px}.membership-filter-chips button{padding:7px 9px}}
+
 /* FanFolio v0.4.0 — 当落・公演 CRUD */
 .lottery-search{padding:0;overflow:hidden}.lottery-search span{padding-left:14px;color:var(--muted);flex:none}.lottery-search input{width:100%;border:0;background:transparent;outline:none;padding:13px 14px 13px 4px;font-size:14px;color:var(--ink);min-width:0}.lottery-search input::placeholder{color:#aaa196}
 .lottery-toolbar{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:10px}.lottery-empty{padding:24px 16px;border:1px dashed var(--line-strong);border-radius:15px;text-align:center;background:rgba(255,253,250,.55);color:var(--muted);font-size:12.5px;line-height:1.65}
@@ -692,6 +746,26 @@ body.security-locked{overflow:hidden!important}
     <div class="list-view" id="membershipListView">
       <div class="modal-title" id="membershipModalTitle">FC・Membership</div>
       <div class="membership-summary"><span id="membershipOshiName">—</span><span id="membershipCount">0 / 2</span></div>
+      <div class="membership-list-tools" id="membershipListTools">
+        <label class="membership-search-box" aria-label="名義を検索">
+          <span aria-hidden="true">⌕</span>
+          <input id="membershipSearchInput" type="search" placeholder="名義・氏名・会員番号で検索" autocomplete="off" />
+        </label>
+        <div class="membership-filter-row">
+          <select class="membership-sort-select" id="membershipSortSelect" aria-label="並び替え">
+            <option value="account">名義順</option>
+            <option value="expiry">更新日が近い順</option>
+            <option value="join">入会が古い順</option>
+          </select>
+          <div class="membership-filter-chips" id="membershipFilterChips" aria-label="絞り込み">
+            <button type="button" class="active" data-membership-filter="all">すべて</button>
+            <button type="button" data-membership-filter="active">有効</button>
+            <button type="button" data-membership-filter="soon">更新間近</button>
+            <button type="button" data-membership-filter="expired">期限切れ</button>
+          </div>
+        </div>
+        <div class="membership-mini-stats" id="membershipMiniStats"></div>
+      </div>
       <div class="membership-list" id="membershipList"></div>
       <div class="membership-toolbar">
         <button class="ghost-btn" id="closeMembershipBtn" type="button">閉じる</button>
@@ -1168,7 +1242,7 @@ const BETA_ADMIN_KEY='fanfolio_beta_admin_enabled';
 const BETA_PLAN_OVERRIDE_KEY='fanfolio_beta_plan_override';
 const FREE_ACCESS_KEY='fanfolio_v1_free_access';
 const THEME_KEY='fanfolio_v1_theme';
-const APP_VERSION='0.21.2';
+const APP_VERSION='0.22.0';
 if(location.search.includes('__fanfolio_refresh')){try{const cleanUrl=new URL(location.href);cleanUrl.searchParams.delete('__fanfolio_refresh');history.replaceState(null,'',cleanUrl.pathname+(cleanUrl.searchParams.toString()?`?${cleanUrl.searchParams}`:'')+cleanUrl.hash)}catch{}}
 const BACKUP_SCHEMA_VERSION=1;
 const BACKUP_DATA_KEYS={oshi:OSHI_KEY,memberships:MEMBERSHIP_KEY,tours:TOUR_KEY,performances:PERFORMANCE_KEY,expenses:EXPENSE_KEY,memories:MEMORY_KEY,trades:TRADE_KEY,trips:TRIP_KEY,countdowns:COUNTDOWN_KEY};
@@ -1212,6 +1286,10 @@ const membershipFormView=document.getElementById('membershipFormView');
 const membershipOshiName=document.getElementById('membershipOshiName');
 const membershipCount=document.getElementById('membershipCount');
 const membershipList=document.getElementById('membershipList');
+const membershipSearchInput=document.getElementById('membershipSearchInput');
+const membershipSortSelect=document.getElementById('membershipSortSelect');
+const membershipFilterChips=document.getElementById('membershipFilterChips');
+const membershipMiniStats=document.getElementById('membershipMiniStats');
 const closeMembershipBtn=document.getElementById('closeMembershipBtn');
 const addMembershipBtn=document.getElementById('addMembershipBtn');
 const backMembershipBtn=document.getElementById('backMembershipBtn');
@@ -1492,40 +1570,31 @@ function emptyCard(){
     <div class="quick-links"><div class="quick">プロフィール<small>基本情報</small></div><div class="quick">FC・Membership<small>${membershipLimit}</small></div><div class="quick">公演履歴<small>${performanceLimit}</small></div><div class="quick">Memories<small>基本記録</small></div></div>
   </article>`;
 }
+
+const OSHI_UI_STATE_KEY='fanfolio_v1_oshi_ui';
+function getOshiUiState(){try{const v=JSON.parse(localStorage.getItem(OSHI_UI_STATE_KEY)||'{}');return v&&typeof v==='object'?v:{}}catch{return {}}}
+function saveOshiUiState(state){try{localStorage.setItem(OSHI_UI_STATE_KEY,JSON.stringify(state||{}))}catch{}}
+function oshiUiIsOpen(key,defaultOpen=false){const st=getOshiUiState();return Object.prototype.hasOwnProperty.call(st,key)?Boolean(st[key]):defaultOpen}
+function setOshiUiOpen(key,open){const st=getOshiUiState();st[key]=Boolean(open);saveOshiUiState(st)}
+function normGroupName(v=''){return String(v||'').trim().replace(/\s+/g,' ').toLocaleLowerCase('ja')}
+function buildOshiClusters(items){
+  const explicitGroups=items.filter(o=>(o.oshiType||'individual')==='group');const individuals=items.filter(o=>(o.oshiType||'individual')!=='group');const used=new Set(),clusters=[];
+  explicitGroups.forEach(groupItem=>{const key=normGroupName(groupItem.name);const members=individuals.filter(m=>m.group&&normGroupName(m.group)===key);used.add(groupItem.id);members.forEach(m=>used.add(m.id));clusters.push({kind:'group',key:`cluster:${groupItem.id}`,label:groupItem.name,groupItem,members})});
+  const synthetic=new Map();individuals.forEach(item=>{if(used.has(item.id)||!item.group)return;const key=normGroupName(item.group);if(!synthetic.has(key))synthetic.set(key,{kind:'group',key:`cluster-name:${key}`,label:item.group,groupItem:null,members:[]});synthetic.get(key).members.push(item);used.add(item.id)});clusters.push(...synthetic.values());
+  items.filter(item=>!used.has(item.id)).forEach(item=>clusters.push({kind:'single',key:`single:${item.id}`,item}));return clusters;
+}
+function oshiCountsForIds(ids=[]){const idSet=new Set(ids),oshiItems=getOshi().filter(o=>idSet.has(o.id));const memberships=getMemberships().filter(m=>idSet.has(m.oshiId)).length;const performances=getPerformances().filter(p=>oshiItems.some(o=>performanceBelongsToOshi(p,o))).length;const memories=getMemories().filter(m=>idSet.has(m.oshiId)).length;return {memberships,performances,memories}}
+function avatarStyleForOshi(item){if(!item)return {cls:'oshi-cluster-avatar',style:'',text:'♡'};const colorHex=isPremium()?getOshiMemberColorHex(item.memberColor):'';const styleParts=[];if(item.photo)styleParts.push(`background-image:url('${item.photo}')`);else if(colorHex)styleParts.push(`background:${colorHex}22`,`color:${colorHex}`);return {cls:'oshi-cluster-avatar',style:styleParts.length?` style="${styleParts.join(';')}"`:'',text:item.photo?'':'♡'}}
+function renderOshiRecordCard(item){
+  const colorHex=isPremium()?getOshiMemberColorHex(item.memberColor):'',avatarStyleParts=[];if(item.photo)avatarStyleParts.push(`background-image:url('${item.photo}')`);else if(colorHex)avatarStyleParts.push(`background:${colorHex}22`,`color:${colorHex}`);const style=avatarStyleParts.length?` style="${avatarStyleParts.join(';')}"`:'';const avatarClass=item.photo?'avatar has-image':'avatar';
+  const groupMode=(item.oshiType||'individual')==='group';const meta=(groupMode?[item.category,item.favoriteArtist?`推し：${item.favoriteArtist}`:'']:[item.category,item.group,birthdayText(item.birthday)]).filter(Boolean).join(' ・ ')||'基本プロフィール';const cardStyle=colorHex?` style="border-left:6px solid ${colorHex}"`:'';const membershipN=getMemberships().filter(m=>m.oshiId===item.id).length;const oshiPerfCount=getPerformances().filter(p=>performanceBelongsToOshi(p,item)).length;const memoryN=getMemories().filter(m=>m.oshiId===item.id).length;const membershipSub=isPremium()?`${membershipN}件 / 無制限`:`${membershipN}件 / Free合計2件まで`;const performanceSub=isPremium()?`${oshiPerfCount}公演 / 無制限`:`${oshiPerfCount}公演 / Free合計5公演まで`;const editable=isRecordEditable('oshi',item.id);const open=oshiUiIsOpen(`record:${item.id}`,false);const dot=colorHex?`<span class="oshi-color-dot" style="background:${colorHex}"></span>`:'';
+  return `<article class="osh-card${editable?'':' record-locked'}${open?' open':''}" data-id="${esc(item.id)}"${cardStyle}><div class="osh-top"><div class="${avatarClass}"${style}>♡</div><div style="min-width:0;flex:1"><div class="oshi-name-row">${dot}<div class="osh-name">${esc(item.name)}</div>${editable?'':'<span class="readonly-chip">閲覧のみ</span>'}</div><div class="osh-group">${esc(meta)}</div></div><div class="oshi-actions"><button class="icon-btn edit-oshi" type="button" aria-label="${editable?'編集':'閲覧'}">${editable?'✎':'◉'}</button><button class="oshi-card-toggle" type="button" data-oshi-record-toggle="${esc(item.id)}" aria-label="${open?'閉じる':'開く'}"><span class="oshi-collapse-chevron">⌄</span></button></div></div><div class="oshi-card-compact"><span class="oshi-stat-pill">FC ${membershipN}</span><span class="oshi-stat-pill">公演 ${oshiPerfCount}</span><span class="oshi-stat-pill">Memories ${memoryN}</span></div><div class="oshi-card-details"><div class="quick-links"><button class="quick edit-oshi" type="button" style="text-align:left">プロフィール<small>${editable?'基本情報を見る・編集':'閲覧のみ'}</small></button><button class="quick membership-preview" type="button" style="text-align:left">FC・Membership<small>${membershipSub}</small></button><button class="quick history-preview" type="button" style="text-align:left">公演履歴<small>${performanceSub}</small></button><button class="quick memories-preview" type="button" style="text-align:left">Memories<small>${memoryN}件 / 基本記録</small></button></div>${item.memo?`<div class="memo-preview">${esc(item.memo)}</div>`:''}</div></article>`;
+}
+function renderOshiCluster(cluster){const ids=[cluster.groupItem?.id,...cluster.members.map(m=>m.id)].filter(Boolean),counts=oshiCountsForIds(ids),open=oshiUiIsOpen(cluster.key,false),hero=cluster.groupItem||cluster.members[0]||null,av=avatarStyleForOshi(hero),favorite=cluster.groupItem?.favoriteArtist||cluster.members.map(m=>m.name).slice(0,3).join('・'),colorHex=hero&&isPremium()?getOshiMemberColorHex(hero.memberColor):'',dot=colorHex?`<span class="oshi-color-dot" style="background:${colorHex}"></span>`:'';return `<section class="oshi-cluster${open?' open':''}" data-oshi-cluster="${esc(cluster.key)}"><button class="oshi-cluster-head oshi-cluster-toggle" type="button" data-oshi-cluster-toggle="${esc(cluster.key)}" aria-expanded="${open?'true':'false'}"><span class="${av.cls}"${av.style}>${av.text}</span><span class="oshi-cluster-main"><span class="oshi-cluster-name">${dot}${esc(cluster.label)}</span><span class="oshi-cluster-meta">${favorite?`推し：${esc(favorite)}`:'グループでまとめて管理'}</span><span class="oshi-cluster-stats">${cluster.members.length?`<span class="oshi-stat-pill">メンバー ${cluster.members.length}</span>`:''}<span class="oshi-stat-pill">FC ${counts.memberships}</span><span class="oshi-stat-pill">公演 ${counts.performances}</span><span class="oshi-stat-pill">Memories ${counts.memories}</span></span></span><span class="oshi-collapse-chevron">⌄</span></button><div class="oshi-cluster-body"${open?'':' hidden'}>${cluster.groupItem?`<div class="oshi-cluster-section-label">グループ</div>${renderOshiRecordCard(cluster.groupItem)}`:''}${cluster.members.length?`<div class="oshi-cluster-section-label" style="margin-top:${cluster.groupItem?'12':'3'}px">メンバー</div><div class="oshi-cluster-members">${cluster.members.map(m=>renderOshiRecordCard(m)).join('')}</div>`:''}</div></section>`}
+
 function renderOshi(){
-  updateFreeAccessButton();
-  const items=getOshi();
-  oshiCount.textContent=planLimitText('oshi',items.length);
-  if(!items.length){oshiList.innerHTML=emptyCard();return}
-  oshiList.innerHTML=items.map(item=>{
-    const colorHex=isPremium()?getOshiMemberColorHex(item.memberColor):'';
-    const avatarStyleParts=[];
-    if(item.photo)avatarStyleParts.push(`background-image:url('${item.photo}')`);
-    else if(colorHex)avatarStyleParts.push(`background:${colorHex}22`,`color:${colorHex}`);
-    const style=avatarStyleParts.length?` style="${avatarStyleParts.join(';')}"`:'';
-    const avatarClass=item.photo?'avatar has-image':'avatar';
-    const groupMode=(item.oshiType||'individual')==='group';
-    const meta=(groupMode?[item.category,item.favoriteArtist?`推し：${item.favoriteArtist}`:'']:[item.category,item.group,birthdayText(item.birthday)]).filter(Boolean).join(' ・ ')||'基本プロフィール';
-    const cardStyle=colorHex?` style="border-left:6px solid ${colorHex}"`:'';
-    const dot=colorHex?`<span class="oshi-color-dot" style="background:${colorHex}"></span>`:'';
-    const membershipSub=isPremium()?`${getMemberships().filter(m=>m.oshiId===item.id).length}件 / 無制限`:`${getMemberships().filter(m=>m.oshiId===item.id).length}件 / Free合計2件まで`;
-    const oshiPerfCount=getPerformances().filter(p=>performanceBelongsToOshi(p,item)).length;const performanceSub=isPremium()?`${oshiPerfCount}公演 / 無制限`:`${oshiPerfCount}公演 / Free合計5公演まで`;
-    const editable=isRecordEditable('oshi',item.id);
-    return `<article class="osh-card${editable?'':' record-locked'}" data-id="${esc(item.id)}"${cardStyle}>
-      <div class="osh-top">
-        <div class="${avatarClass}"${style}>♡</div>
-        <div style="min-width:0;flex:1"><div class="oshi-name-row">${dot}<div class="osh-name">${esc(item.name)}</div>${editable?'':'<span class="readonly-chip">閲覧のみ</span>'}</div><div class="osh-group">${esc(meta)}</div></div>
-        <div class="oshi-actions"><button class="icon-btn edit-oshi" type="button" aria-label="${editable?'編集':'閲覧'}">${editable?'✎':'◉'}</button></div>
-      </div>
-      <div class="quick-links">
-        <button class="quick edit-oshi" type="button" style="text-align:left">プロフィール<small>${editable?'基本情報を見る・編集':'閲覧のみ'}</small></button>
-        <button class="quick membership-preview" type="button" style="text-align:left">FC・Membership<small>${membershipSub}</small></button>
-        <button class="quick history-preview" type="button" style="text-align:left">公演履歴<small>${performanceSub}</small></button>
-        <button class="quick memories-preview" type="button" style="text-align:left">Memories<small>${getMemories().filter(m=>m.oshiId===item.id).length}件 / 基本記録</small></button>
-      </div>
-      ${item.memo?`<div class="memo-preview">${esc(item.memo)}</div>`:''}
-    </article>`;
-  }).join('');
+  updateFreeAccessButton();const items=getOshi();oshiCount.textContent=planLimitText('oshi',items.length);if(!items.length){oshiList.innerHTML=emptyCard();return}
+  const clusters=buildOshiClusters(items);oshiList.innerHTML=clusters.map(cluster=>cluster.kind==='group'?renderOshiCluster(cluster):`<div class="oshi-standalone-wrap">${renderOshiRecordCard(cluster.item)}</div>`).join('');
 }
 function resetPhotoPreview(){pendingPhoto='';photoPreview.style.backgroundImage='';photoPreview.textContent='♡'}
 function setPhotoPreview(data){pendingPhoto=data||'';photoPreview.style.backgroundImage=data?`url('${data}')`:'';photoPreview.textContent=data?'':'♡'}
@@ -1600,41 +1669,27 @@ deleteOshiBtn.addEventListener('click',()=>{
   closeOshiModal();renderOshi();renderLottery();renderCalendar();showToast('削除しました。');
 });
 oshiList.addEventListener('click',e=>{
-  const card=e.target.closest('.osh-card[data-id]');if(!card)return;
-  const item=getOshi().find(x=>x.id===card.dataset.id);if(!item)return;
-  if(e.target.closest('.edit-oshi'))openOshiModal(item);
-  else if(e.target.closest('.membership-preview'))openMembershipManager(item.id);
-  else if(e.target.closest('.history-preview')){activateMainScreen('lottery');lotterySearch.value=item.name;renderLottery();showToast(`${item.name}の公演履歴を表示しています。`);}
-  else if(e.target.closest('.memories-preview'))openMemoryManager(item.id);
+  const clusterToggle=e.target.closest('.oshi-cluster-toggle[data-oshi-cluster-toggle]');if(clusterToggle){const key=clusterToggle.dataset.oshiClusterToggle,section=clusterToggle.closest('.oshi-cluster'),open=!section.classList.contains('open');section.classList.toggle('open',open);clusterToggle.setAttribute('aria-expanded',open?'true':'false');const body=section.querySelector('.oshi-cluster-body');if(body)body.hidden=!open;setOshiUiOpen(key,open);return}
+  const recordToggle=e.target.closest('[data-oshi-record-toggle]');if(recordToggle){const id=recordToggle.dataset.oshiRecordToggle,card=recordToggle.closest('.osh-card'),open=!card.classList.contains('open');card.classList.toggle('open',open);recordToggle.setAttribute('aria-label',open?'閉じる':'開く');setOshiUiOpen(`record:${id}`,open);return}
+  const card=e.target.closest('.osh-card[data-id]');if(!card)return;const item=getOshi().find(x=>x.id===card.dataset.id);if(!item)return;if(e.target.closest('.edit-oshi'))openOshiModal(item);else if(e.target.closest('.membership-preview'))openMembershipManager(item.id);else if(e.target.closest('.history-preview')){activateMainScreen('lottery');lotterySearch.value=item.name;renderLottery();showToast(`${item.name}の公演履歴を表示しています。`)}else if(e.target.closest('.memories-preview'))openMemoryManager(item.id);
 });
 function copyIconSvg(){return '<svg viewBox="0 0 24 24" aria-hidden="true"><rect x="8" y="8" width="11" height="11" rx="1.5"/><path d="M16 8V5.5A1.5 1.5 0 0 0 14.5 4h-10A1.5 1.5 0 0 0 3 5.5v10A1.5 1.5 0 0 0 4.5 17H8"/></svg>'}
 async function copyMembershipValue(value,label){
   if(!value){showToast(`${label}が登録されていません。`);return}
   try{if(navigator.clipboard&&window.isSecureContext)await navigator.clipboard.writeText(value);else{const t=document.createElement('textarea');t.value=value;t.style.position='fixed';t.style.opacity='0';document.body.appendChild(t);t.select();document.execCommand('copy');t.remove()}showToast(`${label}をコピーしました。`)}catch{showToast('コピーできませんでした。')}
 }
+
+let membershipFilterMode='all';let membershipExpandedIds=new Set();
+function membershipExpiryState(item){if(!item?.expiry)return 'active';const end=new Date(`${item.expiry}T23:59:59`),today=new Date();today.setHours(0,0,0,0);const days=Math.ceil((end-today)/86400000);if(days<0)return 'expired';if(days<=60)return 'soon';return 'active'}
+function membershipMatchesSearch(item,q){if(!q)return true;const text=[item.name,item.account,item.memberNumber,item.realName,item.phone,item.email,item.postalCode,item.prefecture,item.address].filter(Boolean).join(' ').toLocaleLowerCase('ja');return text.includes(q.toLocaleLowerCase('ja'))}
+function membershipSortItems(items,mode){const arr=items.slice();if(mode==='expiry')return arr.sort((a,b)=>(a.expiry||'9999-99-99').localeCompare(b.expiry||'9999-99-99')||(a.account||a.name||'').localeCompare(b.account||b.name||'','ja'));if(mode==='join')return arr.sort((a,b)=>(a.joinMonth||'9999-99').localeCompare(b.joinMonth||'9999-99')||(a.account||a.name||'').localeCompare(b.account||b.name||'','ja'));return arr.sort((a,b)=>(a.account||a.name||'').localeCompare(b.account||b.name||'','ja',{numeric:true}))}
+function membershipDetailRows(item){const rows=[['氏名',item.realName],['郵便番号',item.postalCode],['都道府県',item.prefecture],['住所',item.address],['電話番号',item.phone],['生年月日',item.birthdate?formatDateJP(item.birthdate):''],['メール',item.email],['入会年月',item.joinMonth?formatMonthJP(item.joinMonth):''],['有効期限',item.expiry?formatDateJP(item.expiry):'']].filter(([,v])=>v);return rows.length?`<dl class="membership-detail-grid">${rows.map(([k,v])=>`<div class="membership-detail-row"><dt>${esc(k)}</dt><dd>${esc(v)}</dd></div>`).join('')}</dl>`:''}
 function renderMemberships(){
-  const oshi=getOshi().find(o=>o.id===activeMembershipOshiId);
-  const all=getMemberships();const items=all.filter(m=>m.oshiId===activeMembershipOshiId);
-  membershipOshiName.textContent=oshi?oshi.name:'—';
-  membershipCount.textContent=isPremium()?`この推し ${items.length}件 ・ 合計 ${all.length} / 無制限`:`この推し ${items.length}件 ・ Free合計 ${all.length} / ${FREE_MEMBERSHIP_LIMIT}`;
-  addMembershipBtn.disabled=!canAddMore('membership',all.length);addMembershipBtn.title=addMembershipBtn.disabled?'Freeの登録上限に達しています。':'';
-  if(!items.length){membershipList.innerHTML='<div class="membership-empty">この推しのFC・Membershipはまだ登録されていません。<br>「＋ 新規登録」から追加できます。</div>';return}
-  membershipList.innerHTML=items.map(item=>{
-    const exp=expiryInfo(item.expiry);
-    const meta=[item.joinMonth?`入会 ${esc(formatMonthJP(item.joinMonth))}`:'',item.realName?esc(item.realName):''].filter(Boolean).join(' ・ ');
-    const editable=isRecordEditable('membership',item.id);
-    const noRow=item.memberNumber?`<div class="membership-credential-row"><span class="membership-credential-label">No.</span><span class="membership-credential-value">${esc(item.memberNumber)}</span><button class="membership-copy-btn copy-membership" type="button" data-kind="number" data-id="${esc(item.id)}" aria-label="会員番号をコピー">${copyIconSvg()}</button></div>`:'';
-    const pwRow=item.password?`<div class="membership-credential-row"><span class="membership-credential-label">パスワード</span><span class="membership-credential-value password">••••••</span><button class="membership-copy-btn copy-membership" type="button" data-kind="password" data-id="${esc(item.id)}" aria-label="パスワードをコピー">${copyIconSvg()}</button></div>`:'';
-    return `<div class="membership-card${editable?'':' record-locked'}" data-id="${esc(item.id)}">
-      <button class="membership-card-main edit-membership" type="button" data-id="${esc(item.id)}">
-        <div class="row"><div style="min-width:0"><div class="mc-name">${esc(item.name)} ${editable?'':'<span class="readonly-chip">閲覧のみ</span>'}</div>${item.account?`<div class="mc-account">${esc(item.account)}</div>`:''}</div><span class="chev">›</span></div>
-        ${meta?`<div class="mc-meta">${meta}</div>`:''}
-        ${exp.text?`<div class="mc-expiry${exp.soon?' soon':''}">${esc(exp.text)}</div>`:''}
-      </button>
-      ${(noRow||pwRow)?`<div class="membership-credential-box">${noRow}${pwRow}</div>`:''}
-      <div class="membership-card-actions"><button class="edit-membership" type="button" data-id="${esc(item.id)}">${editable?'編集':'カルテ'}</button></div>
-    </div>`;
-  }).join('');
+  const oshi=getOshi().find(o=>o.id===activeMembershipOshiId),all=getMemberships(),allItems=all.filter(m=>m.oshiId===activeMembershipOshiId);membershipOshiName.textContent=oshi?oshi.name:'—';membershipCount.textContent=isPremium()?`この推し ${allItems.length}件 ・ 合計 ${all.length} / 無制限`:`この推し ${allItems.length}件 ・ Free合計 ${all.length} / ${FREE_MEMBERSHIP_LIMIT}`;addMembershipBtn.disabled=!canAddMore('membership',all.length);addMembershipBtn.title=addMembershipBtn.disabled?'Freeの登録上限に達しています。':'';
+  const stateCounts={active:0,soon:0,expired:0};allItems.forEach(item=>stateCounts[membershipExpiryState(item)]++);const now=new Date(),ym=`${now.getFullYear()}-${String(now.getMonth()+1).padStart(2,'0')}`,thisMonth=allItems.filter(item=>item.expiry?.startsWith(ym)).length;if(membershipMiniStats)membershipMiniStats.textContent=`全${allItems.length}名義 ・ 更新間近${stateCounts.soon} ・ 今月更新${thisMonth} ・ 期限切れ${stateCounts.expired}`;
+  if(!allItems.length){membershipList.innerHTML='<div class="membership-empty">この推しのFC・Membershipはまだ登録されていません。<br>「＋ 新規登録」から追加できます。</div>';return}
+  const q=(membershipSearchInput?.value||'').trim(),filtered=allItems.filter(item=>membershipMatchesSearch(item,q)&&(membershipFilterMode==='all'||membershipExpiryState(item)===membershipFilterMode)),items=membershipSortItems(filtered,membershipSortSelect?.value||'account');if(!items.length){membershipList.innerHTML='<div class="membership-empty">条件に一致する名義がありません。<br>検索や絞り込みを変更してください。</div>';return}
+  membershipList.innerHTML=items.map(item=>{const exp=expiryInfo(item.expiry),editable=isRecordEditable('membership',item.id),expanded=membershipExpandedIds.has(item.id),primary=item.account||item.name,secondary=item.account?item.name:'',meta=[item.joinMonth?`入会 ${formatMonthJP(item.joinMonth)}`:'',item.realName||''].filter(Boolean).join(' ・ '),numberCompact=item.memberNumber?`<div class="membership-compact-number"><span class="membership-credential-label">No.</span><span class="membership-credential-value">${esc(item.memberNumber)}</span><button class="membership-copy-btn copy-membership" type="button" data-kind="number" data-id="${esc(item.id)}" aria-label="会員番号をコピー">${copyIconSvg()}</button></div>`:'',noRow=item.memberNumber?`<div class="membership-credential-row"><span class="membership-credential-label">No.</span><span class="membership-credential-value">${esc(item.memberNumber)}</span><button class="membership-copy-btn copy-membership" type="button" data-kind="number" data-id="${esc(item.id)}" aria-label="会員番号をコピー">${copyIconSvg()}</button></div>`:'',pwRow=item.password?`<div class="membership-credential-row"><span class="membership-credential-label">パスワード</span><span class="membership-credential-value password">••••••</span><button class="membership-copy-btn copy-membership" type="button" data-kind="password" data-id="${esc(item.id)}" aria-label="パスワードをコピー">${copyIconSvg()}</button></div>`:'';return `<div class="membership-card${editable?'':' record-locked'}${expanded?' expanded':''}" data-id="${esc(item.id)}"><button class="membership-card-head toggle-membership-card" type="button" data-id="${esc(item.id)}" aria-expanded="${expanded?'true':'false'}"><div class="membership-card-head-row"><div class="membership-card-head-main"><div class="mc-name">${esc(primary)} ${editable?'':'<span class="readonly-chip">閲覧のみ</span>'}</div>${secondary?`<div class="mc-account">${esc(secondary)}</div>`:''}${meta?`<div class="mc-meta">${esc(meta)}</div>`:''}${exp.text?`<div class="mc-expiry${exp.soon?' soon':''}">${esc(exp.text)}</div>`:''}</div><span class="membership-card-chevron">⌄</span></div></button>${numberCompact}<div class="membership-expanded">${membershipDetailRows(item)}${(noRow||pwRow)?`<div class="membership-credential-box">${noRow}${pwRow}</div>`:''}${item.memo?`<div class="membership-detail-memo">${esc(item.memo)}</div>`:''}<div class="membership-card-actions"><button class="edit-membership" type="button" data-id="${esc(item.id)}">${editable?'編集':'カルテ'}</button></div></div></div>`}).join('');
 }
 function postalDigits(value=''){return String(value).replace(/\D/g,'').slice(0,7)}
 function formatPostalCode(value=''){const d=postalDigits(value);return d.length>3?`${d.slice(0,3)}-${d.slice(3)}`:d}
@@ -1658,7 +1713,7 @@ function showMembershipListView(){
   membershipFormFields.forEach(el=>el.disabled=false);if(membershipPasswordToggle)membershipPasswordToggle.disabled=false;membershipForm.querySelector('button[type="submit"]').style.display='';const ro=membershipForm.querySelector('.readonly-banner');if(ro)ro.style.display='none';membershipForm.reset();membershipId.value='';deleteMembershipBtn.style.display='none';renderMemberships();
 }
 function openMembershipManager(oshiIdValue){
-  activeMembershipOshiId=oshiIdValue;showMembershipListView();
+  activeMembershipOshiId=oshiIdValue;membershipFilterMode='all';membershipExpandedIds=new Set();if(membershipSearchInput)membershipSearchInput.value='';if(membershipSortSelect)membershipSortSelect.value='account';membershipFilterChips?.querySelectorAll('[data-membership-filter]').forEach(b=>b.classList.toggle('active',b.dataset.membershipFilter==='all'));showMembershipListView();
   membershipModal.classList.add('open');membershipModal.setAttribute('aria-hidden','false');document.body.style.overflow='hidden';
 }
 function closeMembershipManager(){
@@ -1683,10 +1738,13 @@ if(membershipPasswordToggle)membershipPasswordToggle.addEventListener('click',()
 membershipPostalCode?.addEventListener('input',()=>{membershipPostalCode.value=formatPostalCode(membershipPostalCode.value);clearTimeout(postalLookupTimer);const digits=postalDigits(membershipPostalCode.value);if(digits.length===7)postalLookupTimer=setTimeout(()=>lookupMembershipPostalCode(membershipPostalCode.value),350);else{lastPostalLookup='';setPostalStatus('7桁入力すると都道府県・住所を自動入力します。住所検索時は郵便番号のみ外部の住所検索サービスへ送信されます。')}});
 membershipPostalCode?.addEventListener('blur',()=>{if(postalDigits(membershipPostalCode.value).length===7)lookupMembershipPostalCode(membershipPostalCode.value)});
 membershipPhone?.addEventListener('input',()=>{membershipPhone.value=formatPhoneNumber(membershipPhone.value)});
+membershipSearchInput?.addEventListener('input',renderMemberships);
+membershipSortSelect?.addEventListener('change',renderMemberships);
+membershipFilterChips?.addEventListener('click',e=>{const btn=e.target.closest('[data-membership-filter]');if(!btn)return;membershipFilterMode=btn.dataset.membershipFilter||'all';membershipFilterChips.querySelectorAll('[data-membership-filter]').forEach(b=>b.classList.toggle('active',b===btn));renderMemberships()});
 membershipList.addEventListener('click',e=>{
   const copyBtn=e.target.closest('.copy-membership[data-id]');if(copyBtn){const item=getMemberships().find(m=>m.id===copyBtn.dataset.id);if(!item)return;copyMembershipValue(copyBtn.dataset.kind==='password'?item.password:item.memberNumber,copyBtn.dataset.kind==='password'?'パスワード':'会員番号');return}
-  const card=e.target.closest('.edit-membership[data-id]');if(!card)return;
-  const item=getMemberships().find(m=>m.id===card.dataset.id);if(item)openMembershipForm(item);
+  const toggle=e.target.closest('.toggle-membership-card[data-id]');if(toggle){const id=toggle.dataset.id;if(membershipExpandedIds.has(id))membershipExpandedIds.delete(id);else membershipExpandedIds.add(id);renderMemberships();return}
+  const card=e.target.closest('.edit-membership[data-id]');if(!card)return;const item=getMemberships().find(m=>m.id===card.dataset.id);if(item)openMembershipForm(item);
 });
 membershipForm.addEventListener('submit',e=>{
   e.preventDefault();const name=membershipName.value.trim();if(!name){showToast('FC・Membership名を入力してください。');return}
