@@ -12,7 +12,7 @@
 <link rel="icon" type="image/png" sizes="32x32" href="./favicon-32.png" />
 <link rel="icon" type="image/png" sizes="192x192" href="./icon-192.png" />
 <meta name="mobile-web-app-capable" content="yes" />
-<title>FanFolio v0.20.6</title>
+<title>FanFolio v0.20.7</title>
 <style>
 :root{
   --bg:#f7f5f0;
@@ -104,7 +104,7 @@ button{cursor:pointer}
 .money-tabs button.active{color:var(--accent-strong);border-bottom-color:var(--accent-strong)}
 .money-cards{display:grid;gap:12px}.money-box{padding:17px 19px;border-radius:18px;background:var(--surface-soft);border:1px solid var(--line)}.money-box .label{color:var(--muted);font-size:14px}.money-box strong{font-size:24px;color:var(--accent-strong);display:block;margin-top:4px}
 .settings-section{margin-bottom:29px}
-.settings-card{border:1.5px solid var(--line);border-radius:22px;background:var(--surface);overflow:hidden}
+.settings-card{border:1.5px solid var(--line);border-radius:22px;background:var(--surface);overflow:hidden}.beta-admin-panel{border-top:1px dashed var(--line);padding:16px 18px 18px;background:var(--surface-soft)}.beta-admin-head{display:flex;align-items:center;justify-content:space-between;gap:10px;margin-bottom:8px}.beta-admin-head strong{font-size:14px;color:var(--accent-strong)}.beta-admin-note{font-size:12px;line-height:1.55;color:var(--muted);margin-bottom:12px}.beta-admin-actions{display:grid;grid-template-columns:1fr 1fr;gap:8px}.beta-admin-actions button{min-height:44px;padding:10px 9px;border-radius:14px;font-size:12px}.beta-admin-actions button.active-test{outline:2px solid var(--accent-strong);outline-offset:1px}.beta-admin-status{font-size:12px;font-weight:750;color:var(--accent-strong);margin-top:10px}.beta-admin-exit{margin-top:8px;width:100%;border:0;background:transparent;color:var(--muted);font-size:11.5px;padding:7px}
 .setting-row{padding:19px 22px;border-bottom:1px solid var(--line);display:flex;align-items:center;justify-content:space-between;gap:15px}
 .setting-row:last-child{border-bottom:0}.setting-row h3{font-size:18px;margin:0 0 4px;font-weight:650}.setting-row p{font-size:14px;color:var(--muted);margin:0;line-height:1.5}.setting-main{display:flex;align-items:center;gap:18px;min-width:0;flex:1}.setting-line-icon{width:30px;height:30px;flex:none;color:var(--accent);display:grid;place-items:center}.setting-line-icon svg{width:30px;height:30px;display:block;fill:none;stroke:currentColor;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round}.setting-content{min-width:0;flex:1}.setting-content h3,.setting-content p{word-break:break-word}.about-settings-card .setting-row{min-height:76px;padding:21px 24px}.about-settings-card .setting-content h3{font-size:18px;font-weight:650;margin:0}.about-settings-card .chev{color:var(--accent);font-size:25px}
 .plan-card{padding:22px;background:linear-gradient(135deg,#f2eee6,#ebe4d8);border:1.5px solid var(--line);border-radius:22px;margin-bottom:29px}.plan-name{font-size:25px;font-weight:850}.plan-price{color:var(--accent-strong);font-size:16px;margin-top:7px}.plan-actions{display:flex;gap:10px;margin-top:17px}.plan-actions button{flex:1}.plan-foot-line{display:block;white-space:nowrap}.plan-foot-line+.plan-foot-line{margin-top:4px}
@@ -568,13 +568,13 @@ body.security-locked{overflow:hidden!important}
 
       <div class="settings-section"><div class="section-title">データ管理</div><div class="settings-card"><button class="setting-row setting-action" id="exportBackupBtn" type="button"><div><h3>データをエクスポート</h3><p>FanFolioの全データをバックアップファイルとして保存します。</p></div><div class="setting-action-side"><span class="premium-chip" id="exportBackupBadge">Premium</span><span class="chev">›</span></div></button><button class="setting-row setting-action" id="importBackupBtn" type="button"><div><h3>データをインポート</h3><p>保存したバックアップからFanFolioのデータを復元します。</p></div><div class="setting-action-side"><span class="premium-chip" id="importBackupBadge">Premium</span><span class="chev">›</span></div></button><div class="backup-meta" id="backupMeta">最終バックアップ：未作成</div></div><input id="backupFileInput" type="file" accept="application/json,.json" hidden /></div>
 
-      <div class="settings-section"><div class="section-title">Betaチェック</div><div class="settings-card"><button class="setting-row setting-action" id="runIntegrityCheckBtn" type="button"><div><h3>データ整合性をチェック</h3><p id="integrityCheckStatus">推し・公演・取引などの関連データを確認します。</p></div><span class="chev">›</span></button></div></div>
+      <div class="settings-section"><div class="section-title">Betaチェック</div><div class="settings-card"><button class="setting-row setting-action" id="runIntegrityCheckBtn" type="button"><div><h3>データ整合性をチェック</h3><p id="integrityCheckStatus">推し・公演・取引などの関連データを確認します。</p></div><span class="chev">›</span></button><div class="beta-admin-panel" id="betaAdminPanel" hidden><div class="beta-admin-head"><strong>管理者テストモード</strong><span class="premium-chip">BETA</span></div><div class="beta-admin-note">決済接続前にFree／Premiumの両方を実機確認するための開発者用機能です。保存済みデータは削除しません。</div><div class="beta-admin-actions"><button class="ghost-btn" id="testAsFreeBtn" type="button">Freeとして確認</button><button class="solid-btn" id="testAsPremiumBtn" type="button">Premiumとして確認</button></div><div class="beta-admin-status" id="betaAdminStatus">通常モード</div><button class="beta-admin-exit" id="disableBetaAdminBtn" type="button">管理者テストモードを終了</button></div></div></div>
 
       <div class="settings-section"><div class="section-title">アプリについて</div><div class="settings-card about-settings-card"><button class="setting-row setting-action" id="aboutToolBtn" type="button"><div class="setting-main"><span class="setting-line-icon" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M20.8 4.6a5.5 5.5 0 0 0-7.8 0L12 5.6l-1-1a5.5 5.5 0 0 0-7.8 7.8l1 1L12 21l7.8-7.6 1-1a5.5 5.5 0 0 0 0-7.8Z"/></svg></span><div class="setting-content"><h3>このツールについて</h3></div></div><span class="chev">›</span></button><button class="setting-row setting-action" id="termsBtn" type="button"><div class="setting-main"><span class="setting-line-icon" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M6 2.8h8l4 4V21H6z"/><path d="M14 2.8V7h4M9 11h6M9 15h6"/></svg></span><div class="setting-content"><h3>利用規約</h3></div></div><span class="chev">›</span></button><button class="setting-row setting-action" id="privacyBtn" type="button"><div class="setting-main"><span class="setting-line-icon" aria-hidden="true"><svg viewBox="0 0 24 24"><rect x="5" y="10" width="14" height="10" rx="2"/><path d="M8 10V7a4 4 0 0 1 8 0v3"/></svg></span><div class="setting-content"><h3>プライバシーポリシー</h3></div></div><span class="chev">›</span></button><button class="setting-row setting-action" id="faqBtn" type="button"><div class="setting-main"><span class="setting-line-icon" aria-hidden="true"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M9.8 9.2a2.4 2.4 0 1 1 4.2 1.6c-1.1 1-2 1.4-2 3M12 17h.01"/></svg></span><div class="setting-content"><h3>よくある質問</h3></div></div><span class="chev">›</span></button><button class="setting-row setting-action" id="feedbackBtn" type="button"><div class="setting-main"><span class="setting-line-icon" aria-hidden="true"><svg viewBox="0 0 24 24"><rect x="3" y="5" width="18" height="14" rx="2"/><path d="m4 7 8 6 8-6"/></svg></span><div class="setting-content"><h3>不具合の報告・ご要望</h3></div></div><span class="chev">›</span></button></div></div>
 
       <div class="settings-section"><div class="section-title">アプリ・オフライン</div><div class="settings-card"><button class="setting-row setting-action" id="installAppBtn" type="button"><div><h3>ホーム画面に追加</h3><p id="installAppDescription">FanFolioをアプリのように起動できます。</p></div><span class="chev">›</span></button><div class="setting-row"><div><h3>起動モード</h3><div class="pwa-status"><span class="pwa-dot" id="pwaModeDot"></span><span class="pwa-status-text" id="pwaModeStatus">確認中</span></div></div></div><div class="setting-row"><div><h3>オフライン利用</h3><div class="pwa-status"><span class="pwa-dot" id="pwaOfflineDot"></span><span class="pwa-status-text" id="pwaOfflineStatus">確認中</span></div></div></div><div class="pwa-mini-note" id="pwaHelpText">HTTPSで一度開くと、通信がないときも保存済みのFanFolioを起動できます。</div></div></div>
 
-      <div class="settings-section"><div class="section-title">バージョン</div><div class="settings-card"><div class="setting-row"><div><h3>FanFolio</h3></div><div class="subtle">ver. 0.20.6</div></div><button class="setting-row setting-action" id="checkUpdateBtn" type="button"><div><h3>更新を確認</h3><p id="updateStatusText">サーバー上の最新版を確認します。</p></div><span class="chev">›</span></button></div></div>
+      <div class="settings-section"><div class="section-title">バージョン</div><div class="settings-card"><div class="setting-row" id="versionInfoRow"><div><h3>FanFolio</h3></div><div class="subtle">ver. 0.20.7</div></div><button class="setting-row setting-action" id="checkUpdateBtn" type="button"><div><h3>更新を確認</h3><p id="updateStatusText">サーバー上の最新版を確認します。</p></div><span class="chev">›</span></button></div></div>
       <div class="footer-note">— ✦ —<br><br>Made with ♡ by めいぷりん</div>
     </main>
   </section>
@@ -1046,9 +1046,11 @@ const TRADE_KEY='fanfolio_v1_trades';
 const TRIP_KEY='fanfolio_v1_trips';
 const BACKUP_META_KEY='fanfolio_v1_backup_meta';
 const SECURITY_KEY='fanfolio_v1_security';
+const BETA_ADMIN_KEY='fanfolio_beta_admin_enabled';
+const BETA_PLAN_OVERRIDE_KEY='fanfolio_beta_plan_override';
 const FREE_ACCESS_KEY='fanfolio_v1_free_access';
 const THEME_KEY='fanfolio_v1_theme';
-const APP_VERSION='0.20.6';
+const APP_VERSION='0.20.7';
 if(location.search.includes('__fanfolio_refresh')){try{const cleanUrl=new URL(location.href);cleanUrl.searchParams.delete('__fanfolio_refresh');history.replaceState(null,'',cleanUrl.pathname+(cleanUrl.searchParams.toString()?`?${cleanUrl.searchParams}`:'')+cleanUrl.hash)}catch{}}
 const BACKUP_SCHEMA_VERSION=1;
 const BACKUP_DATA_KEYS={oshi:OSHI_KEY,memberships:MEMBERSHIP_KEY,tours:TOUR_KEY,performances:PERFORMANCE_KEY,expenses:EXPENSE_KEY,memories:MEMORY_KEY,trades:TRADE_KEY,trips:TRIP_KEY};
@@ -1126,6 +1128,7 @@ const themePicker=document.getElementById('themePicker');const themeSwatches=[..
 const checkUpdateBtn=document.getElementById('checkUpdateBtn');
 const installAppBtn=document.getElementById('installAppBtn');const installAppDescription=document.getElementById('installAppDescription');const pwaModeDot=document.getElementById('pwaModeDot');const pwaModeStatus=document.getElementById('pwaModeStatus');const pwaOfflineDot=document.getElementById('pwaOfflineDot');const pwaOfflineStatus=document.getElementById('pwaOfflineStatus');const pwaHelpText=document.getElementById('pwaHelpText');const updateStatusText=document.getElementById('updateStatusText');const installModal=document.getElementById('installModal');const closeInstallModalBtn=document.getElementById('closeInstallModalBtn');const updateBanner=document.getElementById('updateBanner');const applyUpdateBtn=document.getElementById('applyUpdateBtn');const dismissUpdateBtn=document.getElementById('dismissUpdateBtn');const offlineBanner=document.getElementById('offlineBanner');
 const runIntegrityCheckBtn=document.getElementById('runIntegrityCheckBtn');const integrityCheckStatus=document.getElementById('integrityCheckStatus');
+const betaAdminPanel=document.getElementById('betaAdminPanel');const testAsFreeBtn=document.getElementById('testAsFreeBtn');const testAsPremiumBtn=document.getElementById('testAsPremiumBtn');const betaAdminStatus=document.getElementById('betaAdminStatus');const disableBetaAdminBtn=document.getElementById('disableBetaAdminBtn');const versionInfoRow=document.getElementById('versionInfoRow');
 const aboutToolBtn=document.getElementById('aboutToolBtn');const termsBtn=document.getElementById('termsBtn');const privacyBtn=document.getElementById('privacyBtn');const faqBtn=document.getElementById('faqBtn');const feedbackBtn=document.getElementById('feedbackBtn');
 const oshiColorPicker=document.getElementById('oshiColorPicker');const oshiColorButtons=[...document.querySelectorAll('#oshiColorPicker .oshi-color-btn')];const oshiColorNote=document.getElementById('oshiColorNote');
 
@@ -1148,7 +1151,10 @@ function getPlanState(){
   return {tier:'free',billing:'',region:'jp',founding:false,renewalDate:''};
 }
 function savePlanState(patch={}){const next={...getPlanState(),...patch};localStorage.setItem(PLAN_KEY,JSON.stringify(next));return next}
-function isPremium(){return getPlanState().tier==='premium'}
+function isBetaAdminEnabled(){try{return localStorage.getItem(BETA_ADMIN_KEY)==='1'}catch{return false}}
+function getBetaPlanOverride(){try{const v=localStorage.getItem(BETA_PLAN_OVERRIDE_KEY)||'';return v==='premium'||v==='free'?v:''}catch{return ''}}
+function getEffectiveTier(){const override=isBetaAdminEnabled()?getBetaPlanOverride():'';return override||getPlanState().tier}
+function isPremium(){return getEffectiveTier()==='premium'}
 const THEME_PALETTES={
   beige:{bg:'#f7f5f0',surface:'#fffdfa',surfaceSoft:'#f1eee7',surfaceSoft2:'#ebe7de',line:'#d8d1c5',lineStrong:'#c8beae',muted:'#8b8378',accent:'#918476',accentStrong:'#786b5f',accentPale:'#e8e1d7'},
   red:{bg:'#f7f5f0',surface:'#fffdfa',surfaceSoft:'#f4e9e6',surfaceSoft2:'#efe2de',line:'#e2d0cb',lineStrong:'#d3b8b1',muted:'#927974',accent:'#cb6b64',accentStrong:'#b34b43',accentPale:'#efdbd7'},
@@ -1199,20 +1205,23 @@ function openFreeAccessModal(){if(isPremium()||!hasFreeOverflow())return;renderF
 function closeFreeAccessModal(){freeAccessModal.classList.remove('open');freeAccessModal.setAttribute('aria-hidden','true');document.body.style.overflow=''}
 function saveFreeAccessChoices(){const patch={};for(const [kind,list] of [['oshi',freeAccessOshiList],['membership',freeAccessMembershipList],['performance',freeAccessPerformanceList]]){const items=freeItemsFor(kind),required=Math.min(freeLimitFor(kind),items.length);const ids=[...list.querySelectorAll('input:checked')].map(x=>x.value);if(items.length>freeLimitFor(kind)&&ids.length!==required){showToast(`${kind==='oshi'?'推し':kind==='membership'?'FC・Membership':'公演'}は${required}件選んでください。`);return}patch[freeAccessKeyFor(kind)]=ids}saveFreeAccessState({...patch,prompted:true,initialized:true,lastTier:'free'});closeFreeAccessModal();renderOshi();renderMembershipsIfOpen();renderLottery();renderCalendar();updateFreeAccessButton();showToast('Freeで編集するデータを更新しました。')}
 function renderMembershipsIfOpen(){if(activeMembershipOshiId&&membershipModal.classList.contains('open'))renderMemberships()}
-function syncFreeAccessPlanState(){const plan=getPlanState();const state=getFreeAccessState();if(plan.tier==='premium'){saveFreeAccessState({lastTier:'premium',initialized:true,prompted:false});updateFreeAccessButton();return}const changedFromPremium=state.lastTier==='premium';const firstOverflow=!state.initialized&&hasFreeOverflow();const shouldPrompt=hasFreeOverflow()&&(changedFromPremium||firstOverflow)&&!state.prompted;saveFreeAccessState({lastTier:'free',initialized:true,prompted:shouldPrompt?true:state.prompted});updateFreeAccessButton();if(shouldPrompt)setTimeout(openFreeAccessModal,160)}
+function syncFreeAccessPlanState(){const tier=getEffectiveTier();const state=getFreeAccessState();if(tier==='premium'){saveFreeAccessState({lastTier:'premium',initialized:true,prompted:false});updateFreeAccessButton();return}const changedFromPremium=state.lastTier==='premium';const firstOverflow=!state.initialized&&hasFreeOverflow();const shouldPrompt=hasFreeOverflow()&&(changedFromPremium||firstOverflow)&&!state.prompted;saveFreeAccessState({lastTier:'free',initialized:true,prompted:shouldPrompt?true:state.prompted});updateFreeAccessButton();if(shouldPrompt)setTimeout(openFreeAccessModal,160)}
 function canAddMore(kind,count){if(isPremium())return true;const limits={oshi:FREE_OSHI_LIMIT,membership:FREE_MEMBERSHIP_LIMIT,performance:FREE_PERFORMANCE_LIMIT};return count<(limits[kind]??Infinity)}
 function planLimitText(kind,count){if(isPremium())return `${count} / 無制限`;const limits={oshi:FREE_OSHI_LIMIT,membership:FREE_MEMBERSHIP_LIMIT,performance:FREE_PERFORMANCE_LIMIT};return `${count} / ${limits[kind]}`}
+function renderBetaAdminPanel(){if(!betaAdminPanel)return;const enabled=isBetaAdminEnabled(),override=getBetaPlanOverride();betaAdminPanel.hidden=!enabled;if(betaAdminStatus)betaAdminStatus.textContent=!enabled?'通常モード':override==='premium'?'現在：Premiumとしてテスト中':override==='free'?'現在：Freeとしてテスト中':'現在：契約状態どおり';testAsPremiumBtn?.classList.toggle('active-test',enabled&&override==='premium');testAsFreeBtn?.classList.toggle('active-test',enabled&&override==='free')}
+function refreshAfterBetaPlanChange(){renderPlanState();renderOshi();renderMembershipsIfOpen();renderLottery();renderCalendar();renderMoney();renderTrades();renderTrips();renderAnnualSummary();if(isPremium())renderAnalysis()}
+function setBetaPlanOverride(tier){if(!isBetaAdminEnabled())return;try{localStorage.setItem(BETA_PLAN_OVERRIDE_KEY,tier)}catch{}refreshAfterBetaPlanChange();showToast(tier==='premium'?'Premiumテストを有効にしました。':'Freeテストに切り替えました。')}
 function renderPlanState(){
-  const plan=getPlanState();
-  if(plan.tier==='premium'){
-    currentPlanName.textContent='FanFolio Premium';currentPlanPrice.textContent=plan.billing==='monthly'?'月額プラン':'年間プラン';currentPlanBadge.textContent=plan.founding?'FOUNDING':'PREMIUM';currentPlanDescription.textContent='Premium機能がすべて利用できます。';currentPlanFoot.textContent=plan.renewalDate?`次回更新日 ${formatDateJP(plan.renewalDate)}`:'Premium契約中';upgradePlanBtn.textContent='プランを管理';
+  const plan=getPlanState(),tier=getEffectiveTier(),betaOverride=isBetaAdminEnabled()?getBetaPlanOverride():'';
+  if(tier==='premium'){
+    currentPlanName.textContent='FanFolio Premium';currentPlanPrice.textContent=betaOverride==='premium'?'Betaテストモード':(plan.billing==='monthly'?'月額プラン':'年間プラン');currentPlanBadge.textContent=betaOverride==='premium'?'TEST':(plan.founding?'FOUNDING':'PREMIUM');currentPlanDescription.textContent=betaOverride==='premium'?'管理者テストとしてPremium機能をすべて有効にしています。':'Premium機能がすべて利用できます。';currentPlanFoot.textContent=betaOverride==='premium'?'決済は発生しません。テスト専用です。':(plan.renewalDate?`次回更新日 ${formatDateJP(plan.renewalDate)}`:'Premium契約中');upgradePlanBtn.textContent=betaOverride==='premium'?'料金プランを見る':'プランを管理';
   }else{
     const price=PREMIUM_PRICES[plan.region]||PREMIUM_PRICES.jp;currentPlanName.textContent='FanFolio Free';currentPlanPrice.textContent='¥0 ・ 広告なし';currentPlanBadge.textContent='CURRENT';currentPlanDescription.textContent=hasFreeOverflow()?'Freeの上限を超える既存データは削除されず、閲覧のみで保管されています。':'Premiumなら推し・公演・名義が無制限。メンカラ、取引、遠征、詳細分析も利用できます。';currentPlanFoot.innerHTML=`<span class="plan-foot-line">月額 ${price.monthly} ／ 年額 ${price.annual}</span><span class="plan-foot-line">Founding Member 初年度 ${price.founding}</span>`;upgradePlanBtn.textContent='Premiumにアップグレード';
   }
-  if(moneyPlanBadge)moneyPlanBadge.textContent=plan.tier==='premium'?'PREMIUM':'FREE';
-  if(moneyPremiumPreview)moneyPremiumPreview.hidden=plan.tier==='premium';if(tripFreeView)tripFreeView.hidden=plan.tier==='premium';if(tripPremiumView)tripPremiumView.hidden=plan.tier!=='premium';if(tripLegend)tripLegend.hidden=plan.tier!=='premium';
-  moneyTabs?.querySelectorAll('button[data-money-tab]').forEach(btn=>{const gated=btn.dataset.moneyTab!=='expense';btn.classList.toggle('locked',gated&&plan.tier!=='premium');btn.textContent=btn.dataset.moneyTab==='expense'?'支出':btn.dataset.moneyTab==='trade'?(plan.tier==='premium'?'取引':'取引 🔒'):(plan.tier==='premium'?'分析':'分析 🔒')});
-  if(plan.tier!=='premium'&&activeMoneyTab!=='expense')setMoneyTab('expense');
+  if(moneyPlanBadge)moneyPlanBadge.textContent=tier==='premium'?'PREMIUM':'FREE';
+  if(moneyPremiumPreview)moneyPremiumPreview.hidden=tier==='premium';if(tripFreeView)tripFreeView.hidden=tier==='premium';if(tripPremiumView)tripPremiumView.hidden=tier!=='premium';if(tripLegend)tripLegend.hidden=tier!=='premium';
+  moneyTabs?.querySelectorAll('button[data-money-tab]').forEach(btn=>{const gated=btn.dataset.moneyTab!=='expense';btn.classList.toggle('locked',gated&&tier!=='premium');btn.textContent=btn.dataset.moneyTab==='expense'?'支出':btn.dataset.moneyTab==='trade'?(tier==='premium'?'取引':'取引 🔒'):(tier==='premium'?'分析':'分析 🔒')});
+  if(tier!=='premium'&&activeMoneyTab!=='expense')setMoneyTab('expense');
   applyTheme();
   renderThemePicker();
   setSelectedOshiColor(selectedOshiColor);
@@ -1220,6 +1229,7 @@ function renderPlanState(){
   renderAnnualSummary();
   renderBackupState();
   renderSecurityState();
+  renderBetaAdminPanel();
 }
 function renderPremiumPrices(){const key=premiumRegion.value in PREMIUM_PRICES?premiumRegion.value:'jp';const p=PREMIUM_PRICES[key];monthlyPrice.textContent=p.monthly;annualPrice.textContent=p.annual;annualMonthlyNote.textContent=`月額換算 ${p.annualMonthly}`;foundingPrice.textContent=`初年度 ${p.founding}`}
 function openPremiumModal(){const plan=getPlanState();premiumRegion.value=plan.region in PREMIUM_PRICES?plan.region:'jp';renderPremiumPrices();premiumModal.classList.add('open');premiumModal.setAttribute('aria-hidden','false');document.body.style.overflow='hidden'}
@@ -1854,6 +1864,8 @@ cancelBackupRestoreBtn?.addEventListener('click',closeBackupRestorePreview);
 confirmBackupRestoreBtn?.addEventListener('click',restorePendingBackup);
 backupRestoreModal?.addEventListener('click',e=>{if(e.target===backupRestoreModal)closeBackupRestorePreview()});
 
+let betaAdminTapCount=0,betaAdminTapTimer=0;versionInfoRow?.addEventListener('click',()=>{if(isBetaAdminEnabled()){renderBetaAdminPanel();return}betaAdminTapCount++;clearTimeout(betaAdminTapTimer);betaAdminTapTimer=setTimeout(()=>{betaAdminTapCount=0},3500);if(betaAdminTapCount>=7){betaAdminTapCount=0;clearTimeout(betaAdminTapTimer);try{localStorage.setItem(BETA_ADMIN_KEY,'1');localStorage.setItem(BETA_PLAN_OVERRIDE_KEY,'premium')}catch{}refreshAfterBetaPlanChange();showToast('管理者テストモードを有効にしました。')}});
+testAsPremiumBtn?.addEventListener('click',()=>setBetaPlanOverride('premium'));testAsFreeBtn?.addEventListener('click',()=>setBetaPlanOverride('free'));disableBetaAdminBtn?.addEventListener('click',()=>{try{localStorage.removeItem(BETA_ADMIN_KEY);localStorage.removeItem(BETA_PLAN_OVERRIDE_KEY)}catch{}refreshAfterBetaPlanChange();showToast('管理者テストモードを終了しました。')});
 runIntegrityCheckBtn?.addEventListener('click',showIntegrityReport);
 aboutToolBtn?.addEventListener('click',showAppInfo);termsBtn?.addEventListener('click',()=>showComingSoonDoc('利用規約'));privacyBtn?.addEventListener('click',()=>showComingSoonDoc('プライバシーポリシー'));faqBtn?.addEventListener('click',()=>showComingSoonDoc('よくある質問'));feedbackBtn?.addEventListener('click',()=>showComingSoonDoc('不具合の報告・ご要望'));
 checkUpdateBtn?.addEventListener('click',checkForFanFolioUpdate);
