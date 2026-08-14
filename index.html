@@ -12,7 +12,7 @@
 <link rel="icon" type="image/png" sizes="32x32" href="./favicon-32.png" />
 <link rel="icon" type="image/png" sizes="192x192" href="./icon-192.png" />
 <meta name="mobile-web-app-capable" content="yes" />
-<title>FanFolio v0.20.4</title>
+<title>FanFolio v0.20.5</title>
 <style>
 :root{
   --bg:#f7f5f0;
@@ -106,7 +106,7 @@ button{cursor:pointer}
 .settings-section{margin-bottom:29px}
 .settings-card{border:1.5px solid var(--line);border-radius:22px;background:var(--surface);overflow:hidden}
 .setting-row{padding:19px 22px;border-bottom:1px solid var(--line);display:flex;align-items:center;justify-content:space-between;gap:15px}
-.setting-row:last-child{border-bottom:0}.setting-row h3{font-size:18px;margin:0 0 4px;font-weight:650}.setting-row p{font-size:14px;color:var(--muted);margin:0;line-height:1.5}
+.setting-row:last-child{border-bottom:0}.setting-row h3{font-size:18px;margin:0 0 4px;font-weight:650}.setting-row p{font-size:14px;color:var(--muted);margin:0;line-height:1.5}.setting-main{display:flex;align-items:center;gap:16px;min-width:0;flex:1}.setting-icon-badge{width:42px;height:42px;border-radius:14px;border:1.5px solid var(--line);display:grid;place-items:center;color:var(--accentStrong);font-size:22px;flex:none;background:var(--surfaceSoft)}.setting-content{min-width:0;flex:1}.setting-content h3,.setting-content p{word-break:break-word}
 .plan-card{padding:22px;background:linear-gradient(135deg,#f2eee6,#ebe4d8);border:1.5px solid var(--line);border-radius:22px;margin-bottom:29px}.plan-name{font-size:25px;font-weight:850}.plan-price{color:var(--accent-strong);font-size:16px;margin-top:7px}.plan-actions{display:flex;gap:10px;margin-top:17px}.plan-actions button{flex:1}.plan-foot-line{display:block;white-space:nowrap}.plan-foot-line+.plan-foot-line{margin-top:4px}
 .theme-card{padding:28px 30px 30px}.theme-title{font-size:18px;font-weight:650;margin:0;color:var(--ink)}.theme-subcopy{font-size:12.5px;color:var(--muted);line-height:1.65;margin:10px 0 0}.color-swatches{display:grid;grid-template-columns:repeat(6,68px);gap:22px 20px;margin-top:26px}.swatch{appearance:none;-webkit-appearance:none;width:68px;height:68px;border-radius:50%;border:3px solid transparent;background:#ddd;box-shadow:0 2px 0 rgba(0,0,0,.08),0 6px 16px rgba(0,0,0,.05);position:relative;padding:0;display:grid;place-items:center}.swatch::before{content:"";position:absolute;inset:0;border-radius:50%;border:1.5px solid rgba(56,44,35,.12)}.swatch::after{content:"";width:18px;height:30px;border-right:6px solid transparent;border-bottom:6px solid transparent;opacity:0;transform:rotate(45deg) translateY(-2px)}.swatch.active{border-color:#362b24}.swatch.active::after{opacity:1;width:17px;height:30px;border-right-color:#fff;border-bottom-color:#fff}.swatch.beige{background:#d6cec1}.swatch.red{background:#d7493e}.swatch.pink{background:#e2a5b5}.swatch.orange{background:#e3842e}.swatch.yellow{background:#ecd450}.swatch.green{background:#b8d9b8}.swatch.blue{background:#84a2cc}.swatch.lime{background:#bdd45e}.swatch.purple{background:#a394c8}.swatch.gray{background:#a8a8aa}.swatch.white{background:#f5f5f5}.theme-note{font-size:16px;line-height:1.7;color:#80947e;margin:26px 0 0}.theme-note.strong{font-size:17px;font-weight:800;color:#73906f;margin-top:12px}.theme-sep{height:1px;background:#e7dfcf;margin:28px 0 24px}.theme-reset{min-width:164px;padding:14px 26px;border-radius:999px;background:#ddebe0;border-color:#c4dac8;color:#5f755c;font-size:17px;font-weight:700}.theme-reset:active{transform:translateY(1px)}.oshi-color-picker{display:grid;grid-template-columns:repeat(5,1fr);gap:10px;margin-top:10px}.oshi-color-btn{appearance:none;-webkit-appearance:none;border:1.5px solid var(--line);background:var(--surface);border-radius:16px;padding:10px 8px;display:flex;align-items:center;justify-content:center;gap:6px;font-size:12px;font-weight:700;color:var(--accent-strong);min-height:44px}.oshi-color-btn .dot-mini{width:12px;height:12px;border-radius:50%;display:inline-block;border:1px solid rgba(0,0,0,.08)}.oshi-color-btn.active{border-color:var(--accent-strong);background:var(--accent-pale)}.oshi-color-btn.locked{opacity:.58}.oshi-color-picker-note{font-size:12px;color:var(--muted);line-height:1.55;margin-top:8px}.oshi-name-row{display:flex;align-items:center;gap:8px;flex-wrap:wrap}.oshi-color-dot{width:12px;height:12px;border-radius:50%;flex:none;border:1px solid rgba(0,0,0,.08)}
 .switch{width:58px;height:34px;border-radius:999px;background:#ddd7cd;position:relative;flex:none}.switch:before{content:"";position:absolute;width:28px;height:28px;border-radius:50%;background:white;left:3px;top:3px;box-shadow:0 2px 7px rgba(0,0,0,.08)}
@@ -208,6 +208,7 @@ html,body{
 .setting-row{padding:15px 17px;gap:12px}
 .setting-row h3{font-size:16px;margin-bottom:3px;font-weight:600}
 .setting-row p{font-size:12.5px;line-height:1.5}
+.setting-main{gap:12px}.setting-icon-badge{width:36px;height:36px;border-radius:12px;font-size:19px}
 .plan-card{padding:18px;border-width:1px;border-radius:18px;margin-bottom:24px}
 .plan-name{font-size:20px}
 .plan-price{font-size:14px;margin-top:5px}
@@ -567,11 +568,13 @@ body.security-locked{overflow:hidden!important}
 
       <div class="settings-section"><div class="section-title">データ管理</div><div class="settings-card"><button class="setting-row setting-action" id="exportBackupBtn" type="button"><div><h3>データをエクスポート</h3><p>FanFolioの全データをバックアップファイルとして保存します。</p></div><div class="setting-action-side"><span class="premium-chip" id="exportBackupBadge">Premium</span><span class="chev">›</span></div></button><button class="setting-row setting-action" id="importBackupBtn" type="button"><div><h3>データをインポート</h3><p>保存したバックアップからFanFolioのデータを復元します。</p></div><div class="setting-action-side"><span class="premium-chip" id="importBackupBadge">Premium</span><span class="chev">›</span></div></button><div class="backup-meta" id="backupMeta">最終バックアップ：未作成</div></div><input id="backupFileInput" type="file" accept="application/json,.json" hidden /></div>
 
-      <div class="settings-section"><div class="section-title">Betaチェック</div><div class="settings-card"><button class="setting-row setting-action" id="runIntegrityCheckBtn" type="button"><div><h3>データ整合性をチェック</h3><p id="integrityCheckStatus">推し・公演・取引などの関連データを確認します。</p></div><span class="chev">›</span></button><div class="setting-row"><div><h3>公開前の準備項目</h3><p>利用規約・プライバシーポリシー・FAQ・お問い合わせ窓口は正式公開前に追加します。</p></div><span class="premium-chip">準備中</span></div></div></div>
+      <div class="settings-section"><div class="section-title">Betaチェック</div><div class="settings-card"><button class="setting-row setting-action" id="runIntegrityCheckBtn" type="button"><div><h3>データ整合性をチェック</h3><p id="integrityCheckStatus">推し・公演・取引などの関連データを確認します。</p></div><span class="chev">›</span></button></div></div>
+
+      <div class="settings-section"><div class="section-title">アプリについて</div><div class="settings-card"><button class="setting-row setting-action" id="aboutToolBtn" type="button"><div class="setting-main"><span class="setting-icon-badge">♡</span><div class="setting-content"><h3>このツールについて</h3></div></div><span class="chev">›</span></button><button class="setting-row setting-action" id="termsBtn" type="button"><div class="setting-main"><span class="setting-icon-badge">📄</span><div class="setting-content"><h3>利用規約</h3></div></div><span class="chev">›</span></button><button class="setting-row setting-action" id="privacyBtn" type="button"><div class="setting-main"><span class="setting-icon-badge">🔒</span><div class="setting-content"><h3>プライバシーポリシー</h3></div></div><span class="chev">›</span></button><button class="setting-row setting-action" id="faqBtn" type="button"><div class="setting-main"><span class="setting-icon-badge">?</span><div class="setting-content"><h3>よくある質問</h3></div></div><span class="chev">›</span></button><button class="setting-row setting-action" id="feedbackBtn" type="button"><div class="setting-main"><span class="setting-icon-badge">✉</span><div class="setting-content"><h3>不具合の報告・ご要望</h3></div></div><span class="chev">›</span></button></div></div>
 
       <div class="settings-section"><div class="section-title">アプリ・オフライン</div><div class="settings-card"><button class="setting-row setting-action" id="installAppBtn" type="button"><div><h3>ホーム画面に追加</h3><p id="installAppDescription">FanFolioをアプリのように起動できます。</p></div><span class="chev">›</span></button><div class="setting-row"><div><h3>起動モード</h3><div class="pwa-status"><span class="pwa-dot" id="pwaModeDot"></span><span class="pwa-status-text" id="pwaModeStatus">確認中</span></div></div></div><div class="setting-row"><div><h3>オフライン利用</h3><div class="pwa-status"><span class="pwa-dot" id="pwaOfflineDot"></span><span class="pwa-status-text" id="pwaOfflineStatus">確認中</span></div></div></div><div class="pwa-mini-note" id="pwaHelpText">HTTPSで一度開くと、通信がないときも保存済みのFanFolioを起動できます。</div></div></div>
 
-      <div class="settings-section"><div class="section-title">バージョン</div><div class="settings-card"><div class="setting-row"><div><h3>FanFolio</h3></div><div class="subtle">ver. 0.20.4</div></div><button class="setting-row setting-action" id="checkUpdateBtn" type="button"><div><h3>更新を確認</h3><p id="updateStatusText">サーバー上の最新版を確認します。</p></div><span class="chev">›</span></button></div></div>
+      <div class="settings-section"><div class="section-title">バージョン</div><div class="settings-card"><div class="setting-row"><div><h3>FanFolio</h3></div><div class="subtle">ver. 0.20.5</div></div><button class="setting-row setting-action" id="checkUpdateBtn" type="button"><div><h3>更新を確認</h3><p id="updateStatusText">サーバー上の最新版を確認します。</p></div><span class="chev">›</span></button></div></div>
       <div class="footer-note">— ✦ —<br><br>Made with ♡ by めいぷりん</div>
     </main>
   </section>
@@ -1045,7 +1048,7 @@ const BACKUP_META_KEY='fanfolio_v1_backup_meta';
 const SECURITY_KEY='fanfolio_v1_security';
 const FREE_ACCESS_KEY='fanfolio_v1_free_access';
 const THEME_KEY='fanfolio_v1_theme';
-const APP_VERSION='0.20.4';
+const APP_VERSION='0.20.5';
 if(location.search.includes('__fanfolio_refresh')){try{const cleanUrl=new URL(location.href);cleanUrl.searchParams.delete('__fanfolio_refresh');history.replaceState(null,'',cleanUrl.pathname+(cleanUrl.searchParams.toString()?`?${cleanUrl.searchParams}`:'')+cleanUrl.hash)}catch{}}
 const BACKUP_SCHEMA_VERSION=1;
 const BACKUP_DATA_KEYS={oshi:OSHI_KEY,memberships:MEMBERSHIP_KEY,tours:TOUR_KEY,performances:PERFORMANCE_KEY,expenses:EXPENSE_KEY,memories:MEMORY_KEY,trades:TRADE_KEY,trips:TRIP_KEY};
@@ -1123,6 +1126,7 @@ const themePicker=document.getElementById('themePicker');const themeSwatches=[..
 const checkUpdateBtn=document.getElementById('checkUpdateBtn');
 const installAppBtn=document.getElementById('installAppBtn');const installAppDescription=document.getElementById('installAppDescription');const pwaModeDot=document.getElementById('pwaModeDot');const pwaModeStatus=document.getElementById('pwaModeStatus');const pwaOfflineDot=document.getElementById('pwaOfflineDot');const pwaOfflineStatus=document.getElementById('pwaOfflineStatus');const pwaHelpText=document.getElementById('pwaHelpText');const updateStatusText=document.getElementById('updateStatusText');const installModal=document.getElementById('installModal');const closeInstallModalBtn=document.getElementById('closeInstallModalBtn');const updateBanner=document.getElementById('updateBanner');const applyUpdateBtn=document.getElementById('applyUpdateBtn');const dismissUpdateBtn=document.getElementById('dismissUpdateBtn');const offlineBanner=document.getElementById('offlineBanner');
 const runIntegrityCheckBtn=document.getElementById('runIntegrityCheckBtn');const integrityCheckStatus=document.getElementById('integrityCheckStatus');
+const aboutToolBtn=document.getElementById('aboutToolBtn');const termsBtn=document.getElementById('termsBtn');const privacyBtn=document.getElementById('privacyBtn');const faqBtn=document.getElementById('faqBtn');const feedbackBtn=document.getElementById('feedbackBtn');
 const oshiColorPicker=document.getElementById('oshiColorPicker');const oshiColorButtons=[...document.querySelectorAll('#oshiColorPicker .oshi-color-btn')];const oshiColorNote=document.getElementById('oshiColorNote');
 
 let lotteryView='tour';
@@ -1784,6 +1788,8 @@ async function requestPwaInstall(){
 }
 function showUpdateBanner(version=''){if(updateBanner)updateBanner.hidden=false;if(applyUpdateBtn)applyUpdateBtn.disabled=false;if(updateStatusText)updateStatusText.textContent=version?`新しいバージョン v${version} があります。更新できます。`:'新しいバージョンがあります。更新できます。'}
 function hideUpdateBanner(){if(updateBanner)updateBanner.hidden=true}
+function showAppInfo(){alert('FanFolio\n\n推し・名義・当落・カレンダー・マネーを、ひとつにまとめて管理できる推し活サポートツールです。\n\n現在はBeta版のため、利用規約・FAQ・お問い合わせ窓口は正式公開前に順次追加します。')}
+function showComingSoonDoc(name){showToast(`${name} は正式公開前に追加予定です。`)}
 function compareVersion(a,b){const pa=String(a||'').split('.').map(n=>Number(n)||0),pb=String(b||'').split('.').map(n=>Number(n)||0),len=Math.max(pa.length,pb.length);for(let i=0;i<len;i++){const diff=(pa[i]||0)-(pb[i]||0);if(diff)return diff>0?1:-1}return 0}
 async function fetchPublishedVersion(){
   const url=`./index.html?__fanfolio_version=${Date.now()}`;
@@ -1849,6 +1855,7 @@ confirmBackupRestoreBtn?.addEventListener('click',restorePendingBackup);
 backupRestoreModal?.addEventListener('click',e=>{if(e.target===backupRestoreModal)closeBackupRestorePreview()});
 
 runIntegrityCheckBtn?.addEventListener('click',showIntegrityReport);
+aboutToolBtn?.addEventListener('click',showAppInfo);termsBtn?.addEventListener('click',()=>showComingSoonDoc('利用規約'));privacyBtn?.addEventListener('click',()=>showComingSoonDoc('プライバシーポリシー'));faqBtn?.addEventListener('click',()=>showComingSoonDoc('よくある質問'));feedbackBtn?.addEventListener('click',()=>showComingSoonDoc('不具合の報告・ご要望'));
 checkUpdateBtn?.addEventListener('click',checkForFanFolioUpdate);
 installAppBtn?.addEventListener('click',requestPwaInstall);closeInstallModalBtn?.addEventListener('click',closeInstallModal);installModal?.addEventListener('click',e=>{if(e.target===installModal)closeInstallModal()});
 applyUpdateBtn?.addEventListener('click',async()=>{try{if(applyUpdateBtn)applyUpdateBtn.disabled=true;await forceReloadLatestFanFolio()}catch(err){console.error(err);if(applyUpdateBtn)applyUpdateBtn.disabled=false;if(updateStatusText)updateStatusText.textContent='更新を適用できませんでした。';showToast('更新できませんでした。オンライン状態を確認してもう一度お試しください。')}});dismissUpdateBtn?.addEventListener('click',hideUpdateBanner);
