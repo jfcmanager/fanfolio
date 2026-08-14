@@ -12,7 +12,7 @@
 <link rel="icon" type="image/png" sizes="32x32" href="./favicon-32.png" />
 <link rel="icon" type="image/png" sizes="192x192" href="./icon-192.png" />
 <meta name="mobile-web-app-capable" content="yes" />
-<title>FanFolio v0.21.0</title>
+<title>FanFolio v0.21.1</title>
 <style>
 :root{
   --bg:#f7f5f0;
@@ -303,6 +303,26 @@ input.form-control:not([type="hidden"]),select.form-control{height:52px;min-heig
 .membership-card .mc-expiry.soon{color:#a06d43;font-weight:700}
 .membership-empty{padding:20px 14px;border:1px dashed var(--line-strong);border-radius:14px;text-align:center;color:var(--muted);font-size:12.5px;line-height:1.6;background:rgba(255,253,250,.55)}
 .membership-toolbar{display:grid;grid-template-columns:1fr 1.45fr;gap:8px;margin-top:13px}
+.membership-card{position:relative;overflow:hidden}
+.membership-card-main{display:block;width:100%;border:0;background:transparent;padding:0;text-align:left;color:inherit}
+.membership-card-main:active{opacity:.72}
+.membership-credential-box{margin-top:12px;border:1px solid var(--line);border-radius:13px;overflow:hidden;background:rgba(255,253,250,.72)}
+.membership-credential-row{min-height:48px;padding:10px 11px;display:grid;grid-template-columns:72px 1fr 34px;gap:8px;align-items:center;border-top:1px solid var(--line)}
+.membership-credential-row:first-child{border-top:0}
+.membership-credential-label{font-size:11.5px;color:var(--muted);font-weight:650}
+.membership-credential-value{min-width:0;text-align:right;font-size:14px;font-weight:800;letter-spacing:.03em;color:var(--ink);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.membership-credential-value.password{letter-spacing:.22em;font-size:16px}
+.membership-copy-btn{width:32px;height:32px;border:1px solid var(--line-strong);border-radius:10px;background:var(--accent-pale);color:var(--accent-strong);display:grid;place-items:center;padding:0}
+.membership-copy-btn svg{width:15px;height:15px;stroke:currentColor;fill:none;stroke-width:1.8}
+.membership-copy-btn:active{transform:scale(.96)}
+.membership-card-actions{display:flex;justify-content:flex-end;gap:14px;margin-top:10px}
+.membership-card-actions button{border:0;background:transparent;color:var(--accent-strong);font-size:12px;font-weight:800;padding:4px 0}
+.form-section-title{font-size:13px;font-weight:800;color:var(--accent-strong);margin:20px 0 13px;padding-bottom:8px;border-bottom:1px dashed var(--line)}
+.password-field-wrap{position:relative}
+.password-field-wrap .form-control{padding-right:48px}
+.password-eye-btn{position:absolute;right:10px;top:50%;transform:translateY(-50%);width:34px;height:34px;border:0;background:transparent;color:var(--accent-strong);display:grid;place-items:center;padding:0}
+.password-eye-btn svg{width:20px;height:20px;stroke:currentColor;fill:none;stroke-width:1.7}
+.local-data-note{font-size:11.5px;line-height:1.6;color:var(--muted);background:var(--surface-soft);border-radius:12px;padding:10px 12px;margin:3px 0 15px}
 .form-view[hidden],.list-view[hidden]{display:none!important}
 .modal-back{border:0;background:transparent;color:var(--accent-strong);font-size:13px;font-weight:700;padding:0 0 12px;display:inline-flex;align-items:center;gap:4px}
 @media (min-width:431px){.modal-backdrop{align-items:center;padding:20px}.modal-sheet{border-radius:22px;max-height:84vh}}
@@ -670,6 +690,7 @@ body.security-locked{overflow:hidden!important}
       <div class="modal-title" id="membershipFormTitle">FC・Membershipを追加</div>
       <form id="membershipForm">
         <input type="hidden" id="membershipId" />
+        <div class="form-section-title">FC・Membership情報</div>
         <div class="form-group">
           <label class="form-label" for="membershipName">FC・Membership名 *</label>
           <input class="form-control" id="membershipName" maxlength="80" placeholder="例：なにわ男子 FC / Weverse Membership" required />
@@ -680,7 +701,7 @@ body.security-locked{overflow:hidden!important}
         </div>
         <div class="form-group">
           <label class="form-label" for="membershipNumber">会員番号</label>
-          <input class="form-control" id="membershipNumber" maxlength="80" inputmode="text" placeholder="例：12345678" />
+          <input class="form-control" id="membershipNumber" maxlength="80" inputmode="text" autocomplete="off" placeholder="例：12345678" />
         </div>
         <div class="form-group">
           <label class="form-label" for="membershipJoinMonth">入会年月</label>
@@ -690,8 +711,29 @@ body.security-locked{overflow:hidden!important}
           <label class="form-label" for="membershipExpiry">会員有効期限</label>
           <input class="form-control" id="membershipExpiry" type="date" />
         </div>
+
+        <div class="form-section-title">個人情報</div>
+        <div class="local-data-note">この情報はこの端末内に保存され、FanFolio運営者へ送信されません。共有端末では保存しないでください。</div>
+        <div class="form-group"><label class="form-label" for="membershipRealName">氏名</label><input class="form-control" id="membershipRealName" maxlength="80" autocomplete="off" /></div>
+        <div class="form-group"><label class="form-label" for="membershipPostalCode">郵便番号</label><input class="form-control" id="membershipPostalCode" maxlength="12" inputmode="numeric" autocomplete="off" placeholder="例：1234567" /></div>
+        <div class="form-group"><label class="form-label" for="membershipPrefecture">都道府県</label><input class="form-control" id="membershipPrefecture" maxlength="40" autocomplete="off" /></div>
+        <div class="form-group"><label class="form-label" for="membershipAddress">住所</label><textarea class="form-control" id="membershipAddress" maxlength="240" autocomplete="off"></textarea></div>
+        <div class="form-group"><label class="form-label" for="membershipPhone">電話番号</label><input class="form-control" id="membershipPhone" maxlength="30" inputmode="tel" autocomplete="off" /></div>
+        <div class="form-group"><label class="form-label" for="membershipBirthdate">生年月日</label><input class="form-control" id="membershipBirthdate" type="date" /></div>
+        <div class="form-group"><label class="form-label" for="membershipEmail">メールアドレス</label><input class="form-control" id="membershipEmail" type="email" maxlength="120" inputmode="email" autocomplete="off" /></div>
+
+        <div class="form-section-title">ログイン情報</div>
         <div class="form-group">
-          <label class="form-label" for="membershipMemo">メモ</label>
+          <label class="form-label" for="membershipPassword">ログインパスワード</label>
+          <div class="password-field-wrap">
+            <input class="form-control" id="membershipPassword" type="password" maxlength="160" autocomplete="new-password" />
+            <button class="password-eye-btn" id="membershipPasswordToggle" type="button" aria-label="パスワードを表示">
+              <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M2.5 12s3.5-6 9.5-6 9.5 6 9.5 6-3.5 6-9.5 6-9.5-6-9.5-6Z"/><circle cx="12" cy="12" r="2.6"/></svg>
+            </button>
+          </div>
+        </div>
+        <div class="form-group">
+          <label class="form-label" for="membershipMemo">備考・メモ</label>
           <textarea class="form-control" id="membershipMemo" maxlength="500" placeholder="更新・名義についてのメモなど"></textarea>
         </div>
         <div class="form-actions">
@@ -1112,7 +1154,7 @@ const BETA_ADMIN_KEY='fanfolio_beta_admin_enabled';
 const BETA_PLAN_OVERRIDE_KEY='fanfolio_beta_plan_override';
 const FREE_ACCESS_KEY='fanfolio_v1_free_access';
 const THEME_KEY='fanfolio_v1_theme';
-const APP_VERSION='0.21.0';
+const APP_VERSION='0.21.1';
 if(location.search.includes('__fanfolio_refresh')){try{const cleanUrl=new URL(location.href);cleanUrl.searchParams.delete('__fanfolio_refresh');history.replaceState(null,'',cleanUrl.pathname+(cleanUrl.searchParams.toString()?`?${cleanUrl.searchParams}`:'')+cleanUrl.hash)}catch{}}
 const BACKUP_SCHEMA_VERSION=1;
 const BACKUP_DATA_KEYS={oshi:OSHI_KEY,memberships:MEMBERSHIP_KEY,tours:TOUR_KEY,performances:PERFORMANCE_KEY,expenses:EXPENSE_KEY,memories:MEMORY_KEY,trades:TRADE_KEY,trips:TRIP_KEY,countdowns:COUNTDOWN_KEY};
@@ -1157,7 +1199,17 @@ const membershipAccount=document.getElementById('membershipAccount');
 const membershipNumber=document.getElementById('membershipNumber');
 const membershipJoinMonth=document.getElementById('membershipJoinMonth');
 const membershipExpiry=document.getElementById('membershipExpiry');
+const membershipRealName=document.getElementById('membershipRealName');
+const membershipPostalCode=document.getElementById('membershipPostalCode');
+const membershipPrefecture=document.getElementById('membershipPrefecture');
+const membershipAddress=document.getElementById('membershipAddress');
+const membershipPhone=document.getElementById('membershipPhone');
+const membershipBirthdate=document.getElementById('membershipBirthdate');
+const membershipEmail=document.getElementById('membershipEmail');
+const membershipPassword=document.getElementById('membershipPassword');
+const membershipPasswordToggle=document.getElementById('membershipPasswordToggle');
 const membershipMemo=document.getElementById('membershipMemo');
+const membershipFormFields=[membershipName,membershipAccount,membershipNumber,membershipJoinMonth,membershipExpiry,membershipRealName,membershipPostalCode,membershipPrefecture,membershipAddress,membershipPhone,membershipBirthdate,membershipEmail,membershipPassword,membershipMemo];
 const cancelMembershipEditBtn=document.getElementById('cancelMembershipEditBtn');
 const deleteMembershipBtn=document.getElementById('deleteMembershipBtn');
 const lotteryList=document.getElementById('lotteryList');
@@ -1509,6 +1561,11 @@ oshiList.addEventListener('click',e=>{
   else if(e.target.closest('.history-preview')){activateMainScreen('lottery');lotterySearch.value=item.name;renderLottery();showToast(`${item.name}の公演履歴を表示しています。`);}
   else if(e.target.closest('.memories-preview'))openMemoryManager(item.id);
 });
+function copyIconSvg(){return '<svg viewBox="0 0 24 24" aria-hidden="true"><rect x="8" y="8" width="11" height="11" rx="1.5"/><path d="M16 8V5.5A1.5 1.5 0 0 0 14.5 4h-10A1.5 1.5 0 0 0 3 5.5v10A1.5 1.5 0 0 0 4.5 17H8"/></svg>'}
+async function copyMembershipValue(value,label){
+  if(!value){showToast(`${label}が登録されていません。`);return}
+  try{if(navigator.clipboard&&window.isSecureContext)await navigator.clipboard.writeText(value);else{const t=document.createElement('textarea');t.value=value;t.style.position='fixed';t.style.opacity='0';document.body.appendChild(t);t.select();document.execCommand('copy');t.remove()}showToast(`${label}をコピーしました。`)}catch{showToast('コピーできませんでした。')}
+}
 function renderMemberships(){
   const oshi=getOshi().find(o=>o.id===activeMembershipOshiId);
   const all=getMemberships();const items=all.filter(m=>m.oshiId===activeMembershipOshiId);
@@ -1518,18 +1575,24 @@ function renderMemberships(){
   if(!items.length){membershipList.innerHTML='<div class="membership-empty">この推しのFC・Membershipはまだ登録されていません。<br>「＋ 新規登録」から追加できます。</div>';return}
   membershipList.innerHTML=items.map(item=>{
     const exp=expiryInfo(item.expiry);
-    const meta=[item.memberNumber?`会員番号 ${esc(item.memberNumber)}`:'',item.joinMonth?`入会 ${esc(formatMonthJP(item.joinMonth))}`:''].filter(Boolean).join(' ・ ');
+    const meta=[item.joinMonth?`入会 ${esc(formatMonthJP(item.joinMonth))}`:'',item.realName?esc(item.realName):''].filter(Boolean).join(' ・ ');
     const editable=isRecordEditable('membership',item.id);
-    return `<button class="membership-card edit-membership${editable?'':' record-locked'}" type="button" data-id="${esc(item.id)}" style="text-align:left;width:100%">
-      <div class="row"><div style="min-width:0"><div class="mc-name">${esc(item.name)} ${editable?'':'<span class="readonly-chip">閲覧のみ</span>'}</div>${item.account?`<div class="mc-account">${esc(item.account)}</div>`:''}</div><span class="chev">›</span></div>
-      ${meta?`<div class="mc-meta">${meta}</div>`:''}
-      ${exp.text?`<div class="mc-expiry${exp.soon?' soon':''}">${esc(exp.text)}</div>`:''}
-    </button>`;
+    const noRow=item.memberNumber?`<div class="membership-credential-row"><span class="membership-credential-label">No.</span><span class="membership-credential-value">${esc(item.memberNumber)}</span><button class="membership-copy-btn copy-membership" type="button" data-kind="number" data-id="${esc(item.id)}" aria-label="会員番号をコピー">${copyIconSvg()}</button></div>`:'';
+    const pwRow=item.password?`<div class="membership-credential-row"><span class="membership-credential-label">パスワード</span><span class="membership-credential-value password">••••••</span><button class="membership-copy-btn copy-membership" type="button" data-kind="password" data-id="${esc(item.id)}" aria-label="パスワードをコピー">${copyIconSvg()}</button></div>`:'';
+    return `<div class="membership-card${editable?'':' record-locked'}" data-id="${esc(item.id)}">
+      <button class="membership-card-main edit-membership" type="button" data-id="${esc(item.id)}">
+        <div class="row"><div style="min-width:0"><div class="mc-name">${esc(item.name)} ${editable?'':'<span class="readonly-chip">閲覧のみ</span>'}</div>${item.account?`<div class="mc-account">${esc(item.account)}</div>`:''}</div><span class="chev">›</span></div>
+        ${meta?`<div class="mc-meta">${meta}</div>`:''}
+        ${exp.text?`<div class="mc-expiry${exp.soon?' soon':''}">${esc(exp.text)}</div>`:''}
+      </button>
+      ${(noRow||pwRow)?`<div class="membership-credential-box">${noRow}${pwRow}</div>`:''}
+      <div class="membership-card-actions"><button class="edit-membership" type="button" data-id="${esc(item.id)}">${editable?'編集':'カルテ'}</button></div>
+    </div>`;
   }).join('');
 }
 function showMembershipListView(){
   membershipFormView.hidden=true;membershipListView.hidden=false;
-  [membershipName,membershipAccount,membershipNumber,membershipJoinMonth,membershipExpiry,membershipMemo].forEach(el=>el.disabled=false);membershipForm.querySelector('button[type="submit"]').style.display='';const ro=membershipForm.querySelector('.readonly-banner');if(ro)ro.style.display='none';membershipForm.reset();membershipId.value='';deleteMembershipBtn.style.display='none';renderMemberships();
+  membershipFormFields.forEach(el=>el.disabled=false);if(membershipPasswordToggle)membershipPasswordToggle.disabled=false;membershipForm.querySelector('button[type="submit"]').style.display='';const ro=membershipForm.querySelector('.readonly-banner');if(ro)ro.style.display='none';membershipForm.reset();membershipId.value='';deleteMembershipBtn.style.display='none';renderMemberships();
 }
 function openMembershipManager(oshiIdValue){
   activeMembershipOshiId=oshiIdValue;showMembershipListView();
@@ -1543,8 +1606,8 @@ function openMembershipForm(item=null){
   const readonly=Boolean(item&&!isRecordEditable('membership',item.id));
   membershipListView.hidden=true;membershipFormView.hidden=false;
   membershipFormTitle.textContent=readonly?'FC・Membership（閲覧のみ）':item?'FC・Membershipを編集':'FC・Membershipを追加';
-  membershipId.value=item?.id||'';membershipName.value=item?.name||'';membershipAccount.value=item?.account||'';membershipNumber.value=item?.memberNumber||'';membershipJoinMonth.value=item?.joinMonth||'';membershipExpiry.value=item?.expiry||'';membershipMemo.value=item?.memo||'';
-  [membershipName,membershipAccount,membershipNumber,membershipJoinMonth,membershipExpiry,membershipMemo].forEach(el=>el.disabled=readonly);membershipForm.querySelector('button[type="submit"]').style.display=readonly?'none':'';deleteMembershipBtn.style.display=item&&!readonly?'block':'none';
+  membershipId.value=item?.id||'';membershipName.value=item?.name||'';membershipAccount.value=item?.account||'';membershipNumber.value=item?.memberNumber||'';membershipJoinMonth.value=item?.joinMonth||'';membershipExpiry.value=item?.expiry||'';membershipRealName.value=item?.realName||'';membershipPostalCode.value=item?.postalCode||'';membershipPrefecture.value=item?.prefecture||'';membershipAddress.value=item?.address||'';membershipPhone.value=item?.phone||'';membershipBirthdate.value=item?.birthdate||'';membershipEmail.value=item?.email||'';membershipPassword.value=item?.password||'';membershipPassword.type='password';membershipPasswordToggle?.setAttribute('aria-label','パスワードを表示');membershipMemo.value=item?.memo||'';
+  membershipFormFields.forEach(el=>el.disabled=readonly);if(membershipPasswordToggle)membershipPasswordToggle.disabled=readonly;membershipForm.querySelector('button[type="submit"]').style.display=readonly?'none':'';deleteMembershipBtn.style.display=item&&!readonly?'block':'none';
   let banner=membershipForm.querySelector('.readonly-banner');if(readonly&&!banner){banner=document.createElement('div');banner.className='readonly-banner';banner.textContent='Freeプランの編集枠を超えているため、現在は閲覧のみです。';membershipForm.prepend(banner)}else if(banner)banner.style.display=readonly?'block':'none';
   if(!readonly)setTimeout(()=>membershipName.focus(),70);
 }
@@ -1553,7 +1616,9 @@ membershipModal.addEventListener('click',e=>{if(e.target===membershipModal)close
 addMembershipBtn.addEventListener('click',()=>openMembershipForm());
 backMembershipBtn.addEventListener('click',showMembershipListView);
 cancelMembershipEditBtn.addEventListener('click',showMembershipListView);
+if(membershipPasswordToggle)membershipPasswordToggle.addEventListener('click',()=>{const showing=membershipPassword.type==='text';membershipPassword.type=showing?'password':'text';membershipPasswordToggle.setAttribute('aria-label',showing?'パスワードを表示':'パスワードを隠す')});
 membershipList.addEventListener('click',e=>{
+  const copyBtn=e.target.closest('.copy-membership[data-id]');if(copyBtn){const item=getMemberships().find(m=>m.id===copyBtn.dataset.id);if(!item)return;copyMembershipValue(copyBtn.dataset.kind==='password'?item.password:item.memberNumber,copyBtn.dataset.kind==='password'?'パスワード':'会員番号');return}
   const card=e.target.closest('.edit-membership[data-id]');if(!card)return;
   const item=getMemberships().find(m=>m.id===card.dataset.id);if(item)openMembershipForm(item);
 });
@@ -1562,7 +1627,7 @@ membershipForm.addEventListener('submit',e=>{
   const all=getMemberships();const editing=membershipId.value;
   if(editing&&!isRecordEditable('membership',editing)){showToast(readonlyMessage('membership'));return}
   if(!editing&&!canAddMore('membership',all.length)){showMembershipListView();showToast('FreeではFC・Membership／名義を合計2件まで登録できます。');return}
-  const record={id:editing||uid(),oshiId:activeMembershipOshiId,name,account:membershipAccount.value.trim(),memberNumber:membershipNumber.value.trim(),joinMonth:membershipJoinMonth.value,expiry:membershipExpiry.value,memo:membershipMemo.value.trim(),updatedAt:new Date().toISOString()};
+  const record={id:editing||uid(),oshiId:activeMembershipOshiId,name,account:membershipAccount.value.trim(),memberNumber:membershipNumber.value.trim(),joinMonth:membershipJoinMonth.value,expiry:membershipExpiry.value,realName:membershipRealName.value.trim(),postalCode:membershipPostalCode.value.trim(),prefecture:membershipPrefecture.value.trim(),address:membershipAddress.value.trim(),phone:membershipPhone.value.trim(),birthdate:membershipBirthdate.value,email:membershipEmail.value.trim(),password:membershipPassword.value,memo:membershipMemo.value.trim(),updatedAt:new Date().toISOString()};
   const index=all.findIndex(m=>m.id===editing);
   if(index>=0)all[index]={...all[index],...record};else all.push({...record,createdAt:new Date().toISOString()});
   saveMemberships(all);showMembershipListView();renderOshi();renderCalendar();showToast(editing?'FC・Membershipを更新しました。':'FC・Membershipを登録しました。');
