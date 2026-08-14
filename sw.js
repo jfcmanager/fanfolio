@@ -1,4 +1,4 @@
-const VERSION='0.20.5';
+const VERSION='0.20.6';
 const CACHE_NAME=`fanfolio-v${VERSION}`;
 const APP_SHELL=['./','./index.html','./manifest.webmanifest','./icon-192.png','./icon-512.png','./apple-touch-icon.png','./favicon-32.png'];
 self.addEventListener('install',event=>{
