@@ -12,7 +12,7 @@
 <link rel="icon" type="image/png" sizes="32x32" href="./favicon-32.png" />
 <link rel="icon" type="image/png" sizes="192x192" href="./icon-192.png" />
 <meta name="mobile-web-app-capable" content="yes" />
-<title>FanFolio v0.20.14</title>
+<title>FanFolio v0.21.0</title>
 <style>
 :root{
   --bg:#f7f5f0;
@@ -378,6 +378,8 @@ input.form-control:not([type="hidden"]),select.form-control{height:52px;min-heig
 .premium-free-note{font-size:11px;color:var(--muted);line-height:1.55;text-align:center;margin:10px 5px 14px}
 .premium-actions{margin-top:0}
 @media(max-width:360px){.premium-pricing-grid{grid-template-columns:1fr}.pricing-card{min-height:92px}}
+.pricing-card,.founding-card{font:inherit;cursor:pointer;width:100%;box-sizing:border-box}.founding-card{text-align:left;color:inherit}.pricing-card.selected,.founding-card.selected{outline:2px solid var(--accent-strong);outline-offset:1px}.pricing-card:active,.founding-card:active{transform:translateY(1px)}
+.checkout-sheet,.subscription-sheet{max-height:min(88vh,760px)}.checkout-test-badge{display:inline-flex;border-radius:999px;padding:4px 9px;background:var(--surface-soft);color:var(--accent-strong);font-size:10px;font-weight:850;letter-spacing:.08em;margin-bottom:10px}.checkout-summary{border:1px solid var(--line);border-radius:16px;background:var(--surface);padding:15px;margin:2px 0 14px}.checkout-summary-row{display:flex;align-items:flex-start;justify-content:space-between;gap:12px}.checkout-summary-row+ .checkout-summary-row{margin-top:9px;padding-top:9px;border-top:1px solid var(--line)}.checkout-summary span{font-size:12px;color:var(--muted)}.checkout-summary strong{font-size:15px;color:var(--accent-strong);text-align:right}.checkout-method{border:1px solid var(--line);border-radius:16px;background:var(--surface);padding:14px;margin-bottom:13px}.checkout-method>strong{display:block;font-size:12px;color:var(--accent-strong);margin-bottom:9px}.checkout-method-row{display:flex;align-items:center;gap:11px}.checkout-card-icon{display:grid;place-items:center;width:46px;height:30px;border-radius:8px;background:var(--surface-soft);border:1px solid var(--line);font-size:8px;font-weight:900;color:var(--accent-strong)}.checkout-method-row b{display:block;font-size:13px}.checkout-method-row small{display:block;color:var(--muted);font-size:10.5px;margin-top:2px}.checkout-confirm{display:flex;align-items:flex-start;gap:9px;border-radius:14px;background:var(--surface-soft);padding:12px;margin:0 0 14px;font-size:11px;line-height:1.55;color:var(--muted)}.checkout-confirm input{width:18px;height:18px;flex:none;margin-top:1px;accent-color:var(--accent-strong)}.subscription-card{border:1px solid var(--line);border-radius:17px;background:var(--surface);padding:16px;margin-bottom:12px}.subscription-plan-name{font-size:19px;font-weight:850}.subscription-plan-meta{font-size:12px;color:var(--muted);line-height:1.55;margin-top:5px}.subscription-status{display:inline-flex;border-radius:999px;padding:4px 8px;background:var(--surface-soft);color:var(--accent-strong);font-size:10px;font-weight:800;margin-top:9px}.subscription-info{font-size:11.5px;line-height:1.6;color:var(--muted);margin:0 2px 14px}.subscription-sheet .wide+.wide{margin-top:9px}
 
 
 
@@ -567,7 +569,7 @@ body.security-locked{overflow:hidden!important}
     <header class="page-head"><h1>設定</h1><div class="en">Settings</div></header>
     <main class="page-body">
       <div class="section-title">プラン・アカウント</div>
-      <div class="plan-card" id="planCard"><div class="row"><div><div class="plan-name" id="currentPlanName">FanFolio Free</div><div class="plan-price" id="currentPlanPrice">¥0 ・ 広告なし</div></div><span class="badge" id="currentPlanBadge">CURRENT</span></div><div class="subtle" id="currentPlanDescription" style="margin-top:10px">Premiumなら推し・公演・名義が無制限。メンカラ、取引、遠征、詳細分析も利用できます。</div><div class="plan-actions"><button class="solid-btn premium-preview-btn" id="upgradePlanBtn" type="button">Premiumにアップグレード</button><button class="ghost-btn premium-preview-btn" id="viewPricingBtn" type="button">料金を見る</button></div><button class="ghost-btn wide free-access-btn" id="manageFreeAccessBtn" type="button" hidden>Freeで編集するデータを選ぶ</button><div class="subtle" id="currentPlanFoot" style="margin-top:12px"><span class="plan-foot-line">月額 ¥480 ／ 年額 ¥3,980</span><span class="plan-foot-line">Founding Member 初年度 ¥3,480</span></div></div>
+      <div class="plan-card" id="planCard"><div class="row"><div><div class="plan-name" id="currentPlanName">FanFolio Free</div><div class="plan-price" id="currentPlanPrice">¥0 ・ 広告なし</div></div><span class="badge" id="currentPlanBadge">CURRENT</span></div><div class="subtle" id="currentPlanDescription" style="margin-top:10px">Premiumなら推し・公演・名義が無制限。メンカラ、取引、遠征、詳細分析も利用できます。</div><div class="plan-actions"><button class="solid-btn" id="upgradePlanBtn" type="button">Premiumにアップグレード</button><button class="ghost-btn premium-preview-btn" id="viewPricingBtn" type="button">料金を見る</button></div><button class="ghost-btn wide free-access-btn" id="manageFreeAccessBtn" type="button" hidden>Freeで編集するデータを選ぶ</button><div class="subtle" id="currentPlanFoot" style="margin-top:12px"><span class="plan-foot-line">月額 ¥480 ／ 年額 ¥3,980</span><span class="plan-foot-line">Founding Member 初年度 ¥3,480</span></div></div>
 
       <div class="settings-section"><div class="section-title">デザイン設定</div><div class="settings-card theme-card"><h3 class="theme-title">テーマカラー</h3><p class="theme-subcopy" id="themeSubcopy">FreeはFanFolio Standard（ベージュ）です。</p><div class="color-swatches" id="themePicker"><button class="swatch red" data-theme="red" type="button" aria-label="赤"></button><button class="swatch pink" data-theme="pink" type="button" aria-label="ピンク"></button><button class="swatch orange" data-theme="orange" type="button" aria-label="オレンジ"></button><button class="swatch yellow" data-theme="yellow" type="button" aria-label="黄色"></button><button class="swatch green" data-theme="green" type="button" aria-label="緑"></button><button class="swatch blue" data-theme="blue" type="button" aria-label="青"></button><button class="swatch lime" data-theme="lime" type="button" aria-label="黄緑"></button><button class="swatch purple" data-theme="purple" type="button" aria-label="紫"></button><button class="swatch gray" data-theme="gray" type="button" aria-label="グレー"></button><button class="swatch white" data-theme="white" type="button" aria-label="白"></button></div><div class="theme-note">Freeではベージュを基本テーマとして使用します。</div><div class="theme-note strong">※Premiumで変更したカラー設定はこの端末だけに保存されます</div><div class="theme-sep"></div><button class="ghost-btn theme-reset" id="resetThemeBtn" type="button">Free（ベージュ）に戻す</button></div></div>
 
@@ -931,11 +933,11 @@ body.security-locked{overflow:hidden!important}
         <option value="cn">中国（CNY）</option>
       </select>
     </div>
-    <div class="premium-pricing-grid">
-      <div class="pricing-card"><div class="pricing-kicker">月額</div><div class="pricing-value" id="monthlyPrice">¥480</div><div class="pricing-note">いつでも始めやすい</div></div>
-      <div class="pricing-card recommended"><div class="pricing-ribbon">おすすめ</div><div class="pricing-kicker">年額</div><div class="pricing-value" id="annualPrice">¥3,980</div><div class="pricing-note" id="annualMonthlyNote">月額換算 約¥332</div></div>
+    <div class="premium-pricing-grid" id="premiumPlanChoices">
+      <button class="pricing-card" type="button" data-plan-choice="monthly" aria-pressed="false"><div class="pricing-kicker">月額</div><div class="pricing-value" id="monthlyPrice">¥480</div><div class="pricing-note">いつでも始めやすい</div></button>
+      <button class="pricing-card recommended selected" type="button" data-plan-choice="annual" aria-pressed="true"><div class="pricing-ribbon">おすすめ</div><div class="pricing-kicker">年額</div><div class="pricing-value" id="annualPrice">¥3,980</div><div class="pricing-note" id="annualMonthlyNote">月額換算 約¥332</div></button>
     </div>
-    <div class="founding-card"><div><span class="founding-badge">🎀 Founding Member</span><strong id="foundingPrice">初年度 ¥3,480</strong><small>最初期の年間プラン加入者限定。2年目以降は通常の年額料金です。Badgeはずっと残ります。</small></div></div>
+    <button class="founding-card" id="foundingPlanChoice" type="button" data-plan-choice="founding" aria-pressed="false"><div><span class="founding-badge">Founding Member</span><strong id="foundingPrice">初年度 ¥3,480</strong><small>最初期の年間プラン加入者限定。2年目以降は通常の年額料金です。Badgeはずっと残ります。</small></div></button>
     <div class="premium-feature-list">
       <div>✓ 推し・FC/Membership・公演を無制限で管理</div>
       <div>✓ メンカラ／推しカラーでカスタマイズ</div>
@@ -945,8 +947,35 @@ body.security-locked{overflow:hidden!important}
       <div>✓ 年間推し活レポート・バックアップ・セキュリティ</div>
     </div>
     <div class="premium-free-note">Freeは永久無料・広告なし。Premiumをやめても既存データは削除されません。</div>
-    <div class="form-actions premium-actions"><button class="ghost-btn" id="closePremiumBtn" type="button">閉じる</button><button class="solid-btn" id="startPremiumBtn" type="button">Premiumを選ぶ</button></div>
-    <div class="modal-note" style="text-align:center;margin-top:10px">現在は開発版のため、実際の決済はまだ行われません。</div>
+    <div class="form-actions premium-actions"><button class="ghost-btn" id="closePremiumBtn" type="button">閉じる</button><button class="solid-btn" id="startPremiumBtn" type="button">テスト決済へ進む</button></div>
+    <div class="modal-note" style="text-align:center;margin-top:10px">Sandbox決済です。実際の請求は発生しません。</div>
+  </div>
+</div>
+
+<div class="modal-backdrop" id="checkoutModal" aria-hidden="true">
+  <div class="modal-sheet checkout-sheet" role="dialog" aria-modal="true" aria-labelledby="checkoutModalTitle">
+    <div class="modal-handle"></div>
+    <div class="checkout-test-badge">SANDBOX</div>
+    <div class="modal-title" id="checkoutModalTitle">Premium テスト決済</div>
+    <div class="checkout-summary" id="checkoutSummary"></div>
+    <div class="checkout-method"><strong>支払い方法</strong><div class="checkout-method-row"><span class="checkout-card-icon">CARD</span><div><b>テストカード</b><small>実際のカード情報は入力しません</small></div></div></div>
+    <label class="checkout-confirm"><input type="checkbox" id="checkoutConfirm" /><span>これは開発用のテスト決済で、実際の請求が発生しないことを確認しました。</span></label>
+    <div class="form-actions"><button class="ghost-btn" id="cancelCheckoutBtn" type="button">戻る</button><button class="solid-btn" id="completeCheckoutBtn" type="button" disabled>テスト決済を完了</button></div>
+    <div class="modal-note">正式公開時は安全な決済サービスへ接続し、FanFolio側ではカード番号を保存しません。</div>
+  </div>
+</div>
+
+<div class="modal-backdrop" id="subscriptionModal" aria-hidden="true">
+  <div class="modal-sheet subscription-sheet" role="dialog" aria-modal="true" aria-labelledby="subscriptionModalTitle">
+    <div class="modal-handle"></div>
+    <div class="modal-title" id="subscriptionModalTitle">Premiumプラン管理</div>
+    <div class="subscription-card" id="subscriptionSummary"></div>
+    <div class="subscription-info">Premiumを解約しても、更新日まではPremium機能を利用できます。Freeへ戻っても既存データは削除されません。</div>
+    <button class="ghost-btn wide" id="cancelAtPeriodBtn" type="button">次回更新で解約する</button>
+    <button class="solid-btn wide" id="resumeSubscriptionBtn" type="button" hidden>解約予約を取り消す</button>
+    <button class="danger-btn wide" id="sandboxEndNowBtn" type="button">テスト：今すぐFreeへ戻す</button>
+    <button class="ghost-btn wide" id="closeSubscriptionBtn" type="button">閉じる</button>
+    <div class="modal-note">「今すぐFreeへ戻す」はSandbox確認用です。正式版には表示しません。</div>
   </div>
 </div>
 
@@ -1061,6 +1090,7 @@ const calendarDateEventList=document.getElementById('calendarDateEventList');
 const closeCalendarDateBtn=document.getElementById('closeCalendarDateBtn');
 let calendarCursor=new Date(new Date().getFullYear(),new Date().getMonth(),1);
 let moneyCursor=new Date(new Date().getFullYear(),new Date().getMonth(),1);
+let selectedPremiumChoice='annual';
 
 // 推し management (Free: 3 people)
 const OSHI_KEY='fanfolio_v1_oshi';
@@ -1082,7 +1112,7 @@ const BETA_ADMIN_KEY='fanfolio_beta_admin_enabled';
 const BETA_PLAN_OVERRIDE_KEY='fanfolio_beta_plan_override';
 const FREE_ACCESS_KEY='fanfolio_v1_free_access';
 const THEME_KEY='fanfolio_v1_theme';
-const APP_VERSION='0.20.14';
+const APP_VERSION='0.21.0';
 if(location.search.includes('__fanfolio_refresh')){try{const cleanUrl=new URL(location.href);cleanUrl.searchParams.delete('__fanfolio_refresh');history.replaceState(null,'',cleanUrl.pathname+(cleanUrl.searchParams.toString()?`?${cleanUrl.searchParams}`:'')+cleanUrl.hash)}catch{}}
 const BACKUP_SCHEMA_VERSION=1;
 const BACKUP_DATA_KEYS={oshi:OSHI_KEY,memberships:MEMBERSHIP_KEY,tours:TOUR_KEY,performances:PERFORMANCE_KEY,expenses:EXPENSE_KEY,memories:MEMORY_KEY,trades:TRADE_KEY,trips:TRIP_KEY,countdowns:COUNTDOWN_KEY};
@@ -1154,7 +1184,8 @@ const countdownModal=document.getElementById('countdownModal');const countdownFo
 const tripModal=document.getElementById('tripModal');const tripForm=document.getElementById('tripForm');const tripId=document.getElementById('tripId');const tripTitle=document.getElementById('tripTitle');const tripStartDate=document.getElementById('tripStartDate');const tripEndDate=document.getElementById('tripEndDate');const tripDestination=document.getElementById('tripDestination');const tripPerformanceOptions=document.getElementById('tripPerformanceOptions');const tripOutbound=document.getElementById('tripOutbound');const tripInbound=document.getElementById('tripInbound');const tripHotel=document.getElementById('tripHotel');const tripCurrency=document.getElementById('tripCurrency');const tripTransportCost=document.getElementById('tripTransportCost');const tripHotelCost=document.getElementById('tripHotelCost');const tripOtherCost=document.getElementById('tripOtherCost');const tripCostPreview=document.getElementById('tripCostPreview');const tripMemo=document.getElementById('tripMemo');const cancelTripBtn=document.getElementById('cancelTripBtn');const deleteTripBtn=document.getElementById('deleteTripBtn');
 
 const memoryModal=document.getElementById('memoryModal');const memoryListView=document.getElementById('memoryListView');const memoryFormView=document.getElementById('memoryFormView');const memoryOshiName=document.getElementById('memoryOshiName');const memoryCount=document.getElementById('memoryCount');const memoryList=document.getElementById('memoryList');const closeMemoryBtn=document.getElementById('closeMemoryBtn');const addMemoryBtn=document.getElementById('addMemoryBtn');const backMemoryBtn=document.getElementById('backMemoryBtn');const memoryFormTitle=document.getElementById('memoryFormTitle');const memoryForm=document.getElementById('memoryForm');const memoryId=document.getElementById('memoryId');const memoryPerformance=document.getElementById('memoryPerformance');const memoryAttendance=document.getElementById('memoryAttendance');const memorySeat=document.getElementById('memorySeat');const memoryImpression=document.getElementById('memoryImpression');const cancelMemoryEditBtn=document.getElementById('cancelMemoryEditBtn');const deleteMemoryBtn=document.getElementById('deleteMemoryBtn');
-const premiumModal=document.getElementById('premiumModal');const premiumRegion=document.getElementById('premiumRegion');const monthlyPrice=document.getElementById('monthlyPrice');const annualPrice=document.getElementById('annualPrice');const annualMonthlyNote=document.getElementById('annualMonthlyNote');const foundingPrice=document.getElementById('foundingPrice');const closePremiumBtn=document.getElementById('closePremiumBtn');const startPremiumBtn=document.getElementById('startPremiumBtn');const currentPlanName=document.getElementById('currentPlanName');const currentPlanPrice=document.getElementById('currentPlanPrice');const currentPlanBadge=document.getElementById('currentPlanBadge');const currentPlanDescription=document.getElementById('currentPlanDescription');const currentPlanFoot=document.getElementById('currentPlanFoot');const upgradePlanBtn=document.getElementById('upgradePlanBtn');
+const premiumModal=document.getElementById('premiumModal');const premiumRegion=document.getElementById('premiumRegion');const monthlyPrice=document.getElementById('monthlyPrice');const annualPrice=document.getElementById('annualPrice');const annualMonthlyNote=document.getElementById('annualMonthlyNote');const foundingPrice=document.getElementById('foundingPrice');const closePremiumBtn=document.getElementById('closePremiumBtn');const startPremiumBtn=document.getElementById('startPremiumBtn');const premiumPlanChoices=document.getElementById('premiumPlanChoices');const foundingPlanChoice=document.getElementById('foundingPlanChoice');const currentPlanName=document.getElementById('currentPlanName');const currentPlanPrice=document.getElementById('currentPlanPrice');const currentPlanBadge=document.getElementById('currentPlanBadge');const currentPlanDescription=document.getElementById('currentPlanDescription');const currentPlanFoot=document.getElementById('currentPlanFoot');const upgradePlanBtn=document.getElementById('upgradePlanBtn');
+const checkoutModal=document.getElementById('checkoutModal');const checkoutSummary=document.getElementById('checkoutSummary');const checkoutConfirm=document.getElementById('checkoutConfirm');const cancelCheckoutBtn=document.getElementById('cancelCheckoutBtn');const completeCheckoutBtn=document.getElementById('completeCheckoutBtn');const subscriptionModal=document.getElementById('subscriptionModal');const subscriptionSummary=document.getElementById('subscriptionSummary');const cancelAtPeriodBtn=document.getElementById('cancelAtPeriodBtn');const resumeSubscriptionBtn=document.getElementById('resumeSubscriptionBtn');const sandboxEndNowBtn=document.getElementById('sandboxEndNowBtn');const closeSubscriptionBtn=document.getElementById('closeSubscriptionBtn');
 const oshiPremiumPreview=document.getElementById('oshiPremiumPreview');
 const oshiPremiumSection=document.getElementById('oshiPremiumSection');
 const manageFreeAccessBtn=document.getElementById('manageFreeAccessBtn');const freeAccessModal=document.getElementById('freeAccessModal');const freeAccessOshiSection=document.getElementById('freeAccessOshiSection');const freeAccessMembershipSection=document.getElementById('freeAccessMembershipSection');const freeAccessPerformanceSection=document.getElementById('freeAccessPerformanceSection');const freeAccessOshiList=document.getElementById('freeAccessOshiList');const freeAccessMembershipList=document.getElementById('freeAccessMembershipList');const freeAccessPerformanceList=document.getElementById('freeAccessPerformanceList');const freeAccessOshiCount=document.getElementById('freeAccessOshiCount');const freeAccessMembershipCount=document.getElementById('freeAccessMembershipCount');const freeAccessPerformanceCount=document.getElementById('freeAccessPerformanceCount');const cancelFreeAccessBtn=document.getElementById('cancelFreeAccessBtn');const saveFreeAccessBtn=document.getElementById('saveFreeAccessBtn');
@@ -1183,8 +1214,8 @@ let pwaRefreshing=false;
 let appWasHiddenAt=0;
 
 function getPlanState(){
-  try{const v=JSON.parse(localStorage.getItem(PLAN_KEY)||'null');if(v&&typeof v==='object')return {tier:v.tier==='premium'?'premium':'free',billing:v.billing||'',region:v.region||'jp',founding:Boolean(v.founding),renewalDate:v.renewalDate||''}}catch{}
-  return {tier:'free',billing:'',region:'jp',founding:false,renewalDate:''};
+  try{const v=JSON.parse(localStorage.getItem(PLAN_KEY)||'null');if(v&&typeof v==='object')return {tier:v.tier==='premium'?'premium':'free',billing:v.billing||'',region:v.region||'jp',founding:Boolean(v.founding),renewalDate:v.renewalDate||'',status:v.status||((v.tier==='premium')?'active':'free'),cancelAtPeriodEnd:Boolean(v.cancelAtPeriodEnd),startedAt:v.startedAt||'',subscriptionSource:v.subscriptionSource||''}}catch{}
+  return {tier:'free',billing:'',region:'jp',founding:false,renewalDate:'',status:'free',cancelAtPeriodEnd:false,startedAt:'',subscriptionSource:''};
 }
 function savePlanState(patch={}){const next={...getPlanState(),...patch};localStorage.setItem(PLAN_KEY,JSON.stringify(next));return next}
 function isBetaAdminEnabled(){try{return localStorage.getItem(BETA_ADMIN_KEY)==='1'}catch{return false}}
@@ -1250,7 +1281,7 @@ function setBetaPlanOverride(tier){if(!isBetaAdminEnabled())return;try{localStor
 function renderPlanState(){
   const plan=getPlanState(),tier=getEffectiveTier(),betaOverride=isBetaAdminEnabled()?getBetaPlanOverride():'';
   if(tier==='premium'){
-    currentPlanName.textContent='FanFolio Premium';currentPlanPrice.textContent=betaOverride==='premium'?'Betaテストモード':(plan.billing==='monthly'?'月額プラン':'年間プラン');currentPlanBadge.textContent=betaOverride==='premium'?'TEST':(plan.founding?'FOUNDING':'PREMIUM');currentPlanDescription.textContent=betaOverride==='premium'?'管理者テストとしてPremium機能をすべて有効にしています。':'Premium機能がすべて利用できます。';currentPlanFoot.textContent=betaOverride==='premium'?'決済は発生しません。テスト専用です。':(plan.renewalDate?`次回更新日 ${formatDateJP(plan.renewalDate)}`:'Premium契約中');upgradePlanBtn.textContent=betaOverride==='premium'?'料金プランを見る':'プランを管理';
+    currentPlanName.textContent='FanFolio Premium';currentPlanPrice.textContent=betaOverride==='premium'?'Betaテストモード':(plan.billing==='monthly'?'月額プラン':'年間プラン');currentPlanBadge.textContent=betaOverride==='premium'?'TEST':(plan.founding?'FOUNDING':'PREMIUM');currentPlanDescription.textContent=betaOverride==='premium'?'管理者テストとしてPremium機能をすべて有効にしています。':plan.cancelAtPeriodEnd?'更新日まではPremium機能を利用できます。既存データはFreeへ戻っても削除されません。':'Premium機能がすべて利用できます。';currentPlanFoot.textContent=betaOverride==='premium'?'決済は発生しません。テスト専用です。':(plan.renewalDate?`${plan.cancelAtPeriodEnd?'利用終了予定':'次回更新日'} ${formatDateJP(plan.renewalDate)}${plan.subscriptionSource==='sandbox'?' ・ SANDBOX':''}`:'Premium契約中');upgradePlanBtn.textContent=betaOverride==='premium'?'料金プランを見る':'プランを管理';
   }else{
     const price=PREMIUM_PRICES[plan.region]||PREMIUM_PRICES.jp;currentPlanName.textContent='FanFolio Free';currentPlanPrice.textContent='¥0 ・ 広告なし';currentPlanBadge.textContent='CURRENT';currentPlanDescription.textContent=hasFreeOverflow()?'Freeの上限を超える既存データは削除されず、閲覧のみで保管されています。':'Premiumなら推し・公演・名義が無制限。メンカラ、取引、遠征、詳細分析も利用できます。';currentPlanFoot.innerHTML=`<span class="plan-foot-line">月額 ${price.monthly} ／ 年額 ${price.annual}</span><span class="plan-foot-line">Founding Member 初年度 ${price.founding}</span>`;upgradePlanBtn.textContent='Premiumにアップグレード';
   }
@@ -1270,8 +1301,21 @@ function renderPlanState(){
   renderBetaAdminPanel();
 }
 function renderPremiumPrices(){const key=premiumRegion.value in PREMIUM_PRICES?premiumRegion.value:'jp';const p=PREMIUM_PRICES[key];monthlyPrice.textContent=p.monthly;annualPrice.textContent=p.annual;annualMonthlyNote.textContent=`月額換算 ${p.annualMonthly}`;foundingPrice.textContent=`初年度 ${p.founding}`}
-function openPremiumModal(){const plan=getPlanState();premiumRegion.value=plan.region in PREMIUM_PRICES?plan.region:'jp';renderPremiumPrices();premiumModal.classList.add('open');premiumModal.setAttribute('aria-hidden','false');document.body.style.overflow='hidden'}
+function renderPremiumChoice(){document.querySelectorAll('[data-plan-choice]').forEach(btn=>{const active=btn.dataset.planChoice===selectedPremiumChoice;btn.classList.toggle('selected',active);btn.setAttribute('aria-pressed',active?'true':'false')});startPremiumBtn.textContent=selectedPremiumChoice==='monthly'?'月額プランでテスト決済':selectedPremiumChoice==='founding'?'Foundingでテスト決済':'年額プランでテスト決済'}
+function openPremiumModal(){const plan=getPlanState();premiumRegion.value=plan.region in PREMIUM_PRICES?plan.region:'jp';selectedPremiumChoice=plan.tier==='premium'?(plan.founding?'founding':plan.billing==='monthly'?'monthly':'annual'):'annual';renderPremiumPrices();renderPremiumChoice();premiumModal.classList.add('open');premiumModal.setAttribute('aria-hidden','false');document.body.style.overflow='hidden'}
 function closePremiumModal(){premiumModal.classList.remove('open');premiumModal.setAttribute('aria-hidden','true');document.body.style.overflow=''}
+function addPlanPeriod(date,billing){const d=new Date(date);if(billing==='monthly')d.setMonth(d.getMonth()+1);else d.setFullYear(d.getFullYear()+1);return dateKeyFromDate(d)}
+function selectedPlanDetails(){const region=premiumRegion.value in PREMIUM_PRICES?premiumRegion.value:'jp',prices=PREMIUM_PRICES[region],choice=selectedPremiumChoice;return {region,choice,billing:choice==='monthly'?'monthly':'annual',founding:choice==='founding',price:choice==='monthly'?prices.monthly:choice==='founding'?prices.founding:prices.annual,label:choice==='monthly'?'月額プラン':choice==='founding'?'Founding Member 年額プラン':'年額プラン'}}
+function openCheckoutModal(){const d=selectedPlanDetails();closePremiumModal();checkoutConfirm.checked=false;completeCheckoutBtn.disabled=true;checkoutSummary.innerHTML=`<div class="checkout-summary-row"><span>プラン</span><strong>${esc(d.label)}</strong></div><div class="checkout-summary-row"><span>テスト料金</span><strong>${esc(d.price)}</strong></div><div class="checkout-summary-row"><span>次回更新</span><strong>${esc(formatDateJP(addPlanPeriod(new Date(),d.billing)))}</strong></div>`;checkoutModal.classList.add('open');checkoutModal.setAttribute('aria-hidden','false');document.body.style.overflow='hidden'}
+function closeCheckoutModal(){checkoutModal.classList.remove('open');checkoutModal.setAttribute('aria-hidden','true');document.body.style.overflow=''}
+function completeSandboxCheckout(){if(!checkoutConfirm.checked)return;const d=selectedPlanDetails(),now=new Date(),renewalDate=addPlanPeriod(now,d.billing);savePlanState({tier:'premium',billing:d.billing,region:d.region,founding:d.founding,renewalDate,status:'active',cancelAtPeriodEnd:false,startedAt:now.toISOString(),subscriptionSource:'sandbox'});if(isBetaAdminEnabled()){try{localStorage.setItem(BETA_PLAN_OVERRIDE_KEY,'')}catch{}}closeCheckoutModal();syncFreeAccessPlanState();refreshAfterBetaPlanChange();showToast('Sandbox決済が完了しました。Premiumを有効にしました。')}
+function planPriceLabel(plan){const p=PREMIUM_PRICES[plan.region]||PREMIUM_PRICES.jp;if(plan.founding)return `${p.founding}（初年度）`;return plan.billing==='monthly'?p.monthly:p.annual}
+function renderSubscriptionManager(){const plan=getPlanState();if(plan.tier!=='premium'){closeSubscriptionModal();return}const label=plan.founding?'Founding Member 年額プラン':plan.billing==='monthly'?'月額プラン':'年額プラン';const status=plan.cancelAtPeriodEnd?'解約予約中':'契約中';subscriptionSummary.innerHTML=`<div class="subscription-plan-name">FanFolio Premium</div><div class="subscription-plan-meta">${esc(label)} ・ ${esc(planPriceLabel(plan))}<br>${plan.renewalDate?`${plan.cancelAtPeriodEnd?'利用終了予定':'次回更新日'} ${esc(formatDateJP(plan.renewalDate))}`:'更新日未設定'}</div><span class="subscription-status">${status}</span>`;cancelAtPeriodBtn.hidden=plan.cancelAtPeriodEnd;resumeSubscriptionBtn.hidden=!plan.cancelAtPeriodEnd}
+function openSubscriptionModal(){renderSubscriptionManager();subscriptionModal.classList.add('open');subscriptionModal.setAttribute('aria-hidden','false');document.body.style.overflow='hidden'}
+function closeSubscriptionModal(){subscriptionModal.classList.remove('open');subscriptionModal.setAttribute('aria-hidden','true');document.body.style.overflow=''}
+function cancelAtPeriodEnd(){const plan=getPlanState();if(plan.tier!=='premium')return;savePlanState({cancelAtPeriodEnd:true,status:'active'});renderSubscriptionManager();renderPlanState();showToast('次回更新でFreeへ戻る設定にしました。')}
+function resumeSubscription(){const plan=getPlanState();if(plan.tier!=='premium')return;savePlanState({cancelAtPeriodEnd:false,status:'active'});renderSubscriptionManager();renderPlanState();showToast('Premiumの継続を再開しました。')}
+function sandboxEndSubscriptionNow(){const plan=getPlanState();if(plan.tier!=='premium')return;if(!confirm('Sandboxテストとして今すぐFreeへ戻しますか？データは削除されません。'))return;savePlanState({tier:'free',billing:'',founding:false,renewalDate:'',status:'free',cancelAtPeriodEnd:false,subscriptionSource:'sandbox'});closeSubscriptionModal();syncFreeAccessPlanState();refreshAfterBetaPlanChange();showToast('Freeへ戻しました。既存データは保持されています。')}
 
 function getSecurityState(){
   try{const v=JSON.parse(localStorage.getItem(SECURITY_KEY)||'null');if(v&&typeof v==='object')return {pinHash:typeof v.pinHash==='string'?v.pinHash:'',pinSalt:typeof v.pinSalt==='string'?v.pinSalt:'',enabled:Boolean(v.enabled),autoLock:v.autoLock!==false}}catch{}
@@ -1942,10 +1986,14 @@ freeAccessModal?.addEventListener('click',e=>{if(e.target===freeAccessModal)clos
 freeAccessModal?.addEventListener('change',e=>{const input=e.target.closest('input[data-free-kind]');if(!input)return;const kind=input.dataset.freeKind,container=kind==='oshi'?freeAccessOshiList:kind==='membership'?freeAccessMembershipList:freeAccessPerformanceList;const max=Math.min(freeLimitFor(kind),freeItemsFor(kind).length);const checked=container.querySelectorAll('input:checked');if(checked.length>max){input.checked=false;showToast(`${kind==='oshi'?'推し':kind==='membership'?'FC・Membership':'公演'}は${max}件まで選べます。`)}updateFreeAccessCounts()});
 
 document.querySelectorAll('.premium-preview-btn').forEach(b=>b.addEventListener('click',openPremiumModal));
+upgradePlanBtn?.addEventListener('click',()=>{const plan=getPlanState(),override=isBetaAdminEnabled()?getBetaPlanOverride():'';if(plan.tier==='premium'&&!override)openSubscriptionModal();else openPremiumModal()});
 premiumRegion.addEventListener('change',()=>{savePlanState({region:premiumRegion.value});renderPremiumPrices();renderPlanState()});
+document.querySelectorAll('[data-plan-choice]').forEach(btn=>btn.addEventListener('click',()=>{selectedPremiumChoice=btn.dataset.planChoice||'annual';renderPremiumChoice()}));
 closePremiumBtn.addEventListener('click',closePremiumModal);
 premiumModal.addEventListener('click',e=>{if(e.target===premiumModal)closePremiumModal()});
-startPremiumBtn.addEventListener('click',()=>showToast('決済機能は正式公開前に接続します。料金プランはこの内容で確定しています。'));
+startPremiumBtn.addEventListener('click',openCheckoutModal);
+checkoutConfirm?.addEventListener('change',()=>{completeCheckoutBtn.disabled=!checkoutConfirm.checked});cancelCheckoutBtn?.addEventListener('click',()=>{closeCheckoutModal();openPremiumModal()});completeCheckoutBtn?.addEventListener('click',completeSandboxCheckout);checkoutModal?.addEventListener('click',e=>{if(e.target===checkoutModal)closeCheckoutModal()});
+cancelAtPeriodBtn?.addEventListener('click',cancelAtPeriodEnd);resumeSubscriptionBtn?.addEventListener('click',resumeSubscription);sandboxEndNowBtn?.addEventListener('click',sandboxEndSubscriptionNow);closeSubscriptionBtn?.addEventListener('click',closeSubscriptionModal);subscriptionModal?.addEventListener('click',e=>{if(e.target===subscriptionModal)closeSubscriptionModal()});
 
 renderAppVersion();
 renderPlanState();
