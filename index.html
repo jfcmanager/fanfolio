@@ -12,7 +12,7 @@
 <link rel="icon" type="image/png" sizes="32x32" href="./favicon-32.png" />
 <link rel="icon" type="image/png" sizes="192x192" href="./icon-192.png" />
 <meta name="mobile-web-app-capable" content="yes" />
-<title>FanFolio v0.20.12</title>
+<title>FanFolio v0.20.13</title>
 <style>
 :root{
   --bg:#f7f5f0;
@@ -276,7 +276,7 @@ html,body{
 .form-control:focus{border-color:var(--accent-strong);box-shadow:0 0 0 2px rgba(120,107,95,.08)}
 textarea.form-control{min-height:92px;resize:vertical;line-height:1.55}
 .form-control::placeholder{font-size:12.5px;line-height:1.45;color:#b4b0aa}
-input.form-control:not([type="hidden"]),select.form-control{height:52px;min-height:52px}input.form-control[type="date"],input.form-control[type="month"],input.form-control[type="number"],select.form-control{appearance:none;-webkit-appearance:none;min-width:0;width:100%;max-width:100%;font-size:14px;height:52px;min-height:52px;line-height:1.2}input.form-control[type="date"]::-webkit-date-and-time-value,input.form-control[type="month"]::-webkit-date-and-time-value{text-align:left;min-height:20px}
+input.form-control:not([type="hidden"]),select.form-control{height:52px;min-height:52px}input.form-control[type="number"],select.form-control{appearance:none;-webkit-appearance:none;min-width:0;width:100%;max-width:100%;font-size:14px;height:52px;min-height:52px;line-height:1.2}input.form-control[type="date"],input.form-control[type="month"]{appearance:auto;-webkit-appearance:auto;display:block;min-width:0;width:100%;max-width:100%;height:52px;min-height:52px;font-size:14px;line-height:1.2;text-align:center;text-align-last:center;padding-left:12px;padding-right:12px}input.form-control[type="date"]::-webkit-date-and-time-value,input.form-control[type="month"]::-webkit-date-and-time-value{text-align:center;min-height:20px;width:100%;margin:0}
 @media (max-width:390px){.form-label{font-size:12px}.form-control{font-size:13.5px;padding:10px 11px}.modal-title{font-size:20px}.ghost-btn,.solid-btn,.danger-btn{font-size:14px}}
 .photo-row{display:flex;align-items:center;gap:13px;min-width:0}
 .photo-preview{width:64px;height:64px;border-radius:50%;border:1px solid var(--line);background:var(--surface-soft);display:grid;place-items:center;color:var(--muted);background-size:cover;background-position:center;flex:none}
@@ -1082,7 +1082,7 @@ const BETA_ADMIN_KEY='fanfolio_beta_admin_enabled';
 const BETA_PLAN_OVERRIDE_KEY='fanfolio_beta_plan_override';
 const FREE_ACCESS_KEY='fanfolio_v1_free_access';
 const THEME_KEY='fanfolio_v1_theme';
-const APP_VERSION='0.20.12';
+const APP_VERSION='0.20.13';
 if(location.search.includes('__fanfolio_refresh')){try{const cleanUrl=new URL(location.href);cleanUrl.searchParams.delete('__fanfolio_refresh');history.replaceState(null,'',cleanUrl.pathname+(cleanUrl.searchParams.toString()?`?${cleanUrl.searchParams}`:'')+cleanUrl.hash)}catch{}}
 const BACKUP_SCHEMA_VERSION=1;
 const BACKUP_DATA_KEYS={oshi:OSHI_KEY,memberships:MEMBERSHIP_KEY,tours:TOUR_KEY,performances:PERFORMANCE_KEY,expenses:EXPENSE_KEY,memories:MEMORY_KEY,trades:TRADE_KEY,trips:TRIP_KEY,countdowns:COUNTDOWN_KEY};
