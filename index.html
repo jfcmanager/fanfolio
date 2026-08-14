@@ -12,7 +12,7 @@
 <link rel="icon" type="image/png" sizes="32x32" href="./favicon-32.png" />
 <link rel="icon" type="image/png" sizes="192x192" href="./icon-192.png" />
 <meta name="mobile-web-app-capable" content="yes" />
-<title>FanFolio v0.20.2</title>
+<title>FanFolio v0.20.3</title>
 <style>
 :root{
   --bg:#f7f5f0;
@@ -215,8 +215,8 @@ html,body{
 .theme-card{padding:22px 20px 23px}
 .theme-title{font-size:16px}
 .theme-subcopy{font-size:11.5px;margin-top:8px}
-.color-swatches{grid-template-columns:repeat(6,52px);gap:16px 8px;margin-top:18px}
-.swatch{width:52px;height:52px;border-width:2.5px}
+.color-swatches{grid-template-columns:repeat(6,minmax(0,1fr));gap:16px 6px;margin-top:18px;width:100%}
+.swatch{width:46px;height:46px;max-width:100%;justify-self:center;border-width:2.5px}
 .swatch::after{width:14px;height:24px;border-right-width:5px;border-bottom-width:5px}
 .theme-note{font-size:13px;margin-top:18px}
 .theme-note.strong{font-size:14px;margin-top:10px}
@@ -226,6 +226,7 @@ html,body{
 .oshi-color-btn{border-radius:14px;padding:9px 6px;font-size:11px;min-height:40px}
 .oshi-color-btn .dot-mini{width:10px;height:10px}
 .oshi-color-dot{width:10px;height:10px}
+@media(max-width:380px){.theme-card{padding-left:16px;padding-right:16px}.color-swatches{gap:14px 4px}.swatch{width:42px;height:42px}}
 .switch{width:52px;height:30px}
 .switch:before{width:24px;height:24px}
 .premium-chip{font-size:10.5px;padding:3px 7px}
@@ -282,7 +283,7 @@ textarea.form-control{min-height:92px;resize:vertical;line-height:1.55}
 .toast{position:fixed;z-index:150;left:50%;transform:translateX(-50%) translateY(18px);bottom:calc(var(--nav-h) + 18px + env(safe-area-inset-bottom));max-width:calc(100% - 36px);background:#3d3934;color:#fff;padding:10px 14px;border-radius:12px;font-size:12.5px;opacity:0;pointer-events:none;transition:.2s ease;text-align:center}
 .toast.show{opacity:1;transform:translateX(-50%) translateY(0)}
 .pwa-status{display:flex;align-items:center;gap:8px;flex-wrap:wrap}.pwa-dot{width:9px;height:9px;border-radius:50%;background:#a6a09a;flex:none}.pwa-dot.ready{background:#7f9c80}.pwa-dot.warn{background:#b89b54}.pwa-dot.offline{background:#9a7a7a}.pwa-status-text{font-size:12.5px;color:var(--muted);line-height:1.5}.pwa-mini-note{padding:11px 17px 13px;border-top:1px dashed var(--line);background:rgba(247,245,240,.54);font-size:11.5px;line-height:1.6;color:var(--muted)}
-.update-banner{position:fixed;z-index:170;left:50%;transform:translateX(-50%);bottom:calc(var(--nav-h) + 14px + env(safe-area-inset-bottom));width:min(calc(100% - 28px),560px);border:1px solid var(--line-strong);background:rgba(255,253,250,.98);box-shadow:0 10px 34px rgba(64,53,43,.14);border-radius:18px;padding:14px 15px;display:flex;align-items:center;gap:12px}.update-banner-text{min-width:0;flex:1}.update-banner-text strong{display:block;font-size:14px;color:var(--accent-strong);margin-bottom:3px}.update-banner-text span{display:block;font-size:11.5px;line-height:1.45;color:var(--muted)}.update-banner-actions{display:flex;gap:7px;flex:none}.update-banner-actions button{min-height:36px;padding:8px 11px;border-radius:11px;font-size:11.5px}.offline-banner{position:fixed;z-index:145;top:calc(env(safe-area-inset-top) + 8px);left:50%;transform:translateX(-50%);background:#514b45;color:white;border-radius:999px;padding:7px 12px;font-size:11.5px;box-shadow:0 5px 18px rgba(0,0,0,.12);pointer-events:none}.install-steps{display:grid;gap:10px;margin:15px 0}.install-step{display:flex;align-items:flex-start;gap:11px;border:1px solid var(--line);background:var(--surface-soft);border-radius:14px;padding:12px}.install-step-num{width:25px;height:25px;border-radius:50%;display:grid;place-items:center;background:var(--accent-pale);color:var(--accent-strong);font-size:12px;font-weight:800;flex:none}.install-step-text{font-size:13px;line-height:1.55}.install-step-text strong{display:block;color:var(--accent-strong);margin-bottom:2px}
+.update-banner{position:fixed;z-index:170;left:50%;transform:translateX(-50%);bottom:calc(var(--nav-h) + 14px + env(safe-area-inset-bottom));width:min(calc(100% - 28px),560px);border:1px solid var(--line-strong);background:rgba(255,253,250,.98);box-shadow:0 10px 34px rgba(64,53,43,.14);border-radius:18px;padding:14px 15px;display:flex;align-items:center;gap:12px}.update-banner[hidden]{display:none!important}.update-banner-text{min-width:0;flex:1}.update-banner-text strong{display:block;font-size:14px;color:var(--accent-strong);margin-bottom:3px}.update-banner-text span{display:block;font-size:11.5px;line-height:1.45;color:var(--muted)}.update-banner-actions{display:flex;gap:7px;flex:none}.update-banner-actions button{min-height:36px;padding:8px 11px;border-radius:11px;font-size:11.5px}.offline-banner{position:fixed;z-index:145;top:calc(env(safe-area-inset-top) + 8px);left:50%;transform:translateX(-50%);background:#514b45;color:white;border-radius:999px;padding:7px 12px;font-size:11.5px;box-shadow:0 5px 18px rgba(0,0,0,.12);pointer-events:none}.install-steps{display:grid;gap:10px;margin:15px 0}.install-step{display:flex;align-items:flex-start;gap:11px;border:1px solid var(--line);background:var(--surface-soft);border-radius:14px;padding:12px}.install-step-num{width:25px;height:25px;border-radius:50%;display:grid;place-items:center;background:var(--accent-pale);color:var(--accent-strong);font-size:12px;font-weight:800;flex:none}.install-step-text{font-size:13px;line-height:1.55}.install-step-text strong{display:block;color:var(--accent-strong);margin-bottom:2px}
 .empty-oshi .quick-links{opacity:.72}
 .premium-limit{text-align:center;padding:8px 0 1px;color:var(--muted);font-size:12px}
 .readonly-chip{display:inline-flex;align-items:center;border-radius:999px;padding:4px 8px;background:#eee9e1;color:#887d70;font-size:10.5px;font-weight:800;white-space:nowrap}.record-locked{background:#fbf9f5}.record-locked .edit-oshi,.record-locked .edit-membership,.record-locked .edit-performance{cursor:pointer}.record-locked .quick.edit-oshi{background:#f2eee8}.readonly-banner{margin:0 0 14px;padding:10px 12px;border:1px dashed var(--line-strong);border-radius:12px;background:#f2eee7;color:var(--accent-strong);font-size:12px;font-weight:700;line-height:1.55}.free-access-btn{margin-top:10px}.free-access-sheet{max-height:min(90vh,820px)}.free-access-intro{font-size:12.5px;line-height:1.65;color:var(--muted);margin:0 0 16px}.free-access-section{margin:17px 0}.free-access-title{display:flex;align-items:center;justify-content:space-between;gap:10px;font-size:14px;font-weight:800;color:var(--accent-strong);margin:0 0 8px}.free-access-options{display:grid;gap:7px}.free-access-option{display:flex;align-items:flex-start;gap:10px;border:1px solid var(--line);background:var(--surface);border-radius:13px;padding:11px 12px}.free-access-option input{margin-top:2px;width:18px;height:18px;accent-color:var(--accent-strong);flex:none}.free-access-option strong{display:block;font-size:13px;line-height:1.35}.free-access-option small{display:block;color:var(--muted);font-size:11px;line-height:1.45;margin-top:3px}.free-access-help{padding:10px 12px;border-radius:12px;background:var(--surface-soft);color:var(--muted);font-size:11.5px;line-height:1.55}.free-access-hidden{display:none!important}
@@ -570,7 +571,7 @@ body.security-locked{overflow:hidden!important}
 
       <div class="settings-section"><div class="section-title">アプリ・オフライン</div><div class="settings-card"><button class="setting-row setting-action" id="installAppBtn" type="button"><div><h3>ホーム画面に追加</h3><p id="installAppDescription">FanFolioをアプリのように起動できます。</p></div><span class="chev">›</span></button><div class="setting-row"><div><h3>起動モード</h3><div class="pwa-status"><span class="pwa-dot" id="pwaModeDot"></span><span class="pwa-status-text" id="pwaModeStatus">確認中</span></div></div></div><div class="setting-row"><div><h3>オフライン利用</h3><div class="pwa-status"><span class="pwa-dot" id="pwaOfflineDot"></span><span class="pwa-status-text" id="pwaOfflineStatus">確認中</span></div></div></div><div class="pwa-mini-note" id="pwaHelpText">HTTPSで一度開くと、通信がないときも保存済みのFanFolioを起動できます。</div></div></div>
 
-      <div class="settings-section"><div class="section-title">バージョン</div><div class="settings-card"><div class="setting-row"><div><h3>FanFolio</h3></div><div class="subtle">ver. 0.20.2</div></div><button class="setting-row setting-action" id="checkUpdateBtn" type="button"><div><h3>更新を確認</h3><p id="updateStatusText">サーバー上の最新版を確認します。</p></div><span class="chev">›</span></button></div></div>
+      <div class="settings-section"><div class="section-title">バージョン</div><div class="settings-card"><div class="setting-row"><div><h3>FanFolio</h3></div><div class="subtle">ver. 0.20.3</div></div><button class="setting-row setting-action" id="checkUpdateBtn" type="button"><div><h3>更新を確認</h3><p id="updateStatusText">サーバー上の最新版を確認します。</p></div><span class="chev">›</span></button></div></div>
       <div class="footer-note">— ✦ —<br><br>Made with ♡ by めいぷりん</div>
     </main>
   </section>
@@ -1044,7 +1045,7 @@ const BACKUP_META_KEY='fanfolio_v1_backup_meta';
 const SECURITY_KEY='fanfolio_v1_security';
 const FREE_ACCESS_KEY='fanfolio_v1_free_access';
 const THEME_KEY='fanfolio_v1_theme';
-const APP_VERSION='0.20.2';
+const APP_VERSION='0.20.3';
 if(location.search.includes('__fanfolio_refresh')){try{const cleanUrl=new URL(location.href);cleanUrl.searchParams.delete('__fanfolio_refresh');history.replaceState(null,'',cleanUrl.pathname+(cleanUrl.searchParams.toString()?`?${cleanUrl.searchParams}`:'')+cleanUrl.hash)}catch{}}
 const BACKUP_SCHEMA_VERSION=1;
 const BACKUP_DATA_KEYS={oshi:OSHI_KEY,memberships:MEMBERSHIP_KEY,tours:TOUR_KEY,performances:PERFORMANCE_KEY,expenses:EXPENSE_KEY,memories:MEMORY_KEY,trades:TRADE_KEY,trips:TRIP_KEY};
@@ -1781,7 +1782,7 @@ async function requestPwaInstall(){
   if(deferredInstallPrompt){try{deferredInstallPrompt.prompt();await deferredInstallPrompt.userChoice;deferredInstallPrompt=null;renderPwaStatus();return}catch(err){console.error(err)}}
   openInstallModal();
 }
-function showUpdateBanner(version=''){if(updateBanner)updateBanner.hidden=false;if(updateStatusText)updateStatusText.textContent=version?`新しいバージョン v${version} があります。更新できます。`:'新しいバージョンがあります。更新できます。'}
+function showUpdateBanner(version=''){if(updateBanner)updateBanner.hidden=false;if(applyUpdateBtn)applyUpdateBtn.disabled=false;if(updateStatusText)updateStatusText.textContent=version?`新しいバージョン v${version} があります。更新できます。`:'新しいバージョンがあります。更新できます。'}
 function hideUpdateBanner(){if(updateBanner)updateBanner.hidden=true}
 function compareVersion(a,b){const pa=String(a||'').split('.').map(n=>Number(n)||0),pb=String(b||'').split('.').map(n=>Number(n)||0),len=Math.max(pa.length,pb.length);for(let i=0;i<len;i++){const diff=(pa[i]||0)-(pb[i]||0);if(diff)return diff>0?1:-1}return 0}
 async function fetchPublishedVersion(){
@@ -1820,8 +1821,8 @@ async function checkForFanFolioUpdate(){
     if(compareVersion(latest,APP_VERSION)>0){
       showUpdateBanner(latest);showToast(`v${latest} に更新できます。`);return
     }
-    hideUpdateBanner();
-    if(updateStatusText)updateStatusText.textContent=`現在のバージョン v${APP_VERSION} は最新です。`;showToast('最新版です。');
+    pendingPublishedVersion='';hideUpdateBanner();
+    if(applyUpdateBtn)applyUpdateBtn.disabled=false;if(updateStatusText)updateStatusText.textContent=`現在のバージョン v${APP_VERSION} は最新です。`;showToast('最新版です。');
     const reg=pwaRegistration||await registerWorkerForVersion(APP_VERSION);reg.update().catch(()=>{});
   }catch(err){console.error(err);if(updateStatusText)updateStatusText.textContent='更新を確認できませんでした。';showToast('更新を確認できませんでした。ネット接続をご確認ください。')}
 }
