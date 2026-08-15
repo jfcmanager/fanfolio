@@ -12,7 +12,7 @@
 <link rel="icon" type="image/png" sizes="32x32" href="./favicon-32.png" />
 <link rel="icon" type="image/png" sizes="192x192" href="./icon-192.png" />
 <meta name="mobile-web-app-capable" content="yes" />
-<title>FanFolio v0.26.19</title>
+<title>FanFolio v0.26.20</title>
 <style>
 :root{
   --bg:#f7f5f0;
@@ -698,7 +698,7 @@ body.security-locked{overflow:hidden!important}
   </section>
 
   <section class="screen" data-screen="lottery"><header class="page-head"><h1>当落</h1><div class="en">Results</div></header><main class="page-body"><div class="lottery-page-tabs" id="lotteryPageTabs"><button class="active" data-lottery-page="record">抽選記録</button><button data-lottery-page="application">申込管理</button><button data-lottery-page="analysis">分析</button></div><section class="lottery-panel" data-lottery-panel="record"><div class="record-summary-grid"><div class="record-summary-card"><span>総当選</span><strong id="statWon">0</strong></div><div class="record-summary-card"><span>総落選</span><strong id="statLost">0</strong></div><div class="record-summary-card"><span>申込中</span><strong id="statApplying">0</strong></div><div class="record-summary-card"><span>結果待ち</span><strong id="statWaiting">0</strong></div></div><div class="category-summary" id="lotteryCategorySummary"></div><div class="category-chip-row" id="lotteryCategoryFilters"></div><div class="mini-tabs" id="lotteryTabs"><button class="active" data-view="tour">ツアー別</button><button data-view="oshi">名義別</button></div><label class="search lottery-search"><span>⌕</span><input id="lotterySearch" type="search" placeholder="ツアー名・会場・名義で検索..." /></label><div class="lottery-toolbar"><button class="ghost-btn" id="addPerformanceBtn" type="button">＋ 抽選追加</button><button class="ghost-btn" id="addTourBtn" type="button">＋ ツアー・イベント</button></div><div class="oshi-count" id="performanceCount">抽選 0 / 3 ・ ツアー 0 / 3</div><div id="lotteryList"></div><div class="premium-limit">Freeでは抽選記録を3件、ツアー・イベントを3件まで登録できます</div></section><section class="lottery-panel" data-lottery-panel="application" hidden><div class="application-intro"><strong>申込管理</strong><p>当落前の申込内容をメモして、結果が出たら当選・落選として抽選記録に残せます♡</p></div><label class="search lottery-search"><span>⌕</span><input id="applicationSearch" type="search" placeholder="公演名・会場・名義・同行者で検索..." /></label><div class="application-toolbar"><button class="solid-btn" id="addApplicationBtn" type="button">＋ 申込を追加</button><button class="ghost-btn" id="performanceMasterBtn" type="button">公演マスタ管理</button></div><div class="oshi-count" id="applicationCount">0 / 3 申込</div><div class="application-tour-list" id="applicationTourList"></div><div class="premium-limit">Freeでは申込管理を3件まで登録できます</div></section><section class="lottery-panel" data-lottery-panel="analysis" hidden>
-<div class="lottery-analysis-intro"><strong>当選履歴の玄学分析</strong><p>登録済みのFC名義・代表者当選・FC同行者当選をもとに、「最近どのくらい当選していないか」「直近の連続落選」「カテゴリー別の当選傾向」を整理します。狙い目スコアは当選確率ではなく、次回申込でどの名義を優先するか考えるための参考指標です。※あくまで参考用です。あまり真に受けすぎないでください。もし中票しなくても、どうか私を責めないでくださいww</p></div>
+<div class="lottery-analysis-intro"><strong>当選履歴の玄学分析</strong><p>登録済みのFC名義・代表者当選・FC同行者当選をもとに、「最近どのくらい当選していないか」「直近の連続落選」「カテゴリー別の当選傾向」を整理します。狙い目スコアは当選確率ではなく、次回申込でどの名義を優先するか考えるための参考指標です。※あくまで参考用です。あまり真に受けすぎないでください。もし当たらなくても、私のせいにしないでくださいねww</p></div>
 <div class="lottery-analysis-toolbar"><select id="lotteryAnalysisFc"><option value="">全てのFC</option></select><select id="lotteryAnalysisCategory"><option value="">全てのカテゴリー</option></select></div>
 <div class="lottery-analysis-kpis"><div class="lottery-analysis-kpi"><span>対象名義</span><strong id="analysisMembershipCount">0件</strong></div><div class="lottery-analysis-kpi"><span>代表者当選</span><strong id="analysisTotalWins">0件</strong></div><div class="lottery-analysis-kpi"><span>同行者当選</span><strong id="analysisAverageWins">0件</strong></div><div class="lottery-analysis-kpi"><span>判定済み</span><strong id="analysisHotMembership">0件</strong></div></div>
 <div class="lottery-analysis-premium-note" id="lotteryAnalysisPremiumNote"><div class="lottery-analysis-premium-head"><span class="premium-chip">PREMIUM</span><strong>Premiumなら、名義ごとの玄学分析を詳しく確認</strong></div><p>Freeでは上の基本集計を確認できます。Premiumでは代表者・FC同行者の履歴を分け、カテゴリー別の狙い目と「なぜその順位なのか」を確認できます。</p><div class="lottery-analysis-premium-grid"><span>FC別 狙い目ランキング</span><span>カテゴリー別 狙い目</span><span>直近の連続落選</span><span>FC同行者当選</span><span>カウコン・合同ライブ補正</span><span>参考度・スコア理由</span></div><button class="ghost-btn wide premium-preview-btn" type="button" id="lotteryAnalysisPremiumBtn">Premiumを見る</button></div>
@@ -1624,7 +1624,7 @@ const BETA_ADMIN_KEY='fanfolio_beta_admin_enabled';
 const BETA_PLAN_OVERRIDE_KEY='fanfolio_beta_plan_override';
 const FREE_ACCESS_KEY='fanfolio_v1_free_access';
 const THEME_KEY='fanfolio_v1_theme';
-const APP_VERSION='0.26.19';
+const APP_VERSION='0.26.20';
 const RELEASE_NOTES_SEEN_KEY='fanfolio_v1_release_notes_seen';
 const CURRENT_RELEASE_NOTES={
   version:'0.26.19',date:'2026.08.16',
