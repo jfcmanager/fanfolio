@@ -1,4 +1,4 @@
-const CACHE_NAME = 'fanfolio-v0.22.3';
+const CACHE_NAME = 'fanfolio-v0.22.4';
 const APP_SHELL = ['./', './index.html', './manifest.webmanifest'];
 self.addEventListener('install', event => {
   event.waitUntil(caches.open(CACHE_NAME).then(cache => cache.addAll(APP_SHELL)).then(() => self.skipWaiting()));
