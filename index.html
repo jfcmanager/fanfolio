@@ -12,7 +12,7 @@
 <link rel="icon" type="image/png" sizes="32x32" href="./favicon-32.png" />
 <link rel="icon" type="image/png" sizes="192x192" href="./icon-192.png" />
 <meta name="mobile-web-app-capable" content="yes" />
-<title>FanFolio v0.26.9</title>
+<title>FanFolio v0.26.10</title>
 <style>
 :root{
   --bg:#f7f5f0;
@@ -554,8 +554,21 @@ body.security-locked{overflow:hidden!important}
 .companion-local-note{font-size:10px;line-height:1.55;color:var(--muted);margin:9px 2px 0}
 @media(max-width:360px){.name-manager-entry button{align-items:flex-start;flex-direction:column;gap:5px}.name-manager-entry-copy{text-align:left}.companion-row-head{gap:7px}.companion-actions{gap:5px}.companion-mini-btn{padding:6px 7px}}
 
-/* FanFolio v0.26.8 — 端末管理 directory */
-.device-manager-head{margin:0 0 12px}.device-manager-head strong{display:block;font-size:15px;color:var(--accent-strong);margin-bottom:5px}.device-manager-head p{margin:0;color:var(--muted);font-size:10.5px;line-height:1.6}.device-toolbar{margin:0 0 12px}.device-list{display:grid;gap:10px}.device-card{border:1px solid var(--line);border-radius:16px;background:var(--surface);padding:14px 14px 13px}.device-card-index{font-size:18px;font-weight:850;line-height:1;color:var(--ink);margin-bottom:9px}.device-card-name{font-size:13px;font-weight:800;line-height:1.45;color:var(--accent-strong)}.device-card-meta{font-size:11px;line-height:1.55;color:var(--muted);margin-top:4px}.device-card-status{margin-top:8px;padding:7px 8px;border-radius:8px;background:var(--surface-soft);font-size:10.5px;line-height:1.5;color:var(--ink);overflow-wrap:anywhere}.device-card-note{margin-top:8px;font-size:10.5px;line-height:1.55;color:var(--muted);white-space:pre-wrap;overflow-wrap:anywhere}.device-card-actions{display:flex;justify-content:flex-end;gap:8px;margin-top:11px}.device-card-actions button{min-width:60px;border:1px solid var(--line);border-radius:999px;background:var(--accent-pale);color:var(--accent-strong);padding:8px 12px;font-size:11px;font-weight:750}.device-card-actions button.device-delete{color:var(--danger);background:#fffafa;border-color:#e2caca}.device-empty{padding:22px 14px;border:1px dashed var(--line-strong);border-radius:14px;text-align:center;color:var(--muted);font-size:12px;line-height:1.65;background:rgba(255,253,250,.55)}
+/* FanFolio v0.26.10 — 端末管理：同行者・非会員と同じレイアウト */
+.device-toolbar{margin:0 0 12px}
+.device-list{display:grid;gap:9px}
+.device-card{border:1px solid var(--line);border-radius:14px;padding:12px 13px;background:var(--surface)}
+.device-card-head{display:flex;align-items:flex-start;justify-content:space-between;gap:10px}
+.device-card-main{min-width:0;flex:1}
+.device-card-name{display:block;font-size:13px;font-weight:800;line-height:1.4;color:var(--ink)}
+.device-card-meta{display:block;margin-top:4px;font-size:10.5px;line-height:1.5;color:var(--muted)}
+.device-card-status,.device-card-note{margin-top:7px;padding-top:7px;border-top:1px dashed var(--line);font-size:10.5px;line-height:1.55;color:var(--muted);white-space:pre-wrap;overflow-wrap:anywhere;background:transparent;border-radius:0}
+.device-card-note{margin-top:6px}
+.device-card-actions{display:flex;gap:7px;flex:none;margin:0}
+.device-card-actions button{min-width:auto;border:1px solid var(--line);background:var(--surface-soft);border-radius:9px;padding:6px 8px;font-size:10.5px;color:var(--accent-strong);font-weight:750}
+.device-card-actions button.device-delete{color:var(--danger);background:#fffafa;border-color:#e2caca}
+.device-empty{padding:24px 16px;border:1px dashed var(--line-strong);border-radius:15px;text-align:center;background:rgba(255,253,250,.55);color:var(--muted);font-size:12.5px;line-height:1.65}
+@media(max-width:360px){.device-card-head{gap:7px}.device-card-actions{gap:5px}.device-card-actions button{padding:6px 7px}}
 
 /* FanFolio v0.26.7 — 当落画面：Standardベージュ + メンカラ */
 .screen[data-screen="lottery"]{--lottery-bg:#f7f5f0;--lottery-surface:#fffdfa;--lottery-soft:#f1eee7;--lottery-soft-2:#ebe7de;--lottery-line:#d8d1c5;--lottery-line-strong:#c8beae;--lottery-muted:#8b8378;--lottery-accent:#918476;--lottery-strong:#786b5f;--lottery-pale:#e8e1d7}
@@ -941,8 +954,8 @@ body.security-locked{overflow:hidden!important}
       <div class="companion-summary-list" id="companionSummaryList"></div>
     </div>
     <div class="name-manager-panel" data-name-panel="device" hidden>
-      <div class="device-manager-head"><strong>端末管理</strong><p>FCログインに使用するスマホ・PCなどを端末ごとに整理できます。登録内容はこの端末内だけに保存します。</p></div>
-      <div class="device-toolbar"><button class="ghost-btn wide" id="addDeviceBtn" type="button">＋ 端末を追加</button></div>
+      <div class="application-intro"><strong>端末管理</strong><p>FCログインに使用するスマホ・PCなどを端末ごとに整理できます。登録内容はこの端末内だけに保存します。</p></div>
+      <div class="device-toolbar"><button class="solid-btn wide" id="addDeviceBtn" type="button">＋ 端末を追加</button><div class="companion-local-note">追加した端末名・ブラウザ・通信環境・最終ログイン日・メモはこの端末内だけに保存します。</div></div>
       <div class="device-list" id="deviceList"></div>
     </div>
     <div class="form-actions" style="margin-top:16px"><button class="ghost-btn wide" id="closeNameManagerBtn" type="button">閉じる</button></div>
@@ -1482,14 +1495,14 @@ const BETA_ADMIN_KEY='fanfolio_beta_admin_enabled';
 const BETA_PLAN_OVERRIDE_KEY='fanfolio_beta_plan_override';
 const FREE_ACCESS_KEY='fanfolio_v1_free_access';
 const THEME_KEY='fanfolio_v1_theme';
-const APP_VERSION='0.26.9';
+const APP_VERSION='0.26.10';
 const RELEASE_NOTES_SEEN_KEY='fanfolio_v1_release_notes_seen';
 const CURRENT_RELEASE_NOTES={
-  version:'0.26.8',date:'2026.08.15',
+  version:'0.26.10',date:'2026.08.15',
   items:[
-    {title:'ツアー・イベント種類に番組協力を追加',text:'種類の選択肢に「番組協力」を追加し、当落画面では「ファンミ・番組協力」カテゴリーとして集計します。'},
-    {title:'端末管理を端末リスト方式に変更',text:'名義管理の端末管理で、スマホ・PCなどを追加し、編集・削除できる端末リストを管理できるようにしました。'},
-    {title:'端末情報はこの端末内だけに保存',text:'端末名・種別・ブラウザ・通信環境・最終ログイン日・メモはIndexedDBに保存し、既存のlocalStorageキーやデータ形式は変更しません。'}
+    {title:'端末管理のレイアウトを統一',text:'「端末管理」を「同行者・非会員」と同じ構成に揃え、説明カード・追加ボタン・補足文・一覧／空状態の見た目を統一しました。'},
+    {title:'端末の登録・編集・削除機能はそのまま',text:'端末名・種別・ブラウザ・通信環境・最終ログイン日・メモの管理機能は変更せず、表示レイアウトのみ整理しました。'},
+    {title:'既存データ形式は変更なし',text:'既存のlocalStorageキー・データ形式・Bottom Nav・その他の機能には変更を加えていません。'}
   ]
 };
 if(location.search.includes('__fanfolio_refresh')){try{const cleanUrl=new URL(location.href);cleanUrl.searchParams.delete('__fanfolio_refresh');history.replaceState(null,'',cleanUrl.pathname+(cleanUrl.searchParams.toString()?`?${cleanUrl.searchParams}`:'')+cleanUrl.hash)}catch{}}
@@ -2135,7 +2148,7 @@ async function putManagedDevice(record){const db=await openDeviceDb();return awa
 async function removeManagedDevice(id){if(!id)return;const db=await openDeviceDb();return await new Promise((resolve,reject)=>{const tx=db.transaction(DEVICE_STORE,'readwrite');tx.objectStore(DEVICE_STORE).delete(id);tx.oncomplete=()=>resolve();tx.onerror=()=>reject(tx.error);tx.onabort=()=>reject(tx.error||new Error('indexeddb-delete-aborted'))})}
 function deviceTypeLabel(type){return({smartphone:'スマホ',tablet:'タブレット',pc:'PC',other:'その他'})[type]||'その他'}
 function deviceLoginLabel(date){if(!date)return'—';const m=String(date).match(/^(\d{4})-(\d{2})-(\d{2})$/);return m?`${m[1]}.${m[2]}.${m[3]}`:date}
-async function renderDeviceManager(){if(!deviceList)return;deviceList.innerHTML='<div class="device-empty">読み込み中...</div>';try{const items=(await getManagedDevices()).sort((a,b)=>(a.createdAt||'').localeCompare(b.createdAt||'')||(a.name||'').localeCompare(b.name||'','ja'));deviceManagerCache=items;deviceList.innerHTML=items.length?items.map((item,index)=>`<div class="device-card" data-device-id="${esc(item.id)}"><div class="device-card-index">${index+1}</div><div class="device-card-name">${esc(item.name||'名称未入力')}</div><div class="device-card-meta">${esc(deviceTypeLabel(item.type))}｜${esc(item.browser||'ブラウザ未入力')}</div><div class="device-card-status">通信環境：${esc(item.network||'未入力')}　/　最終ログイン：${esc(deviceLoginLabel(item.lastLogin))}</div>${item.memo?`<div class="device-card-note">${esc(item.memo)}</div>`:''}<div class="device-card-actions"><button class="device-edit" type="button" data-id="${esc(item.id)}">編集</button><button class="device-delete" type="button" data-id="${esc(item.id)}">削除</button></div></div>`).join(''):'<div class="device-empty">端末はまだ登録されていません。<br>「＋ 端末を追加」から登録できます。</div>'}catch(err){console.error(err);deviceManagerCache=[];deviceList.innerHTML='<div class="device-empty">端末情報を読み込めませんでした。Safariのサイトデータ設定を確認してください。</div>'}}
+async function renderDeviceManager(){if(!deviceList)return;deviceList.innerHTML='<div class="device-empty">読み込み中...</div>';try{const items=(await getManagedDevices()).sort((a,b)=>(a.createdAt||'').localeCompare(b.createdAt||'')||(a.name||'').localeCompare(b.name||'','ja'));deviceManagerCache=items;deviceList.innerHTML=items.length?items.map(item=>`<div class="device-card" data-device-id="${esc(item.id)}"><div class="device-card-head"><div class="device-card-main"><strong class="device-card-name">${esc(item.name||'名称未入力')}</strong><span class="device-card-meta">${esc(deviceTypeLabel(item.type))} ・ ${esc(item.browser||'ブラウザ未入力')}</span></div><div class="device-card-actions"><button class="device-edit" type="button" data-id="${esc(item.id)}">編集</button><button class="device-delete" type="button" data-id="${esc(item.id)}">削除</button></div></div><div class="device-card-status">通信環境：${esc(item.network||'未入力')}<br>最終ログイン：${esc(deviceLoginLabel(item.lastLogin))}</div>${item.memo?`<div class="device-card-note">メモ：${esc(item.memo)}</div>`:''}</div>`).join(''):'<div class="device-empty">端末はまだ登録されていません。<br>「＋ 端末を追加」から登録できます。</div>'}catch(err){console.error(err);deviceManagerCache=[];deviceList.innerHTML='<div class="device-empty">端末情報を読み込めませんでした。Safariのサイトデータ設定を確認してください。</div>'}}
 function openDeviceEditor(item=null){deviceForm.reset();deviceRecordId.value=item?.id||'';deviceName.value=item?.name||'';deviceType.value=item?.type||'smartphone';deviceBrowser.value=item?.browser||'';deviceNetwork.value=item?.network||'';deviceLastLogin.value=item?.lastLogin||'';deviceMemo.value=item?.memo||'';deviceModalTitle.textContent=item?'端末を編集':'端末を追加';deviceModal.classList.add('open');deviceModal.setAttribute('aria-hidden','false');document.body.style.overflow='hidden';setTimeout(()=>deviceName.focus(),60)}
 function closeDeviceEditor(){deviceModal.classList.remove('open');deviceModal.setAttribute('aria-hidden','true');deviceForm.reset();deviceRecordId.value='';document.body.style.overflow=nameManagerModal.classList.contains('open')?'hidden':''}
 function renderNameManager(){const ms=getMemberships(),ps=getPerformances();if(activeNameManagerTab==='fc'){const renewal=ms.filter(m=>dateWithinDays(m.expiry,60)),payment=ps.filter(p=>dateWithinDays(p.paymentDeadline,30)&&!['paid','notneeded'].includes(p.paymentStatus)),application=ps.filter(p=>dateWithinDays(p.applicationDeadline,30)),result=ps.filter(p=>dateWithinDays(p.resultDate,30));deadlineRenewalCount.textContent=`${renewal.length}件`;deadlinePaymentCount.textContent=`${payment.length}件`;deadlineApplicationCount.textContent=`${application.length}件`;deadlineResultCount.textContent=`${result.length}件`;const total=renewal.length+payment.length+application.length+result.length;deadlineMessage.textContent=total?`確認したい項目が ${total}件 あります。期限の近いものから確認してください。`:'現在確認が必要な項目はありません。今日も推し活管理おつかれさまです。';nameManagerTotal.textContent=`${ms.length}件`;const oldest=ms.filter(m=>m.joinMonth).sort((a,b)=>a.joinMonth.localeCompare(b.joinMonth))[0];nameManagerOldest.textContent=oldest?oldest.joinMonth.replace('-','.'):'—';nameManagerNeedRenewal.textContent=`${renewal.length}件`;renderFcFolders()}else if(activeNameManagerTab==='companion'){void renderCompanionManager()}else{void renderDeviceManager()}}
