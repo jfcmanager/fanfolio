@@ -12,7 +12,7 @@
 <link rel="icon" type="image/png" sizes="32x32" href="./favicon-32.png" />
 <link rel="icon" type="image/png" sizes="192x192" href="./icon-192.png" />
 <meta name="mobile-web-app-capable" content="yes" />
-<title>FanFolio v0.26.18</title>
+<title>FanFolio v0.26.19</title>
 <style>
 :root{
   --bg:#f7f5f0;
@@ -1624,11 +1624,12 @@ const BETA_ADMIN_KEY='fanfolio_beta_admin_enabled';
 const BETA_PLAN_OVERRIDE_KEY='fanfolio_beta_plan_override';
 const FREE_ACCESS_KEY='fanfolio_v1_free_access';
 const THEME_KEY='fanfolio_v1_theme';
-const APP_VERSION='0.26.17';
+const APP_VERSION='0.26.19';
 const RELEASE_NOTES_SEEN_KEY='fanfolio_v1_release_notes_seen';
 const CURRENT_RELEASE_NOTES={
-  version:'0.26.17',date:'2026.08.16',
+  version:'0.26.19',date:'2026.08.16',
   items:[
+    {title:'バージョン表示・更新確認を修正',text:'画面上のバージョン表示と更新確認が古い内部バージョンを参照していた問題を修正し、APP_VERSION・更新確認・Service Workerのバージョンを統一しました。'},
     {title:'ジャニオタ向け玄学分析を強化',text:'前回当選からの経過50%・直近の連続落選25%・過去勝率15%・名義年資10%を軸に、カテゴリー別の狙い目を確認できるようにしました。'},
     {title:'FC同行者の当選履歴に対応',text:'申込時に同行者とFC名義を紐付けると、当選時にその名義へ「同行者当選」として名義カルテ・玄学分析へ反映します。'},
     {title:'カウコン・合同ライブ対応',text:'カテゴリーにカウコンを追加。合同ライブは参加グループを複数記録でき、単独ツアー当選とは分けて関連当選として弱めに補正します。'},
