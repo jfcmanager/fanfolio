@@ -12,7 +12,7 @@
 <link rel="icon" type="image/png" sizes="32x32" href="./favicon-32.png" />
 <link rel="icon" type="image/png" sizes="192x192" href="./icon-192.png" />
 <meta name="mobile-web-app-capable" content="yes" />
-<title>FanFolio v0.26.22</title>
+<title>FanFolio v0.26.23</title>
 <style>
 :root{
   --bg:#f7f5f0;
@@ -628,6 +628,9 @@ body.security-locked{overflow:hidden!important}
 /* FanFolio v0.26.18 — STARTO玄学 / FC同行者 / カウコン・合同ライブ */
 /* FanFolio v0.26.21 — 次回ツアー狙い目 / 関連当選補正 */
 /* FanFolio v0.26.22 — 名義別座席分析 / カテゴリー別当選分布 */
+/* FanFolio v0.26.23 — 推し候補選択 / 入力履歴 */
+#oshiGroupNameCustom:not([hidden]),#oshiGroupCustom:not([hidden]),#oshiFavoriteArtistCustom:not([hidden]){margin-top:8px}
+
 .lottery-analysis-secondary{margin-top:14px}.lottery-analysis-secondary[hidden]{display:none!important}.seat-analysis-list{display:grid;gap:9px}.seat-analysis-card{border:1px solid var(--lottery-line,var(--line));border-radius:14px;background:var(--lottery-surface,var(--surface));padding:12px 13px}.seat-analysis-head{display:flex;align-items:flex-start;justify-content:space-between;gap:10px}.seat-analysis-name{font-size:13px;font-weight:850;color:var(--ink);line-height:1.4}.seat-analysis-meta{font-size:9.8px;color:var(--lottery-muted,var(--muted));line-height:1.5;margin-top:3px}.seat-analysis-count{flex:none;border-radius:999px;background:var(--lottery-pale,var(--accent-pale));color:var(--lottery-strong,var(--accent-strong));padding:4px 8px;font-size:9.5px;font-weight:850;white-space:nowrap}.seat-analysis-kpis{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:6px;margin-top:9px}.seat-analysis-kpi{border-radius:10px;background:var(--lottery-soft,var(--surface-soft));padding:8px 7px;text-align:center}.seat-analysis-kpi span{display:block;font-size:8.7px;color:var(--lottery-muted,var(--muted));line-height:1.3}.seat-analysis-kpi strong{display:block;font-size:11.5px;color:var(--lottery-strong,var(--accent-strong));margin-top:3px;overflow-wrap:anywhere}.seat-analysis-buckets{display:flex;gap:5px;flex-wrap:wrap;margin-top:8px}.seat-analysis-bucket{display:inline-flex;align-items:center;border:1px solid var(--lottery-line,var(--line));border-radius:999px;background:var(--lottery-surface,var(--surface));padding:4px 7px;font-size:9px;color:var(--lottery-muted,var(--muted));font-weight:750}.seat-analysis-history{display:grid;gap:5px;margin-top:9px;padding-top:9px;border-top:1px dashed var(--lottery-line,var(--line))}.seat-analysis-row{display:grid;grid-template-columns:70px minmax(0,1fr);gap:8px;font-size:9.8px;line-height:1.5}.seat-analysis-row span{color:var(--lottery-muted,var(--muted))}.seat-analysis-row strong{color:var(--ink);font-weight:700;overflow-wrap:anywhere}.seat-analysis-note{font-size:9.5px;color:var(--lottery-muted,var(--muted));line-height:1.55;margin-top:8px}.category-distribution-list{display:grid;gap:10px}.category-distribution-row{display:grid;grid-template-columns:88px minmax(0,1fr) auto;gap:9px;align-items:center}.category-distribution-label{font-size:11.5px;font-weight:800;color:var(--ink)}.category-distribution-track{height:11px;border-radius:999px;background:var(--lottery-soft,var(--surface-soft));overflow:hidden}.category-distribution-bar{display:block;height:100%;min-width:0;border-radius:inherit;background:var(--lottery-strong,var(--accent-strong));opacity:.72}.category-distribution-value{text-align:right;white-space:nowrap}.category-distribution-value strong{display:block;font-size:12px;color:var(--ink)}.category-distribution-value span{display:block;font-size:8.5px;color:var(--lottery-muted,var(--muted));margin-top:1px}.category-distribution-foot{margin-top:11px;padding-top:9px;border-top:1px dashed var(--lottery-line,var(--line));font-size:9.5px;line-height:1.55;color:var(--lottery-muted,var(--muted))}@media(max-width:360px){.seat-analysis-kpis{grid-template-columns:1fr 1fr}.seat-analysis-row{grid-template-columns:62px minmax(0,1fr)}.category-distribution-row{grid-template-columns:72px minmax(0,1fr) auto}.category-distribution-label{font-size:10.5px}}
 
 .application-participant-box{display:grid;gap:8px}.application-participant-list{display:flex;gap:7px;flex-wrap:wrap}.application-participant-option{position:relative}.application-participant-option input{position:absolute;opacity:0;pointer-events:none}.application-participant-option span{display:inline-flex;align-items:center;min-height:36px;padding:7px 10px;border:1px solid var(--line);border-radius:999px;background:var(--surface);color:var(--muted);font-size:10.5px;font-weight:800}.application-participant-option input:checked+span{background:var(--accent-pale);border-color:var(--line-strong);color:var(--accent-strong)}.application-participant-empty{font-size:10.5px;color:var(--muted);line-height:1.5}.application-companion-section{border:1px solid var(--line);border-radius:16px;background:var(--surface-soft);padding:12px 13px;margin:0 0 15px}.application-companion-section[hidden]{display:none!important}.application-companion-note{font-size:10.5px;line-height:1.6;color:var(--muted);margin:-3px 0 10px}.application-companion-card{border:1px solid var(--line);border-radius:13px;background:var(--surface);padding:11px 12px;margin-top:8px}.application-companion-card:first-child{margin-top:0}.application-companion-head{font-size:12px;font-weight:850;color:var(--accent-strong);margin-bottom:9px}.application-companion-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px}.application-companion-grid .form-group{margin-bottom:9px}.application-companion-fc-link[hidden]{display:none!important}.application-companion-hint{font-size:9.8px;color:var(--muted);line-height:1.45;margin-top:-3px}.target-score-reference{display:inline-flex;align-items:center;border-radius:999px;padding:4px 8px;margin-left:5px;background:var(--lottery-soft,var(--surface-soft));color:var(--lottery-muted,var(--muted));font-size:9px;font-weight:850}.target-score-reference.high{background:var(--lottery-pale,var(--accent-pale));color:var(--lottery-strong,var(--accent-strong))}.target-score-related{margin-top:8px;border:1px dashed var(--lottery-line,var(--line));border-radius:11px;padding:8px 9px;background:var(--lottery-soft,var(--surface-soft))}.target-score-related strong{display:block;font-size:9.8px;color:var(--lottery-strong,var(--accent-strong));margin-bottom:4px}.target-score-related span{display:block;font-size:9.5px;line-height:1.5;color:var(--lottery-muted,var(--muted))}.membership-win-role{display:inline-flex;align-items:center;border-radius:999px;padding:3px 7px;background:var(--accent-pale);color:var(--accent-strong);font-size:9.5px;font-weight:850;margin-left:6px}@media(max-width:390px){.application-companion-grid{grid-template-columns:1fr}}
@@ -842,22 +845,27 @@ body.security-locked{overflow:hidden!important}
       </div>
       <div class="form-group">
         <label class="form-label" for="oshiName" id="oshiNameLabel">推しの名前 *</label>
-        <input class="form-control" id="oshiName" maxlength="50" placeholder="例：大橋和也" required />
+        <input class="form-control" id="oshiName" maxlength="50" placeholder="例：大橋和也" required data-history-key="oshi-name" />
+        <select class="form-control" id="oshiGroupNameSelect" hidden aria-label="グループ名を選択"></select>
+        <input class="form-control" id="oshiGroupNameCustom" maxlength="60" placeholder="グループ名を入力" hidden data-history-key="group" />
+        <div class="modal-note" id="oshiGroupNameNote" hidden>登録済み・過去に入力したグループから選べます。「その他（直接入力）」で新しいグループも登録できます。</div>
       </div>
       <div class="form-group">
         <label class="form-label" for="oshiCategory">カテゴリ・事務所</label>
-        <input class="form-control" id="oshiCategory" maxlength="60" placeholder="例：STARTO ENTERTAINMENT / K-POP" list="oshiCategorySuggestions" />
+        <input class="form-control" id="oshiCategory" maxlength="60" placeholder="例：STARTO ENTERTAINMENT / K-POP" list="oshiCategorySuggestions" data-history-key="category" />
         <datalist id="oshiCategorySuggestions"><option value="STARTO ENTERTAINMENT"></option><option value="K-POP"></option><option value="俳優"></option><option value="声優"></option><option value="アニメ"></option><option value="VTuber"></option></datalist>
       </div>
       <div class="form-group conditional-field" id="oshiGroupField">
         <label class="form-label" for="oshiGroup">グループ・作品名</label>
-        <input class="form-control" id="oshiGroup" maxlength="60" placeholder="例：なにわ男子" />
+        <select class="form-control" id="oshiGroup" aria-label="グループ・作品名を選択"></select>
+        <input class="form-control" id="oshiGroupCustom" maxlength="60" placeholder="グループ・作品名を入力" hidden data-history-key="group" />
+        <div class="modal-note">登録済み・過去に入力した候補から選択できます。新しいグループは「その他（直接入力）」から追加できます。</div>
       </div>
       <div class="form-group conditional-field" id="oshiFavoriteArtistField" hidden>
         <label class="form-label" for="oshiFavoriteArtist">好きなアーティスト</label>
-        <input class="form-control" id="oshiFavoriteArtist" maxlength="60" placeholder="例：大橋和也" list="oshiFavoriteArtistSuggestions" />
-        <datalist id="oshiFavoriteArtistSuggestions"></datalist>
-        <div class="modal-note">登録済みの個人推しから選ぶか、名前を直接入力できます。</div>
+        <select class="form-control" id="oshiFavoriteArtist" aria-label="好きなアーティストを選択"></select>
+        <input class="form-control" id="oshiFavoriteArtistCustom" maxlength="60" placeholder="名前を直接入力" hidden data-history-key="artist" />
+        <div class="modal-note">選択したグループのメンバー候補を表示します。登録済みの個人推しや過去の入力履歴も候補に追加されます。</div>
       </div>
       <div class="form-group conditional-field" id="oshiBirthdayField">
         <label class="form-label" for="oshiBirthday">誕生日</label>
@@ -1630,15 +1638,15 @@ const BETA_ADMIN_KEY='fanfolio_beta_admin_enabled';
 const BETA_PLAN_OVERRIDE_KEY='fanfolio_beta_plan_override';
 const FREE_ACCESS_KEY='fanfolio_v1_free_access';
 const THEME_KEY='fanfolio_v1_theme';
-const APP_VERSION='0.26.22';
+const APP_VERSION='0.26.23';
 const RELEASE_NOTES_SEEN_KEY='fanfolio_v1_release_notes_seen';
 const CURRENT_RELEASE_NOTES={
-  version:'0.26.22',date:'2026.08.16',
+  version:'0.26.23',date:'2026.08.16',
   items:[
-    {title:'名義別 座席分析を追加',text:'代表者当選とFC同行者当選に紐づく登録済み座席を、名義ごとにまとめて確認できる分析欄を追加しました。'},
-    {title:'カテゴリー別当選分布を追加',text:'ツアー・カウコン・舞台・番組協力・ファンミ・合同ライブなど、カテゴリーごとの当選件数を代表者／FC同行者に分けて可視化しました。'},
-    {title:'分析フィルターと連動',text:'名義別 座席分析は選択中のFC・カテゴリーを反映し、カテゴリー別当選分布は選択中のFCを反映して全カテゴリーの傾向を比較できます。'},
-    {title:'既存データのみで分析',text:'新しい当選履歴や座席データを複製せず、既存の名義・当落・Memories・FC同行者情報を端末内で集計します。'}
+    {title:'グループ名を選択式に変更',text:'推し追加で、登録済み・過去に入力したグループをプルダウンから選べるようにしました。新しいグループは「その他（直接入力）」から登録できます。'},
+    {title:'グループ連動で事務所・メンバー候補を自動表示',text:'グループを選ぶと、登録済み情報やプリセットをもとにカテゴリ・事務所を自動入力し、「好きなアーティスト」にそのグループのメンバー候補を表示します。'},
+    {title:'なにわ男子メンバー候補を追加',text:'なにわ男子を選択した場合、西畑大吾・大西流星・道枝駿佑・高橋恭平・長尾謙杜・藤原丈一郎・大橋和也をすぐ選択できます。'},
+    {title:'入力履歴候補を追加',text:'会場・ツアー名・グループ・カテゴリ・連絡先など、再利用しやすい単行入力欄は端末内の入力履歴から候補を呼び出せます。既存のlocalStorage形式は変更していません。'}
   ]
 };
 if(location.search.includes('__fanfolio_refresh')){try{const cleanUrl=new URL(location.href);cleanUrl.searchParams.delete('__fanfolio_refresh');history.replaceState(null,'',cleanUrl.pathname+(cleanUrl.searchParams.toString()?`?${cleanUrl.searchParams}`:'')+cleanUrl.hash)}catch{}}
@@ -1665,12 +1673,16 @@ const oshiTypeSwitch=document.getElementById('oshiTypeSwitch');
 const oshiTypeButtons=[...document.querySelectorAll('#oshiTypeSwitch .oshi-type-btn')];
 const oshiName=document.getElementById('oshiName');
 const oshiNameLabel=document.getElementById('oshiNameLabel');
+const oshiGroupNameSelect=document.getElementById('oshiGroupNameSelect');
+const oshiGroupNameCustom=document.getElementById('oshiGroupNameCustom');
+const oshiGroupNameNote=document.getElementById('oshiGroupNameNote');
 const oshiCategory=document.getElementById('oshiCategory');
 const oshiGroup=document.getElementById('oshiGroup');
+const oshiGroupCustom=document.getElementById('oshiGroupCustom');
 const oshiGroupField=document.getElementById('oshiGroupField');
 const oshiFavoriteArtist=document.getElementById('oshiFavoriteArtist');
+const oshiFavoriteArtistCustom=document.getElementById('oshiFavoriteArtistCustom');
 const oshiFavoriteArtistField=document.getElementById('oshiFavoriteArtistField');
-const oshiFavoriteArtistSuggestions=document.getElementById('oshiFavoriteArtistSuggestions');
 const oshiBirthday=document.getElementById('oshiBirthday');
 const oshiBirthdayField=document.getElementById('oshiBirthdayField');
 const oshiMemberColorField=document.getElementById('oshiMemberColorField');
@@ -2039,33 +2051,96 @@ function renderOshi(){
 function resetPhotoPreview(){pendingPhoto='';photoPreview.style.backgroundImage='';photoPreview.textContent='♡'}
 function setPhotoPreview(data){pendingPhoto=data||'';photoPreview.style.backgroundImage=data?`url('${data}')`:'';photoPreview.textContent=data?'':'♡'}
 function inferOshiType(item){return item?.oshiType==='group'?'group':'individual'}
-function populateFavoriteArtistSuggestions(currentGroup=''){
-  if(!oshiFavoriteArtistSuggestions)return;
-  const names=getOshi().filter(o=>(o.oshiType||'individual')!=='group'&&o.name&&(!currentGroup||!o.group||o.group===currentGroup)).map(o=>o.name.trim()).filter(Boolean);
-  oshiFavoriteArtistSuggestions.innerHTML=[...new Set(names)].sort((a,b)=>a.localeCompare(b,'ja')).map(name=>`<option value="${esc(name)}"></option>`).join('');
+const OSHI_CUSTOM_OPTION='__fanfolio_custom__';
+const OSHI_GROUP_PRESETS={
+  'なにわ男子':{category:'STARTO ENTERTAINMENT',members:['西畑大吾','大西流星','道枝駿佑','高橋恭平','長尾謙杜','藤原丈一郎','大橋和也']}
+};
+function oshiCleanText(value=''){return String(value||'').normalize('NFKC').trim()}
+function oshiGroupCatalog(){
+  const map=new Map();
+  const ensure=(name,category='')=>{name=oshiCleanText(name);if(!name)return null;const key=name.toLocaleLowerCase('ja');if(!map.has(key))map.set(key,{name,category:oshiCleanText(category),members:new Set()});const item=map.get(key);if(!item.category&&category)item.category=oshiCleanText(category);return item};
+  Object.entries(OSHI_GROUP_PRESETS).forEach(([name,data])=>{const item=ensure(name,data.category);(data.members||[]).forEach(member=>item?.members.add(member))});
+  getOshi().forEach(item=>{const type=inferOshiType(item);if(type==='group'){const entry=ensure(item.name,item.category);if(item.favoriteArtist)entry?.members.add(oshiCleanText(item.favoriteArtist))}else if(item.group){const entry=ensure(item.group,item.category);if(item.name)entry?.members.add(oshiCleanText(item.name))}});
+  inputHistoryValuesFor('group').forEach(name=>ensure(name,''));
+  return [...map.values()].sort((a,b)=>a.name.localeCompare(b.name,'ja'));
 }
-function updateOshiTypeUI(type=oshiType?.value||'individual'){
+function oshiGroupInfo(name=''){const n=oshiCleanText(name);if(!n)return null;return oshiGroupCatalog().find(item=>item.name===n)||null}
+function renderSelectOptions(select,values=[],current='',placeholder='選択してください'){
+  if(!select)return;
+  const unique=[...new Set(values.map(oshiCleanText).filter(Boolean))];
+  const hasCurrent=current&&unique.includes(current);
+  select.innerHTML=`<option value="">${esc(placeholder)}</option>${unique.map(v=>`<option value="${esc(v)}">${esc(v)}</option>`).join('')}<option value="${OSHI_CUSTOM_OPTION}">その他（直接入力）</option>`;
+  if(current){select.value=hasCurrent?current:OSHI_CUSTOM_OPTION}else select.value='';
+}
+function currentGroupRecordName(){
+  if(oshiGroupNameSelect?.value===OSHI_CUSTOM_OPTION)return oshiCleanText(oshiGroupNameCustom?.value);
+  return oshiCleanText(oshiGroupNameSelect?.value);
+}
+function currentIndividualGroupName(){
+  if(oshiGroup?.value===OSHI_CUSTOM_OPTION)return oshiCleanText(oshiGroupCustom?.value);
+  return oshiCleanText(oshiGroup?.value);
+}
+function currentFavoriteArtistName(){
+  if(oshiFavoriteArtist?.value===OSHI_CUSTOM_OPTION)return oshiCleanText(oshiFavoriteArtistCustom?.value);
+  return oshiCleanText(oshiFavoriteArtist?.value);
+}
+function syncOshiCustomInputs(){
+  if(oshiGroupNameCustom){const show=oshiType.value==='group'&&oshiGroupNameSelect?.value===OSHI_CUSTOM_OPTION;oshiGroupNameCustom.hidden=!show;oshiGroupNameCustom.disabled=!show}
+  if(oshiGroupCustom){const show=oshiType.value!=='group'&&oshiGroup?.value===OSHI_CUSTOM_OPTION;oshiGroupCustom.hidden=!show;oshiGroupCustom.disabled=!show}
+  if(oshiFavoriteArtistCustom){const show=oshiType.value==='group'&&oshiFavoriteArtist?.value===OSHI_CUSTOM_OPTION;oshiFavoriteArtistCustom.hidden=!show;oshiFavoriteArtistCustom.disabled=!show}
+}
+function populateOshiGroupChoices(currentGroupName='',individualGroup=''){
+  const names=oshiGroupCatalog().map(item=>item.name);
+  renderSelectOptions(oshiGroupNameSelect,names,oshiCleanText(currentGroupName),'グループを選択してください');
+  renderSelectOptions(oshiGroup,names,oshiCleanText(individualGroup),'選択してください');
+  if(currentGroupName&&!names.includes(oshiCleanText(currentGroupName))&&oshiGroupNameCustom)oshiGroupNameCustom.value=currentGroupName;
+  if(individualGroup&&!names.includes(oshiCleanText(individualGroup))&&oshiGroupCustom)oshiGroupCustom.value=individualGroup;
+  syncOshiCustomInputs();
+}
+function populateFavoriteArtistChoices(groupName='',currentArtist=''){
+  if(!oshiFavoriteArtist)return;
+  const group=oshiCleanText(groupName),info=oshiGroupInfo(group),members=new Set(info?[...info.members]:[]);
+  getOshi().filter(o=>inferOshiType(o)==='individual'&&oshiCleanText(o.group)===group&&o.name).forEach(o=>members.add(oshiCleanText(o.name)));
+  const preset=OSHI_GROUP_PRESETS[group];(preset?.members||[]).forEach(m=>members.add(m));
+  const values=[...members].filter(Boolean);
+  renderSelectOptions(oshiFavoriteArtist,values,oshiCleanText(currentArtist),'選択してください');
+  if(currentArtist&&!values.includes(oshiCleanText(currentArtist))&&oshiFavoriteArtistCustom)oshiFavoriteArtistCustom.value=currentArtist;
+  syncOshiCustomInputs();
+}
+function applyGroupAutofill(groupName,{forceCategory=true,currentArtist=''}={}){
+  const group=oshiCleanText(groupName),info=oshiGroupInfo(group);
+  if(info?.category&&oshiCategory&&(forceCategory||!oshiCategory.value.trim()))oshiCategory.value=info.category;
+  if(oshiType.value==='group')populateFavoriteArtistChoices(group,currentArtist);
+}
+function updateOshiTypeUI(type=oshiType?.value||'individual',item=null){
   const groupMode=type==='group';if(oshiType)oshiType.value=groupMode?'group':'individual';
   oshiTypeButtons.forEach(btn=>{const active=btn.dataset.oshiType===oshiType.value;btn.classList.toggle('active',active);btn.setAttribute('aria-pressed',active?'true':'false')});
-  if(oshiNameLabel)oshiNameLabel.textContent=groupMode?'グループ名 *':'推しの名前 *';
-  if(oshiName)oshiName.placeholder=groupMode?'例：なにわ男子':'例：大橋和也';
+  if(oshiNameLabel){oshiNameLabel.textContent=groupMode?'グループ名 *':'推しの名前 *';oshiNameLabel.htmlFor=groupMode?'oshiGroupNameSelect':'oshiName'}
+  if(oshiName){oshiName.hidden=groupMode;oshiName.disabled=groupMode;oshiName.required=!groupMode;oshiName.placeholder='例：大橋和也'}
+  if(oshiGroupNameSelect){oshiGroupNameSelect.hidden=!groupMode;oshiGroupNameSelect.disabled=!groupMode;oshiGroupNameSelect.required=groupMode}
+  if(oshiGroupNameNote)oshiGroupNameNote.hidden=!groupMode;
   if(oshiGroupField)oshiGroupField.hidden=groupMode;
   if(oshiFavoriteArtistField)oshiFavoriteArtistField.hidden=!groupMode;
   if(oshiBirthdayField)oshiBirthdayField.hidden=groupMode;
-  if(oshiMemberColorField)oshiMemberColorField.hidden=groupMode&&!oshiFavoriteArtist.value.trim();
-  populateFavoriteArtistSuggestions(groupMode?oshiName.value.trim():'');
+  const groupCurrent=groupMode?(item?.name||currentGroupRecordName()):'',individualGroup=!groupMode?(item?.group||currentIndividualGroupName()):'';
+  populateOshiGroupChoices(groupCurrent,individualGroup);
+  if(groupMode){const artist=item?.favoriteArtist||currentFavoriteArtistName();populateFavoriteArtistChoices(groupCurrent,artist)}
+  if(oshiMemberColorField)oshiMemberColorField.hidden=groupMode&&!currentFavoriteArtistName();
+  syncOshiCustomInputs();
 }
+function oshiEditableControls(){return [oshiName,oshiGroupNameSelect,oshiGroupNameCustom,oshiCategory,oshiGroup,oshiGroupCustom,oshiFavoriteArtist,oshiFavoriteArtistCustom,oshiBirthday,oshiMemo].filter(Boolean)}
 function openOshiModal(item=null){
   const readonly=Boolean(item&&!isRecordEditable('oshi',item.id));
   document.getElementById('oshiModalTitle').textContent=readonly?'推し（閲覧のみ）':item?'推しを編集':'推しを追加';
-  oshiId.value=item?.id||'';oshiType.value=inferOshiType(item);oshiName.value=item?.name||'';oshiCategory.value=item?.category||'';oshiGroup.value=item?.group||'';oshiFavoriteArtist.value=item?.favoriteArtist||'';oshiBirthday.value=item?.birthday||'';oshiMemo.value=item?.memo||'';
-  updateOshiTypeUI(oshiType.value);setSelectedOshiColor(item?.memberColor||'');setPhotoPreview(item?.photo||'');
-  [oshiName,oshiCategory,oshiGroup,oshiFavoriteArtist,oshiBirthday,oshiMemo].forEach(el=>el.disabled=readonly);oshiTypeButtons.forEach(btn=>btn.disabled=readonly);choosePhotoBtn.style.display=readonly?'none':'';oshiColorButtons.forEach(btn=>btn.disabled=readonly);oshiForm.querySelector('button[type="submit"]').style.display=readonly?'none':'';deleteOshiBtn.style.display=item&&!readonly?'block':'none';
+  oshiId.value=item?.id||'';oshiType.value=inferOshiType(item);oshiName.value=inferOshiType(item)==='individual'?(item?.name||''):'';oshiCategory.value=item?.category||'';oshiBirthday.value=item?.birthday||'';oshiMemo.value=item?.memo||'';
+  if(oshiGroupNameCustom)oshiGroupNameCustom.value='';if(oshiGroupCustom)oshiGroupCustom.value='';if(oshiFavoriteArtistCustom)oshiFavoriteArtistCustom.value='';
+  updateOshiTypeUI(oshiType.value,item);setSelectedOshiColor(item?.memberColor||'');setPhotoPreview(item?.photo||'');
+  oshiEditableControls().forEach(el=>el.disabled=readonly||el.hidden);oshiTypeButtons.forEach(btn=>btn.disabled=readonly);choosePhotoBtn.style.display=readonly?'none':'';oshiColorButtons.forEach(btn=>btn.disabled=readonly);oshiForm.querySelector('button[type="submit"]').style.display=readonly?'none':'';deleteOshiBtn.style.display=item&&!readonly?'block':'none';
   let banner=oshiForm.querySelector('.readonly-banner');if(readonly&&!banner){banner=document.createElement('div');banner.className='readonly-banner';banner.textContent='Freeプランの編集枠を超えているため、現在は閲覧のみです。設定から編集する推しを変更できます。';oshiForm.prepend(banner)}else if(banner)banner.style.display=readonly?'block':'none';
   oshiModal.classList.add('open');oshiModal.setAttribute('aria-hidden','false');document.body.style.overflow='hidden';
-  if(!readonly)setTimeout(()=>oshiName.focus(),80);
+  if(!readonly)setTimeout(()=>{const target=oshiType.value==='group'?oshiGroupNameSelect:oshiName;target?.focus()},80);
 }
-function closeOshiModal(){oshiModal.classList.remove('open');oshiModal.setAttribute('aria-hidden','true');document.body.style.overflow='';[oshiName,oshiCategory,oshiGroup,oshiFavoriteArtist,oshiBirthday,oshiMemo].forEach(el=>el.disabled=false);oshiTypeButtons.forEach(btn=>btn.disabled=false);choosePhotoBtn.style.display='';oshiColorButtons.forEach(btn=>btn.disabled=false);oshiForm.querySelector('button[type="submit"]').style.display='';const banner=oshiForm.querySelector('.readonly-banner');if(banner)banner.style.display='none';oshiForm.reset();oshiType.value='individual';updateOshiTypeUI('individual');resetPhotoPreview();setSelectedOshiColor('')}
+function closeOshiModal(){oshiModal.classList.remove('open');oshiModal.setAttribute('aria-hidden','true');document.body.style.overflow='';oshiEditableControls().forEach(el=>el.disabled=false);oshiTypeButtons.forEach(btn=>btn.disabled=false);choosePhotoBtn.style.display='';oshiColorButtons.forEach(btn=>btn.disabled=false);oshiForm.querySelector('button[type="submit"]').style.display='';const banner=oshiForm.querySelector('.readonly-banner');if(banner)banner.style.display='none';oshiForm.reset();if(oshiGroupNameCustom)oshiGroupNameCustom.value='';if(oshiGroupCustom)oshiGroupCustom.value='';if(oshiFavoriteArtistCustom)oshiFavoriteArtistCustom.value='';oshiType.value='individual';updateOshiTypeUI('individual');resetPhotoPreview();setSelectedOshiColor('')}
 function uid(){return (crypto.randomUUID?crypto.randomUUID():'oshi_'+Date.now()+'_'+Math.random().toString(36).slice(2))}
 async function resizeImage(file){
   const data=await new Promise((resolve,reject)=>{const r=new FileReader();r.onload=()=>resolve(r.result);r.onerror=reject;r.readAsDataURL(file)});
@@ -2084,21 +2159,26 @@ addOshiBtn.addEventListener('click',()=>{
 cancelOshiBtn.addEventListener('click',closeOshiModal);
 oshiModal.addEventListener('click',e=>{if(e.target===oshiModal)closeOshiModal()});
 oshiTypeSwitch?.addEventListener('click',e=>{const btn=e.target.closest('.oshi-type-btn[data-oshi-type]');if(!btn||btn.disabled)return;updateOshiTypeUI(btn.dataset.oshiType)});
-oshiName?.addEventListener('input',()=>{if(oshiType.value==='group')populateFavoriteArtistSuggestions(oshiName.value.trim())});
-oshiFavoriteArtist?.addEventListener('input',()=>{if(oshiType.value==='group'&&oshiMemberColorField)oshiMemberColorField.hidden=!oshiFavoriteArtist.value.trim()});
+oshiGroupNameSelect?.addEventListener('change',()=>{syncOshiCustomInputs();if(oshiGroupNameSelect.value===OSHI_CUSTOM_OPTION&&oshiCategory)oshiCategory.value='';const group=currentGroupRecordName();if(group)applyGroupAutofill(group,{forceCategory:true});else populateFavoriteArtistChoices('','');if(oshiMemberColorField)oshiMemberColorField.hidden=!currentFavoriteArtistName()});
+oshiGroupNameCustom?.addEventListener('input',()=>{if(oshiType.value==='group'){populateFavoriteArtistChoices(currentGroupRecordName(),currentFavoriteArtistName());if(oshiMemberColorField)oshiMemberColorField.hidden=!currentFavoriteArtistName()}});
+oshiGroup?.addEventListener('change',()=>{syncOshiCustomInputs();if(oshiGroup.value===OSHI_CUSTOM_OPTION&&oshiCategory)oshiCategory.value='';const group=currentIndividualGroupName();if(group)applyGroupAutofill(group,{forceCategory:true})});
+oshiFavoriteArtist?.addEventListener('change',()=>{syncOshiCustomInputs();if(oshiMemberColorField)oshiMemberColorField.hidden=!currentFavoriteArtistName()});
+oshiFavoriteArtistCustom?.addEventListener('input',()=>{if(oshiMemberColorField)oshiMemberColorField.hidden=!currentFavoriteArtistName()});
 oshiColorPicker?.addEventListener('click',e=>{const btn=e.target.closest('.oshi-color-btn[data-color]');if(!btn)return;if(!isPremium()){openPremiumModal();return}selectedOshiColor=btn.dataset.color||'';setSelectedOshiColor(selectedOshiColor)});
 choosePhotoBtn.addEventListener('click',()=>oshiPhoto.click());
 oshiPhoto.addEventListener('change',async()=>{const file=oshiPhoto.files?.[0];if(!file)return;setPhotoPreview(await resizeImage(file))});
 oshiForm.addEventListener('submit',e=>{
-  e.preventDefault();const name=oshiName.value.trim(),type=oshiType.value==='group'?'group':'individual';if(!name){showToast(type==='group'?'グループ名を入力してください。':'推しの名前を入力してください。');return}
+  e.preventDefault();const type=oshiType.value==='group'?'group':'individual',name=type==='group'?currentGroupRecordName():oshiCleanText(oshiName.value);if(!name){showToast(type==='group'?'グループ名を選択または入力してください。':'推しの名前を入力してください。');return}
+  const group=type==='individual'?currentIndividualGroupName():'',favoriteArtist=type==='group'?currentFavoriteArtistName():'';
   const items=getOshi();const editing=oshiId.value;
   if(editing&&!isRecordEditable('oshi',editing)){showToast(readonlyMessage('oshi'));return}
   if(!editing&&!canAddMore('oshi',items.length)){closeOshiModal();showToast('Freeでは推しを3人まで登録できます。');return}
-  const existing=items.find(x=>x.id===editing);const favoriteArtist=type==='group'?oshiFavoriteArtist.value.trim():'';const memberColor=(type==='group'&&!favoriteArtist)?'':(isPremium()?selectedOshiColor:(existing?.memberColor||''));
-  const record={id:editing||uid(),oshiType:type,name,category:oshiCategory.value.trim(),group:type==='individual'?oshiGroup.value.trim():'',favoriteArtist,birthday:type==='individual'?oshiBirthday.value:'',memo:oshiMemo.value.trim(),memberColor,photo:pendingPhoto,updatedAt:new Date().toISOString()};
+  const existing=items.find(x=>x.id===editing);const memberColor=(type==='group'&&!favoriteArtist)?'':(isPremium()?selectedOshiColor:(existing?.memberColor||''));
+  const record={id:editing||uid(),oshiType:type,name,category:oshiCategory.value.trim(),group,favoriteArtist,birthday:type==='individual'?oshiBirthday.value:'',memo:oshiMemo.value.trim(),memberColor,photo:pendingPhoto,updatedAt:new Date().toISOString()};
   const index=items.findIndex(x=>x.id===editing);
   if(index>=0)items[index]={...items[index],...record};else items.push({...record,createdAt:new Date().toISOString()});
   try{saveOshi(items)}catch(err){showToast('保存容量が不足しています。画像を小さくしてお試しください。');return}
+  void rememberInputHistory('group',type==='group'?name:group);void rememberInputHistory('category',record.category);void rememberInputHistory('artist',favoriteArtist||name);
   closeOshiModal();renderOshi();renderCalendar();showToast(editing?'更新しました。':'推しを登録しました。');
 });
 deleteOshiBtn.addEventListener('click',()=>{
@@ -2882,6 +2962,23 @@ performanceMasterForm?.addEventListener('submit',async e=>{e.preventDefault();co
 closeApplicationAddBtn?.addEventListener('click',closeApplicationAddModal);cancelApplicationAddBtn?.addEventListener('click',closeApplicationAddModal);applicationAddModal?.addEventListener('click',e=>{if(e.target===applicationAddModal)closeApplicationAddModal()});
 applicationAddForm?.addEventListener('submit',async e=>{e.preventDefault();const eventName=applicationEventName.value.trim(),memberIds=[...applicationSelectedMembershipIds],members=getMemberships().filter(m=>memberIds.includes(m.id)),primary=currentApplicationPrimaryWish(),companions=applicationCompanionPayload(),participatingGroups=applicationSelectedGroupNames();if(!eventName){showToast('公演名・イベント名を入力してください。');return}if(!members.length){showToast('使用名義を選択してください。');return}if(!primary.date){showToast('第一希望の公演日を入力するか、公演マスタを選択してください。');return}if(!isPremium()&&getPerformances().length+members.length>FREE_PERFORMANCE_LIMIT){showToast(`Freeでは申込管理を${FREE_PERFORMANCE_LIMIT}件まで登録できます。選択名義数を減らしてください。`);return}let tour;try{tour=await ensureApplicationTour(eventName,applicationCategory.value,members[0],primary.date)}catch(err){if(err?.message==='free-tour-limit'){showToast(`Freeではツアー・イベントを${FREE_TOUR_LIMIT}件まで登録できます。既存の公演名を選ぶかPremiumをご利用ください。`);return}console.error(err);showToast('ツアー・イベント情報を作成できませんでした。');return}const items=getPerformances(),now=new Date().toISOString(),createdIds=[],companionNames=companions.map(x=>x.name).filter(Boolean),hasFcCompanion=companions.some(x=>x.fcStatus==='member');for(const m of members){const id=uid(),rec={id,tourId:tour.id,oshiId:tour.oshiId,date:primary.date,session:'',venue:primary.venue||'',status:applicationStatus.value||'applying',tickets:Number(applicationTicketCount.value)||1,memo:applicationAddMemo.value.trim(),membershipId:m.id,companion:companionNames.join('\n'),companionFcStatus:hasFcCompanion?'member':companions.length?'nonmember':'',companionRegistration:'',paymentDeadline:'',paymentStatus:'',paymentAmount:'',paymentCurrency:'JPY',paymentMemo:'',applicationDeadline:'',resultDate:primary.resultDate||applicationResultDate.value||'',updatedAt:now,createdAt:now};items.push(rec);createdIds.push(id)}savePerformances(items);const device=deviceManagerCache.find(x=>x.id===applicationDevice.value)||null,meta={id:uid(),performanceIds:createdIds,tourId:tour.id,eventName,category:applicationCategory.value,membershipIds:memberIds,participatingGroups,companions,lotteryType:applicationLotteryType.value||'',deviceId:applicationDevice.value||'',deviceName:device?.name||'',tickets:Number(applicationTicketCount.value)||1,status:applicationStatus.value||'applying',appliedDate:applicationAppliedDate.value||'',resultDate:applicationResultDate.value||primary.resultDate||'',wishes:[1,2,3].map(applicationWishPayload),fourthChoice:applicationFourthChoice.value||'',memo:applicationAddMemo.value.trim(),createdAt:now,updatedAt:now};try{await appToolsPut(APP_META_STORE,meta);applicationMetaCache.push(meta)}catch(err){console.error('application meta save failed',err)}closeApplicationAddModal();renderLottery();renderApplicationManagement();renderOshi();refreshOshiHomePanel();renderCalendar();showToast(`${members.length}名義分の申込を登録しました。`)});
 
+
+// FanFolio v0.26.23 — 入力履歴候補（既存localStorageは変更しない）
+const INPUT_HISTORY_DB_NAME='fanfolio_input_history',INPUT_HISTORY_DB_VERSION=1,INPUT_HISTORY_STORE='history',INPUT_HISTORY_MAX=24;
+let inputHistoryDbPromise=null;const inputHistoryCache=new Map();
+function openInputHistoryDb(){if(inputHistoryDbPromise)return inputHistoryDbPromise;inputHistoryDbPromise=new Promise((resolve,reject)=>{if(!('indexedDB'in window)){reject(new Error('indexeddb-unavailable'));return}const req=indexedDB.open(INPUT_HISTORY_DB_NAME,INPUT_HISTORY_DB_VERSION);req.onupgradeneeded=()=>{const db=req.result;if(!db.objectStoreNames.contains(INPUT_HISTORY_STORE))db.createObjectStore(INPUT_HISTORY_STORE,{keyPath:'id'})};req.onsuccess=()=>resolve(req.result);req.onerror=()=>reject(req.error||new Error('indexeddb-open-failed'));req.onblocked=()=>reject(new Error('indexeddb-blocked'))});return inputHistoryDbPromise}
+async function loadInputHistory(){try{const db=await openInputHistoryDb();const rows=await new Promise((resolve,reject)=>{const tx=db.transaction(INPUT_HISTORY_STORE,'readonly'),req=tx.objectStore(INPUT_HISTORY_STORE).getAll();req.onsuccess=()=>resolve(req.result||[]);req.onerror=()=>reject(req.error)});rows.forEach(row=>inputHistoryCache.set(row.id,Array.isArray(row.values)?row.values:[]))}catch(err){console.warn('Input history unavailable',err)}}
+function inputHistoryValuesFor(key=''){return [...(inputHistoryCache.get(key)||[])]}
+async function persistInputHistoryKey(key){if(!key)return;try{const db=await openInputHistoryDb();await new Promise((resolve,reject)=>{const tx=db.transaction(INPUT_HISTORY_STORE,'readwrite');tx.objectStore(INPUT_HISTORY_STORE).put({id:key,values:inputHistoryValuesFor(key).slice(0,INPUT_HISTORY_MAX),updatedAt:new Date().toISOString()});tx.oncomplete=()=>resolve();tx.onerror=()=>reject(tx.error);tx.onabort=()=>reject(tx.error||new Error('indexeddb-write-aborted'))})}catch(err){console.warn('Input history save failed',err)}}
+function refreshHistoryListsForKey(key){document.querySelectorAll('input[data-history-bound]').forEach(input=>{if(input.dataset.historyBound===key)refreshHistoryDatalist(input,key)})}
+async function rememberInputHistory(key,value){key=String(key||'').trim();value=oshiCleanText(value);if(!key||!value||value===OSHI_CUSTOM_OPTION)return;const current=inputHistoryValuesFor(key),next=[value,...current.filter(v=>oshiCleanText(v)!==value)].slice(0,INPUT_HISTORY_MAX);inputHistoryCache.set(key,next);refreshHistoryListsForKey(key);await persistInputHistoryKey(key)}
+function reusableHistoryKey(input){if(!input||input.tagName!=='INPUT')return'';if(input.dataset.historyKey)return input.dataset.historyKey;const type=(input.type||'text').toLowerCase(),id=(input.id||'').toLowerCase();if(['password','hidden','file','search','date','month','time','number','checkbox','radio','range','color'].includes(type))return'';if(/password|membernumber|membershipnumber|recordid|^oshiid$|^tourid$|^performanceid$/.test(id))return'';if(/venue/.test(id))return'venue';if(/tourname|eventname/.test(id))return'event-name';if(/group/.test(id))return'group';if(/category|agency|office/.test(id))return'category';if(/artist/.test(id))return'artist';if(/browser/.test(id))return'browser';if(/network/.test(id))return'network';if(/contact/.test(id))return'contact';if(/email/.test(id))return'email';if(/phone|tel/.test(id))return'phone';if(/realname|companionname/.test(id))return'person-name';return id?`field:${id}`:''}
+function refreshHistoryDatalist(input,key){if(!input||!key)return;let listId=input.getAttribute('list'),list=listId?document.getElementById(listId):null;if(!list){listId=`fanfolio-history-${key.replace(/[^a-zA-Z0-9_-]/g,'-')}-${input.id||Math.random().toString(36).slice(2)}`;list=document.createElement('datalist');list.id=listId;document.body.appendChild(list);input.setAttribute('list',listId)}const staticValues=[...(list.dataset.staticValues?JSON.parse(list.dataset.staticValues):[])];if(!list.dataset.staticValues){const base=[...list.querySelectorAll('option')].map(o=>o.value).filter(Boolean);list.dataset.staticValues=JSON.stringify(base);staticValues.push(...base)}const values=[...new Set([...staticValues,...inputHistoryValuesFor(key)])];list.innerHTML=values.map(v=>`<option value="${esc(v)}"></option>`).join('')}
+function bindReusableInputHistory(){document.querySelectorAll('input.form-control').forEach(input=>{const key=reusableHistoryKey(input);if(!key||input.dataset.historyBound)return;input.dataset.historyBound=key;refreshHistoryDatalist(input,key);input.addEventListener('focus',()=>refreshHistoryDatalist(input,key));input.addEventListener('change',()=>{void rememberInputHistory(key,input.value)})})}
+function historySeedMap(){const map=new Map(),add=(key,value)=>{value=oshiCleanText(value);if(!key||!value)return;if(!map.has(key))map.set(key,[]);map.get(key).push(value)};getOshi().forEach(o=>{add('category',o.category);add('group',inferOshiType(o)==='group'?o.name:o.group);add('artist',inferOshiType(o)==='group'?o.favoriteArtist:o.name)});getTours().forEach(t=>add('event-name',t.name));getPerformances().forEach(p=>add('venue',p.venue));getMemberships().forEach(m=>{add('email',m.email);add('phone',m.phone);add('person-name',m.realName)});return map}
+async function seedInputHistory(){const seed=historySeedMap();try{const companions=await buildCompanionDirectory();companions.forEach(c=>{const add=(key,value)=>{value=oshiCleanText(value);if(!value)return;if(!seed.has(key))seed.set(key,[]);seed.get(key).push(value)};add('person-name',c.name);add('email',c.email);add('phone',c.phone);add('contact',c.contact)})}catch{}try{const devices=await getManagedDevices();devices.forEach(d=>{if(d.browser){if(!seed.has('browser'))seed.set('browser',[]);seed.get('browser').push(d.browser)}if(d.network){if(!seed.has('network'))seed.set('network',[]);seed.get('network').push(d.network)}})}catch{}for(const [key,values] of seed){const current=inputHistoryValuesFor(key),merged=[...new Set([...values.map(oshiCleanText).filter(Boolean),...current])].slice(0,INPUT_HISTORY_MAX);inputHistoryCache.set(key,merged);void persistInputHistoryKey(key)}}
+async function initializeInputHistory(){await loadInputHistory();await seedInputHistory();bindReusableInputHistory();populateOshiGroupChoices(currentGroupRecordName(),currentIndividualGroupName());if(oshiType?.value==='group')populateFavoriteArtistChoices(currentGroupRecordName(),currentFavoriteArtistName())}
+
 renderAppVersion();
 renderPlanState();
 renderIntegrityCheckStatus();
@@ -2894,6 +2991,7 @@ renderMoney();
 renderAnnualSummary();
 renderTrades();
 renderTrips();
+void initializeInputHistory();
 if(isPremium())renderAnalysis();
 setTimeout(()=>maybeShowReleaseNotes(),450);
 
