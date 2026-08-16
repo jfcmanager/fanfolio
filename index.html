@@ -2110,15 +2110,16 @@ const BETA_ADMIN_KEY='fanfolio_beta_admin_enabled';
 const BETA_PLAN_OVERRIDE_KEY='fanfolio_beta_plan_override';
 const FREE_ACCESS_KEY='fanfolio_v1_free_access';
 const THEME_KEY='fanfolio_v1_theme';
-const APP_VERSION='0.26.73';
+const APP_VERSION='0.26.74';
 const RELEASE_NOTES_SEEN_KEY='fanfolio_v1_release_notes_seen';
 const CURRENT_RELEASE_NOTES={
   version:APP_VERSION,date:'2026.08.17',
-  items:[
-    {title:'Free／Premiumプレビューを一般ユーザー表示に統一',text:'管理者テストモードでFreeとして確認／Premiumとして確認している間は、Legacy Migrationなど管理者専用UIを非表示にし、一般ユーザーと同じ画面を確認できるようにしました。'},
-    {title:'管理者表示へすぐ戻れるように改善',text:'プレビュー中は「管理者表示に戻る」から契約プレビューだけを終了でき、管理者テストモード自体を解除せずに移行・検証ツールへ戻れます。'},
-    {title:'Legacy Migrationの実行権限も分離',text:'Free／Premiumプレビュー中は画面を隠すだけでなく、移行・検証処理の直接実行もブロックします。'}
-  ]
+  userItems:[
+    {title:'取引管理をさらに見やすく改善',text:'買い手／売り手を分けて確認でき、公演フォルダではツアー・会場・公演日・昼夜ごとに取引を整理できます。取引カードも項目ごとに読みやすく表示します。'},
+    {title:'取引の完了状況をその場でチェック',text:'第1回・第2回の支払い／受取や引渡し完了を、取引カードから直接チェックできるようになりました。完了後も同じ公演フォルダの位置を保ちます。'},
+    {title:'SNSアカウントへすぐアクセス',text:'取引に登録したX・Instagram・Threadsなどの対応SNSアカウントを、取引画面から直接開けるようになりました。'}
+  ],
+  internalItems:[]
 };
 if(location.search.includes('__fanfolio_refresh')){try{const cleanUrl=new URL(location.href);cleanUrl.searchParams.delete('__fanfolio_refresh');history.replaceState(null,'',cleanUrl.pathname+(cleanUrl.searchParams.toString()?`?${cleanUrl.searchParams}`:'')+cleanUrl.hash)}catch{}}
 const BACKUP_SCHEMA_VERSION=1;
@@ -3902,7 +3903,7 @@ async function requestPwaInstall(){
   if(deferredInstallPrompt){try{deferredInstallPrompt.prompt();await deferredInstallPrompt.userChoice;deferredInstallPrompt=null;renderPwaStatus();return}catch(err){console.error(err)}}
   openInstallModal();
 }
-function renderReleaseNotes(){if(releaseNotesMeta)releaseNotesMeta.textContent=`FanFolio v${APP_VERSION} ・ ${CURRENT_RELEASE_NOTES.date.replaceAll('.','/')}`;if(releaseNotesList)releaseNotesList.innerHTML=CURRENT_RELEASE_NOTES.items.map(item=>`<div class="release-note-item"><strong>${esc(item.title)}</strong><p>${esc(item.text)}</p></div>`).join('')}
+function renderReleaseNotes(){if(releaseNotesMeta)releaseNotesMeta.textContent=`FanFolio v${APP_VERSION} ・ ${CURRENT_RELEASE_NOTES.date.replaceAll('.','/')}`;if(releaseNotesList)releaseNotesList.innerHTML=(CURRENT_RELEASE_NOTES.userItems||[]).map(item=>`<div class="release-note-item"><strong>${esc(item.title)}</strong><p>${esc(item.text)}</p></div>`).join('')}
 function openReleaseNotes(){renderReleaseNotes();releaseNotesModal?.classList.add('open');releaseNotesModal?.setAttribute('aria-hidden','false');document.body.style.overflow='hidden'}
 function markReleaseNotesSeen(){try{localStorage.setItem(RELEASE_NOTES_SEEN_KEY,APP_VERSION)}catch{}}
 function closeReleaseNotes(markSeen=true){if(markSeen)markReleaseNotesSeen();releaseNotesModal?.classList.remove('open');releaseNotesModal?.setAttribute('aria-hidden','true');document.body.style.overflow=''}
