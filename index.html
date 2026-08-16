@@ -12,7 +12,7 @@
 <link rel="icon" type="image/png" sizes="32x32" href="./favicon-32.png" />
 <link rel="icon" type="image/png" sizes="192x192" href="./icon-192.png" />
 <meta name="mobile-web-app-capable" content="yes" />
-<title>FanFolio ver. 2026.08.17.07</title>
+<title>FanFolio ver. 2026.08.17.08</title>
 <style>
 :root{
   --bg:#f7f5f0;
@@ -881,8 +881,8 @@ body{width:100%;overscroll-behavior-x:none}
 
       <section class="oshi-home-panel" data-oshi-home-panel="companion" hidden>
         <div class="section-title">同行者・非会員</div>
-        <div class="application-intro"><strong>同行者・非会員</strong><p>公演詳細に入力した同行者と、ここで追加した同行者を重複せずまとめて確認します。</p></div>
-        <div class="companion-toolbar"><button class="solid-btn wide" id="homeAddCompanionBtn" type="button">＋ 同行者を追加</button><div class="companion-local-note">名前（ニックネームOK）・FC状況・電話番号・メールアドレス・連絡手段・備考はこの端末内だけに保存します。</div></div>
+        <div class="application-intro"><strong>同行者・非会員</strong><p>非会員の同行者だけをまとめて確認します。FC会員の同行者はFC名義・申込管理側で管理します。</p></div>
+        <div class="companion-toolbar"><button class="solid-btn wide" id="homeAddCompanionBtn" type="button">＋ 同行者を追加</button><div class="companion-local-note">名前（ニックネームOK）・電話番号・メールアドレス・連絡手段・備考はこの端末内だけに保存します。FC会員はこの一覧には表示しません。</div></div>
         <div class="companion-summary-list" id="homeCompanionList"></div>
       </section>
 
@@ -2117,14 +2117,14 @@ const BETA_ADMIN_KEY='fanfolio_beta_admin_enabled';
 const BETA_PLAN_OVERRIDE_KEY='fanfolio_beta_plan_override';
 const FREE_ACCESS_KEY='fanfolio_v1_free_access';
 const THEME_KEY='fanfolio_v1_theme';
-const APP_VERSION='2026.08.17.07';
+const APP_VERSION='2026.08.17.08';
 const APP_VERSION_DATE='2026.08.17';
 const APP_VERSION_DISPLAY=`ver. ${APP_VERSION}`;
 const RELEASE_NOTES_SEEN_KEY='fanfolio_v1_release_notes_seen';
 const CURRENT_RELEASE_NOTES={
   version:APP_VERSION,date:APP_VERSION_DATE,
   userItems:[
-    {title:'入力候補の表示を整理',text:'削除済みの名前や途中で入力した内容が候補に残らないよう見直し、現在の登録データに沿った候補だけを表示するようにしました。'}
+    {title:'同行者一覧を整理',text:'同行者・非会員の一覧ではFC会員を表示せず、非会員の同行者を確認しやすくしました。FC会員の同行者はFC名義・申込管理側で引き続き管理できます。'}
   ],
   internalItems:[]
 };
@@ -3347,8 +3347,9 @@ async function removeManualCompanion(id){if(!id)return;const db=await openCompan
 function collectPerformanceCompanions(){const map=new Map();getPerformances().forEach(p=>{const names=String(p.companion||'').split('\n').map(x=>x.trim()).filter(Boolean),seen=new Set();names.forEach(name=>{const key=normalizeCompanionName(name);if(!key||seen.has(key))return;seen.add(key);let item=map.get(key);if(!item){item={key,name,count:0,performanceIds:[],statuses:new Set()};map.set(key,item)}item.count++;item.performanceIds.push(p.id);item.statuses.add(['member','nonmember','unknown'].includes(p.companionFcStatus)?p.companionFcStatus:'unknown')})});return map}
 async function buildCompanionDirectory(){const performanceMap=collectPerformanceCompanions();let manual=[];try{manual=await getManualCompanions()}catch(err){console.error('Companion directory unavailable',err)}const merged=new Map();performanceMap.forEach((p,key)=>{const statuses=[...p.statuses];merged.set(key,{key,name:p.name,fcStatus:statuses.length===1?statuses[0]:'unknown',phone:'',email:'',contact:'',memo:'',manualId:'',performanceIds:p.performanceIds,count:p.count})});manual.forEach(m=>{const key=normalizeCompanionName(m.name);if(!key)return;const current=merged.get(key)||{key,name:m.name,fcStatus:'unknown',phone:'',email:'',contact:'',memo:'',manualId:'',performanceIds:[],count:0};current.name=m.name||current.name;current.fcStatus=['member','nonmember','unknown'].includes(m.fcStatus)?m.fcStatus:current.fcStatus;current.phone=m.phone||'';current.email=m.email||'';current.contact=m.contact||'';current.memo=m.memo||'';current.manualId=m.id||'';merged.set(key,current)});return [...merged.values()].sort((a,b)=>b.count-a.count||a.name.localeCompare(b.name,'ja'))}
 function companionDirectoryHtml(items){return items.length?items.map(item=>`<div class="companion-summary-row" data-companion-key="${esc(item.key)}"><div class="companion-row-head"><div class="companion-row-main"><strong>${esc(item.name)}</strong><span class="companion-meta">${item.count}公演 ・ ${companionStatusLabel(item.fcStatus)}</span></div><div class="companion-actions"><button class="companion-mini-btn edit-companion" type="button" data-companion-key="${esc(item.key)}">編集</button><button class="companion-mini-btn danger delete-companion" type="button" data-companion-key="${esc(item.key)}">削除</button></div></div>${item.phone?`<div class="companion-phone">電話番号：${esc(item.phone)}</div>`:''}${item.email?`<div class="companion-email">メール：${esc(item.email)}</div>`:''}${item.contact?`<div class="companion-contact">連絡手段：${esc(item.contact)}</div>`:''}${item.memo?`<div class="companion-memo">備考：${esc(item.memo)}</div>`:''}</div>`).join(''):'<div class="lottery-empty">同行者はまだ登録されていません。<br>「＋ 同行者を追加」から登録できます。</div>'}
-async function renderCompanionManager(){if(companionSummaryList)companionSummaryList.innerHTML='<div class="lottery-empty">読み込み中...</div>';try{const items=await buildCompanionDirectory();companionManagerCache=items;if(companionSummaryList)companionSummaryList.innerHTML=companionDirectoryHtml(items)}catch(err){console.error(err);companionManagerCache=[];if(companionSummaryList)companionSummaryList.innerHTML='<div class="lottery-empty">同行者情報を読み込めませんでした。Safariのサイトデータ設定を確認してください。</div>'}}
-async function renderHomeCompanionManager(){if(!homeCompanionList)return;homeCompanionList.innerHTML='<div class="lottery-empty">読み込み中...</div>';try{const items=await buildCompanionDirectory();companionManagerCache=items;homeCompanionList.innerHTML=companionDirectoryHtml(items)}catch(err){console.error(err);companionManagerCache=[];homeCompanionList.innerHTML='<div class="lottery-empty">同行者情報を読み込めませんでした。Safariのサイトデータ設定を確認してください。</div>'}}
+function visibleNonMemberCompanions(items){return (Array.isArray(items)?items:[]).filter(item=>item?.fcStatus!=='member')}
+async function renderCompanionManager(){if(companionSummaryList)companionSummaryList.innerHTML='<div class="lottery-empty">読み込み中...</div>';try{const items=visibleNonMemberCompanions(await buildCompanionDirectory());companionManagerCache=items;if(companionSummaryList)companionSummaryList.innerHTML=companionDirectoryHtml(items)}catch(err){console.error(err);companionManagerCache=[];if(companionSummaryList)companionSummaryList.innerHTML='<div class="lottery-empty">同行者情報を読み込めませんでした。Safariのサイトデータ設定を確認してください。</div>'}}
+async function renderHomeCompanionManager(){if(!homeCompanionList)return;homeCompanionList.innerHTML='<div class="lottery-empty">読み込み中...</div>';try{const items=visibleNonMemberCompanions(await buildCompanionDirectory());companionManagerCache=items;homeCompanionList.innerHTML=companionDirectoryHtml(items)}catch(err){console.error(err);companionManagerCache=[];homeCompanionList.innerHTML='<div class="lottery-empty">同行者情報を読み込めませんでした。Safariのサイトデータ設定を確認してください。</div>'}}
 function setNameManagerTab(tab){activeNameManagerTab=tab||'fc';nameManagerTabs.querySelectorAll('[data-name-tab]').forEach(b=>b.classList.toggle('active',b.dataset.nameTab===activeNameManagerTab));nameManagerModal.querySelectorAll('[data-name-panel]').forEach(p=>p.hidden=p.dataset.namePanel!==activeNameManagerTab);renderNameManager()}
 const DEVICE_DB_NAME='fanfolio_device_directory';
 const DEVICE_DB_VERSION=1;
