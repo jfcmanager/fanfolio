@@ -12,7 +12,7 @@
 <link rel="icon" type="image/png" sizes="32x32" href="./favicon-32.png" />
 <link rel="icon" type="image/png" sizes="192x192" href="./icon-192.png" />
 <meta name="mobile-web-app-capable" content="yes" />
-<title>FanFolio ver. 2026.08.17.06</title>
+<title>FanFolio ver. 2026.08.17.07</title>
 <style>
 :root{
   --bg:#f7f5f0;
@@ -1042,27 +1042,27 @@ body{width:100%;overscroll-behavior-x:none}
       </div>
       <div class="form-group">
         <label class="form-label" for="oshiName" id="oshiNameLabel">推しの名前 *</label>
-        <input class="form-control" id="oshiName" maxlength="50" placeholder="例：大橋和也" required data-history-key="oshi-name" />
+        <input class="form-control" id="oshiName" maxlength="50" placeholder="例：大橋和也" required autocomplete="off" />
         <select class="form-control" id="oshiGroupNameSelect" hidden aria-label="グループ名を選択"></select>
-        <input class="form-control" id="oshiGroupNameCustom" maxlength="60" placeholder="グループ名を入力" hidden data-history-key="group" />
-        <div class="modal-note" id="oshiGroupNameNote" hidden>登録済み・過去に入力したグループから選べます。「その他（直接入力）」を選んだ場合だけ、グループ名入力欄が表示されます。</div>
+        <input class="form-control" id="oshiGroupNameCustom" maxlength="60" placeholder="グループ名を入力" hidden autocomplete="off" />
+        <div class="modal-note" id="oshiGroupNameNote" hidden>現在登録されているグループから選べます。「その他（直接入力）」を選んだ場合だけ、グループ名入力欄が表示されます。</div>
       </div>
       <div class="form-group">
         <label class="form-label" for="oshiCategory">カテゴリ・事務所</label>
-        <input class="form-control" id="oshiCategory" maxlength="60" placeholder="例：STARTO ENTERTAINMENT / K-POP" list="oshiCategorySuggestions" data-history-key="category" />
+        <input class="form-control" id="oshiCategory" maxlength="60" placeholder="例：STARTO ENTERTAINMENT / K-POP" list="oshiCategorySuggestions" autocomplete="off" />
         <datalist id="oshiCategorySuggestions"><option value="STARTO ENTERTAINMENT"></option><option value="K-POP"></option><option value="俳優"></option><option value="声優"></option><option value="アニメ"></option><option value="VTuber"></option></datalist>
       </div>
       <div class="form-group conditional-field" id="oshiGroupField">
         <label class="form-label" for="oshiGroup">所属グループ <span class="form-label-note">任意</span></label>
         <select class="form-control" id="oshiGroup" aria-label="所属グループを選択"></select>
-        <input class="form-control" id="oshiGroupCustom" maxlength="60" placeholder="グループ名を入力" hidden data-history-key="group" />
+        <input class="form-control" id="oshiGroupCustom" maxlength="60" placeholder="グループ名を入力" hidden autocomplete="off" />
         <div class="modal-note">所属グループがある場合だけ選択してください。新しいグループは「その他（直接入力）」を選ぶと入力欄が表示されます。</div>
       </div>
       <div class="form-group conditional-field" id="oshiFavoriteArtistField" hidden>
         <label class="form-label" for="oshiFavoriteArtist">好きなアーティスト</label>
         <select class="form-control" id="oshiFavoriteArtist" aria-label="好きなアーティストを選択"></select>
-        <input class="form-control" id="oshiFavoriteArtistCustom" maxlength="60" placeholder="名前を直接入力" hidden data-history-key="artist" />
-        <div class="modal-note">選択したグループのメンバー候補を表示します。登録済みの個人推しや過去の入力履歴も候補に追加されます。</div>
+        <input class="form-control" id="oshiFavoriteArtistCustom" maxlength="60" placeholder="名前を直接入力" hidden autocomplete="off" />
+        <div class="modal-note">選択したグループの正式メンバー候補を表示します。履歴や削除済みデータは候補に混ぜません。</div>
       </div>
       <div class="form-group conditional-field" id="oshiBirthdayField">
         <label class="form-label" for="oshiBirthday">誕生日</label>
@@ -2117,14 +2117,14 @@ const BETA_ADMIN_KEY='fanfolio_beta_admin_enabled';
 const BETA_PLAN_OVERRIDE_KEY='fanfolio_beta_plan_override';
 const FREE_ACCESS_KEY='fanfolio_v1_free_access';
 const THEME_KEY='fanfolio_v1_theme';
-const APP_VERSION='2026.08.17.06';
+const APP_VERSION='2026.08.17.07';
 const APP_VERSION_DATE='2026.08.17';
 const APP_VERSION_DISPLAY=`ver. ${APP_VERSION}`;
 const RELEASE_NOTES_SEEN_KEY='fanfolio_v1_release_notes_seen';
 const CURRENT_RELEASE_NOTES={
   version:APP_VERSION,date:APP_VERSION_DATE,
   userItems:[
-    {title:'好きなアーティスト候補を整理',text:'グループ選択時のメンバー候補を正式なグループ情報だけに統一し、過去の手入力名やニックネームが混ざらないようにしました。'}
+    {title:'入力候補の表示を整理',text:'削除済みの名前や途中で入力した内容が候補に残らないよう見直し、現在の登録データに沿った候補だけを表示するようにしました。'}
   ],
   internalItems:[]
 };
@@ -3078,7 +3078,6 @@ oshiForm.addEventListener('submit',e=>{
   const index=items.findIndex(x=>x.id===editing);
   if(index>=0)items[index]={...items[index],...record};else items.push({...record,createdAt:new Date().toISOString()});
   try{saveOshi(items)}catch(err){showToast('保存容量が不足しています。画像を小さくしてお試しください。');return}
-  void rememberInputHistory('group',type==='group'?name:group);void rememberInputHistory('category',record.category);void rememberInputHistory('artist',favoriteArtist||name);
   closeOshiModal();renderOshi();renderCalendar();showToast(editing?'更新しました。':'推しを登録しました。');
 });
 deleteOshiBtn.addEventListener('click',()=>{
@@ -3086,7 +3085,7 @@ deleteOshiBtn.addEventListener('click',()=>{
   const related=getMemberships().filter(m=>m.oshiId===id).length;const relatedTours=getTours().filter(t=>t.oshiId===id);const tourIds=new Set(relatedTours.map(t=>t.id));const relatedPerformances=getPerformances().filter(p=>p.oshiId===id||tourIds.has(p.tourId)).length;
   const details=[related?`FC・Membership ${related}件`:'',relatedTours.length?`ツアー・イベント ${relatedTours.length}件`:'',relatedPerformances?`公演 ${relatedPerformances}件`:''].filter(Boolean).join('、');const message=details?`「${item.name}」を削除しますか？\n紐づいている${details}も削除されます。`:`「${item.name}」を削除しますか？`;if(!confirm(message))return;
   const removedPerfIds=new Set(getPerformances().filter(p=>p.oshiId===id||tourIds.has(p.tourId)).map(p=>p.id));saveOshi(getOshi().filter(x=>x.id!==id));if(related)saveMemberships(getMemberships().filter(m=>m.oshiId!==id));if(relatedTours.length)saveTours(getTours().filter(t=>t.oshiId!==id));if(relatedPerformances)savePerformances(getPerformances().filter(p=>p.oshiId!==id&&!tourIds.has(p.tourId)));saveMemories(getMemories().filter(m=>m.oshiId!==id));saveOshiPremiumPhotos(getOshiPremiumPhotos().filter(x=>x.oshiId!==id));saveFanserviceRecords(getFanserviceRecords().filter(x=>x.oshiId!==id));unlinkPerformanceReferences(removedPerfIds,{removedOshiId:id});
-  closeOshiModal();renderOshi();renderLottery();renderCalendar();showToast('削除しました。');
+  void seedInputHistory();closeOshiModal();renderOshi();renderLottery();renderCalendar();showToast('削除しました。');
 });
 oshiList.addEventListener('click',e=>{
   const clusterToggle=e.target.closest('.oshi-cluster-toggle[data-oshi-cluster-toggle]');if(clusterToggle){const key=clusterToggle.dataset.oshiClusterToggle,section=clusterToggle.closest('.oshi-cluster'),open=!section.classList.contains('open');section.classList.toggle('open',open);clusterToggle.setAttribute('aria-expanded',open?'true':'false');const body=section.querySelector('.oshi-cluster-body');if(body)body.hidden=!open;setOshiUiOpen(key,open);return}
@@ -4243,12 +4242,14 @@ async function loadInputHistory(){try{const db=await openInputHistoryDb();const 
 function inputHistoryValuesFor(key=''){return [...(inputHistoryCache.get(key)||[])]}
 async function persistInputHistoryKey(key){if(!key)return;try{const db=await openInputHistoryDb();await new Promise((resolve,reject)=>{const tx=db.transaction(INPUT_HISTORY_STORE,'readwrite');tx.objectStore(INPUT_HISTORY_STORE).put({id:key,values:inputHistoryValuesFor(key).slice(0,INPUT_HISTORY_MAX),updatedAt:new Date().toISOString()});tx.oncomplete=()=>resolve();tx.onerror=()=>reject(tx.error);tx.onabort=()=>reject(tx.error||new Error('indexeddb-write-aborted'))})}catch(err){console.warn('Input history save failed',err)}}
 function refreshHistoryListsForKey(key){document.querySelectorAll('input[data-history-bound]').forEach(input=>{if(input.dataset.historyBound===key)refreshHistoryDatalist(input,key)})}
-async function rememberInputHistory(key,value){key=String(key||'').trim();value=oshiCleanText(value);if(!key||!value||value===OSHI_CUSTOM_OPTION)return;const current=inputHistoryValuesFor(key),next=[value,...current.filter(v=>oshiCleanText(v)!==value)].slice(0,INPUT_HISTORY_MAX);inputHistoryCache.set(key,next);refreshHistoryListsForKey(key);await persistInputHistoryKey(key)}
+const LIVE_ONLY_HISTORY_KEYS=new Set(['oshi-name','group','artist','category','event-name','venue','person-name','email','phone','contact','browser','network']);
+async function rememberInputHistory(key,value){key=String(key||'').trim();value=oshiCleanText(value);if(!key||!value||value===OSHI_CUSTOM_OPTION)return;if(LIVE_ONLY_HISTORY_KEYS.has(key)){refreshHistoryListsForKey(key);return}const current=inputHistoryValuesFor(key),next=[value,...current.filter(v=>oshiCleanText(v)!==value)].slice(0,INPUT_HISTORY_MAX);inputHistoryCache.set(key,next);refreshHistoryListsForKey(key);await persistInputHistoryKey(key)}
 function reusableHistoryKey(input){if(!input||input.tagName!=='INPUT')return'';if(input.dataset.historyKey)return input.dataset.historyKey;const type=(input.type||'text').toLowerCase(),id=(input.id||'').toLowerCase();if(['password','hidden','file','search','date','month','time','number','checkbox','radio','range','color'].includes(type))return'';if(/password|membernumber|membershipnumber|recordid|^oshiid$|^tourid$|^performanceid$/.test(id))return'';if(/venue/.test(id))return'venue';if(/tourname|eventname/.test(id))return'event-name';if(/group/.test(id))return'group';if(/category|agency|office/.test(id))return'category';if(/artist/.test(id))return'artist';if(/browser/.test(id))return'browser';if(/network/.test(id))return'network';if(/contact/.test(id))return'contact';if(/email/.test(id))return'email';if(/phone|tel/.test(id))return'phone';if(/realname|companionname/.test(id))return'person-name';return id?`field:${id}`:''}
-function refreshHistoryDatalist(input,key){if(!input||!key)return;let listId=input.getAttribute('list'),list=listId?document.getElementById(listId):null;if(!list){listId=`fanfolio-history-${key.replace(/[^a-zA-Z0-9_-]/g,'-')}-${input.id||Math.random().toString(36).slice(2)}`;list=document.createElement('datalist');list.id=listId;document.body.appendChild(list);input.setAttribute('list',listId)}const staticValues=[...(list.dataset.staticValues?JSON.parse(list.dataset.staticValues):[])];if(!list.dataset.staticValues){const base=[...list.querySelectorAll('option')].map(o=>o.value).filter(Boolean);list.dataset.staticValues=JSON.stringify(base);staticValues.push(...base)}const historyValues=key==='group'?oshiGroupCatalog().map(item=>item.name):inputHistoryValuesFor(key),values=[...new Set([...staticValues,...historyValues])];list.innerHTML=values.map(v=>`<option value="${esc(v)}"></option>`).join('')}
-function bindReusableInputHistory(){document.querySelectorAll('input.form-control').forEach(input=>{const key=reusableHistoryKey(input);if(!key||input.dataset.historyBound)return;input.dataset.historyBound=key;if(input.dataset.historyOnInput==='1'){input.removeAttribute('list');input.addEventListener('input',e=>{if(e.isTrusted&&oshiCleanText(input.value))refreshHistoryDatalist(input,key);else if(!oshiCleanText(input.value))input.removeAttribute('list')});input.addEventListener('change',()=>input.removeAttribute('list'));input.addEventListener('blur',()=>input.removeAttribute('list'))}else if(key==='oshi-name'){input.removeAttribute('list');input.addEventListener('focus',()=>{if(oshiCleanText(input.value))refreshHistoryDatalist(input,key)});input.addEventListener('input',()=>{if(oshiCleanText(input.value))refreshHistoryDatalist(input,key);else input.removeAttribute('list')});input.addEventListener('blur',()=>{if(!oshiCleanText(input.value))input.removeAttribute('list')})}else{refreshHistoryDatalist(input,key);input.addEventListener('focus',()=>refreshHistoryDatalist(input,key))}input.addEventListener('change',()=>{void rememberInputHistory(key,input.value)})})}
 function historySeedMap(){const map=new Map(),add=(key,value)=>{value=oshiCleanText(value);if(!key||!value)return;if(!map.has(key))map.set(key,[]);map.get(key).push(value)};getOshi().forEach(o=>{add('category',o.category);add('group',inferOshiType(o)==='group'?o.name:o.group);add('artist',inferOshiType(o)==='group'?o.favoriteArtist:o.name)});getTours().forEach(t=>add('event-name',t.name));getPerformances().forEach(p=>add('venue',p.venue));getMemberships().forEach(m=>{add('email',m.email);add('phone',m.phone);add('person-name',m.realName)});return map}
-async function seedInputHistory(){const seed=historySeedMap();try{const companions=await buildCompanionDirectory();companions.forEach(c=>{const add=(key,value)=>{value=oshiCleanText(value);if(!value)return;if(!seed.has(key))seed.set(key,[]);seed.get(key).push(value)};add('person-name',c.name);add('email',c.email);add('phone',c.phone);add('contact',c.contact)})}catch{}try{const devices=await getManagedDevices();devices.forEach(d=>{if(d.browser){if(!seed.has('browser'))seed.set('browser',[]);seed.get('browser').push(d.browser)}if(d.network){if(!seed.has('network'))seed.set('network',[]);seed.get('network').push(d.network)}})}catch{}for(const [key,values] of seed){const current=inputHistoryValuesFor(key),merged=[...new Set([...values.map(oshiCleanText).filter(Boolean),...current])].slice(0,INPUT_HISTORY_MAX);inputHistoryCache.set(key,merged);void persistInputHistoryKey(key)}}
+function liveHistoryValuesForKey(key){if(key==='group')return oshiGroupCatalog().map(item=>item.name);if(key==='artist'){const values=[];Object.values(OSHI_GROUP_PRESETS).forEach(x=>(x.members||[]).forEach(v=>values.push(oshiCleanText(v))));return [...new Set(values.filter(Boolean))]}const live=historySeedMap();if(key==='venue'){(performanceMasterCache||[]).forEach(m=>{const v=oshiCleanText(m?.venue);if(v){if(!live.has('venue'))live.set('venue',[]);live.get('venue').push(v)}})}if(key==='event-name'){(applicationMetaCache||[]).forEach(m=>{const v=oshiCleanText(m?.eventName);if(v){if(!live.has('event-name'))live.set('event-name',[]);live.get('event-name').push(v)}});(performanceMasterCache||[]).forEach(m=>{const v=oshiCleanText(m?.tourName);if(v){if(!live.has('event-name'))live.set('event-name',[]);live.get('event-name').push(v)}})}if(key==='person-name'||key==='email'||key==='phone'||key==='contact'){(companionManagerCache||[]).forEach(c=>{const field=key==='person-name'?'name':key;const v=oshiCleanText(c?.[field]);if(v){if(!live.has(key))live.set(key,[]);live.get(key).push(v)}})}if(key==='browser'||key==='network'){(deviceManagerCache||[]).forEach(d=>{const v=oshiCleanText(d?.[key]);if(v){if(!live.has(key))live.set(key,[]);live.get(key).push(v)}})}return [...new Set((live.get(key)||[]).map(oshiCleanText).filter(Boolean))].slice(0,INPUT_HISTORY_MAX)}
+function refreshHistoryDatalist(input,key){if(!input||!key)return;let listId=input.getAttribute('list'),list=listId?document.getElementById(listId):null;if(!list){listId=`fanfolio-history-${key.replace(/[^a-zA-Z0-9_-]/g,'-')}-${input.id||Math.random().toString(36).slice(2)}`;list=document.createElement('datalist');list.id=listId;document.body.appendChild(list);input.setAttribute('list',listId)}const staticValues=[...(list.dataset.staticValues?JSON.parse(list.dataset.staticValues):[])];if(!list.dataset.staticValues){const base=[...list.querySelectorAll('option')].map(o=>o.value).filter(Boolean);list.dataset.staticValues=JSON.stringify(base);staticValues.push(...base)}const historyValues=LIVE_ONLY_HISTORY_KEYS.has(key)?liveHistoryValuesForKey(key):inputHistoryValuesFor(key),values=[...new Set([...staticValues,...historyValues])];list.innerHTML=values.map(v=>`<option value="${esc(v)}"></option>`).join('')}
+function bindReusableInputHistory(){document.querySelectorAll('input.form-control[data-history-key],input.form-control[data-history-on-input="1"]').forEach(input=>{const key=reusableHistoryKey(input);if(!key||input.dataset.historyBound)return;input.dataset.historyBound=key;input.setAttribute('autocomplete','off');if(input.dataset.historyOnInput==='1'){input.removeAttribute('list');input.addEventListener('input',e=>{if(e.isTrusted&&oshiCleanText(input.value))refreshHistoryDatalist(input,key);else input.removeAttribute('list')});input.addEventListener('change',()=>input.removeAttribute('list'));input.addEventListener('blur',()=>input.removeAttribute('list'))}else{refreshHistoryDatalist(input,key);input.addEventListener('focus',()=>refreshHistoryDatalist(input,key))}input.addEventListener('change',()=>{void rememberInputHistory(key,input.value)})})}
+async function seedInputHistory(){const seed=historySeedMap();try{const companions=await buildCompanionDirectory();companions.forEach(c=>{const add=(key,value)=>{value=oshiCleanText(value);if(!value)return;if(!seed.has(key))seed.set(key,[]);seed.get(key).push(value)};add('person-name',c.name);add('email',c.email);add('phone',c.phone);add('contact',c.contact)})}catch{}try{const devices=await getManagedDevices();devices.forEach(d=>{if(d.browser){if(!seed.has('browser'))seed.set('browser',[]);seed.get('browser').push(d.browser)}if(d.network){if(!seed.has('network'))seed.set('network',[]);seed.get('network').push(d.network)}})}catch{}for(const key of LIVE_ONLY_HISTORY_KEYS){const values=key==='oshi-name'?[]:(seed.get(key)||[]);const clean=[...new Set(values.map(oshiCleanText).filter(Boolean))].slice(0,INPUT_HISTORY_MAX);inputHistoryCache.set(key,clean);void persistInputHistoryKey(key)}}
 async function initializeInputHistory(){await loadInputHistory();await seedInputHistory();bindReusableInputHistory();populateOshiGroupChoices(currentGroupRecordName(),currentIndividualGroupName());populateFavoriteArtistChoices(oshiType?.value==='group'?currentGroupRecordName():currentIndividualGroupName(),currentFavoriteArtistName())}
 
 renderAppVersion();void refreshPerformanceExtensionCache();
