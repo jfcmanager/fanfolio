@@ -12,7 +12,7 @@
 <link rel="icon" type="image/png" sizes="32x32" href="./favicon-32.png" />
 <link rel="icon" type="image/png" sizes="192x192" href="./icon-192.png" />
 <meta name="mobile-web-app-capable" content="yes" />
-<title>FanFolio v0.26.41</title>
+<title>FanFolio v0.26.42</title>
 <style>
 :root{
   --bg:#f7f5f0;
@@ -77,6 +77,8 @@ button{cursor:pointer}
 .avatar{width:70px;height:70px;border-radius:50%;background:var(--surface-soft);display:grid;place-items:center;color:var(--accent-strong);font-weight:800;font-size:23px;border:1px solid var(--line)}
 .osh-name{font-size:24px;font-weight:800}
 .osh-group{font-size:15px;color:var(--muted);margin-top:4px}
+.oshi-card-meta-lines{display:grid;gap:2px;margin-top:4px;min-width:0}
+.oshi-card-meta-line{display:block;color:var(--muted);font-size:14px;line-height:1.35;white-space:nowrap;word-break:keep-all;overflow:visible}
 .quick-links{display:grid;grid-template-columns:repeat(2,1fr);gap:12px;margin-top:18px}
 .quick{border:1px solid var(--line);border-radius:17px;background:var(--surface-soft);padding:16px 14px;font-weight:650;color:var(--accent-strong)}
 .quick small{display:block;color:var(--muted);font-weight:500;margin-top:5px}
@@ -180,6 +182,8 @@ html,body{
 .avatar{width:56px;height:56px;font-size:20px;border-width:1px}
 .osh-name{font-size:19px;line-height:1.28}
 .osh-group{font-size:13px;margin-top:3px}
+.oshi-card-meta-lines{gap:1px;margin-top:3px}
+.oshi-card-meta-line{font-size:12.5px;line-height:1.32}
 .quick-links{gap:8px;margin-top:14px}
 .quick{border-radius:13px;padding:12px 11px;font-size:14px;line-height:1.25}
 .quick small{font-size:12px;margin-top:4px;line-height:1.3}
@@ -647,7 +651,7 @@ body.security-locked{overflow:hidden!important}
 /* FanFolio v0.26.37 — ツアー別階層化 / 当落日順 / メンカラ展開ラベル */
 /* FanFolio v0.26.38 — FC同行者当選込み集計 / ツアー別内の名義階層 */
 
-/* FanFolio v0.26.41 — 座席自動表記 / FC同行者座席 / 推しプロフィール / 公演区分補完 */
+/* FanFolio v0.26.42 — 推しカードのプロフィール表示を3行固定 */
 .performance-seat-section{margin-top:18px;border-top:1px dashed var(--line);padding-top:14px}.performance-seat-note,.memory-rich-note{font-size:10px;line-height:1.55;color:var(--muted);margin:-2px 1px 10px}.performance-seat-grid,.memory-rich-grid{display:grid;grid-template-columns:1fr 1fr;gap:9px}.performance-seat-grid.three{grid-template-columns:repeat(3,1fr)}.performance-seat-owner{margin-bottom:10px}.performance-seat-section[hidden]{display:none!important}.memory-rich-box{border:1px solid var(--line);border-radius:14px;background:var(--surface);padding:12px;margin:12px 0}.memory-rich-box .form-group{margin-bottom:10px}.memory-rich-box .form-group:last-child{margin-bottom:0}.memory-rating-select{font-weight:800}.phase3-chip{display:inline-flex;align-items:center;border-radius:999px;padding:3px 7px;background:var(--accent-pale);color:var(--accent-strong);font-size:9.5px;font-weight:800;white-space:nowrap}@media(max-width:390px){.performance-seat-grid,.performance-seat-grid.three,.memory-rich-grid{grid-template-columns:1fr}}
 
 .lottery-tour-memberships{display:grid;gap:9px;padding:10px 0 2px}
@@ -1811,15 +1815,12 @@ const BETA_ADMIN_KEY='fanfolio_beta_admin_enabled';
 const BETA_PLAN_OVERRIDE_KEY='fanfolio_beta_plan_override';
 const FREE_ACCESS_KEY='fanfolio_v1_free_access';
 const THEME_KEY='fanfolio_v1_theme';
-const APP_VERSION='0.26.41';
+const APP_VERSION='0.26.42';
 const RELEASE_NOTES_SEEN_KEY='fanfolio_v1_release_notes_seen';
 const CURRENT_RELEASE_NOTES={
-  version:'0.26.41',date:'2026.08.16',
+  version:'0.26.42',date:'2026.08.16',
   items:[
-    {title:'座席表記を自動作成',text:'座席種別・ブロック・列・番号から座席表記を自動で組み立て、名義カルテの座席表示にもそのまま反映します。'},
-    {title:'代表者とFC同行者の座席編集を強化',text:'同じ公演でも代表者とFC同行者を別レコードとして編集・保存します。FC同行者が未紐付けでも別座席として保持できます。'},
-    {title:'推しプロフィールの連動を修正',text:'カテゴリ・事務所／所属グループ／好きなアーティストの候補・保存・表示を再接続し、既存の個人推しも安全に補完します。'},
-    {title:'公演区分の自動補完',text:'申込に保存済みの開演時間から、空欄の公演区分だけを昼／夜などへ補完します。既存入力は上書きしません。'}
+    {title:'推しカードのプロフィール表示を整理',text:'カテゴリ・事務所／所属グループ／誕生日をそれぞれ独立した1行で表示し、長い事務所名も途中で改行しないよう調整しました。'}
   ]
 };
 if(location.search.includes('__fanfolio_refresh')){try{const cleanUrl=new URL(location.href);cleanUrl.searchParams.delete('__fanfolio_refresh');history.replaceState(null,'',cleanUrl.pathname+(cleanUrl.searchParams.toString()?`?${cleanUrl.searchParams}`:'')+cleanUrl.hash)}catch{}}
@@ -2505,8 +2506,11 @@ function oshiCountsForIds(ids=[]){const idSet=new Set(ids),oshiItems=getOshi().f
 function avatarStyleForOshi(item){if(!item)return {cls:'oshi-cluster-avatar',style:'',text:'♡'};const colorHex=isPremium()?getOshiMemberColorHex(item.memberColor):'';const styleParts=[];if(item.photo)styleParts.push(`background-image:url('${item.photo}')`);else if(colorHex)styleParts.push(`background:${colorHex}22`,`color:${colorHex}`);return {cls:'oshi-cluster-avatar',style:styleParts.length?` style="${styleParts.join(';')}"`:'',text:item.photo?'':'♡'}}
 function renderOshiRecordCard(item){
   const colorHex=isPremium()?getOshiMemberColorHex(item.memberColor):'',avatarStyleParts=[];if(item.photo)avatarStyleParts.push(`background-image:url('${item.photo}')`);else if(colorHex)avatarStyleParts.push(`background:${colorHex}22`,`color:${colorHex}`);const style=avatarStyleParts.length?` style="${avatarStyleParts.join(';')}"`:'';const avatarClass=item.photo?'avatar has-image':'avatar';
-  const groupMode=(item.oshiType||'individual')==='group';const meta=(groupMode?[item.category,item.favoriteArtist?`推し：${item.favoriteArtist}`:'']:[item.category,item.group,birthdayText(item.birthday)]).filter(Boolean).join(' ・ ')||'基本プロフィール';const cardStyle=colorHex?` style="border-left:6px solid ${colorHex}"`:'';const membershipN=getMemberships().filter(m=>m.oshiId===item.id).length;const oshiPerfCount=getPerformances().filter(p=>!p.memoryOnly&&performanceBelongsToOshi(p,item)).length;const memoryN=getMemories().filter(m=>m.oshiId===item.id).length;const membershipSub=isPremium()?`${membershipN}件 / 無制限`:`${membershipN}件 / Free合計2件まで`;const performanceSub=isPremium()?`${oshiPerfCount}公演 / 無制限`:`${oshiPerfCount}公演 / Free合計3公演まで`;const editable=isRecordEditable('oshi',item.id);const open=oshiUiIsOpen(`record:${item.id}`,false);const dot=colorHex?`<span class="oshi-color-dot" style="background:${colorHex}"></span>`:'';
-  return `<article class="osh-card${editable?'':' record-locked'}${open?' open':''}" data-id="${esc(item.id)}"${cardStyle}><div class="osh-top"><div class="${avatarClass}"${style}>♡</div><div style="min-width:0;flex:1"><div class="oshi-name-row">${dot}<div class="osh-name">${esc(item.name)}</div>${editable?'':'<span class="readonly-chip">閲覧のみ</span>'}</div><div class="osh-group">${esc(meta)}</div></div><div class="oshi-actions"><button class="icon-btn edit-oshi" type="button" aria-label="${editable?'編集':'閲覧'}">${editable?'✎':'◉'}</button><button class="oshi-card-toggle" type="button" data-oshi-record-toggle="${esc(item.id)}" aria-label="${open?'閉じる':'開く'}"><span class="oshi-collapse-chevron">⌄</span></button></div></div><div class="oshi-card-compact"><span class="oshi-stat-pill">FC ${membershipN}</span><span class="oshi-stat-pill">公演 ${oshiPerfCount}</span><span class="oshi-stat-pill">Memories ${memoryN}</span></div><div class="oshi-card-details"><div class="quick-links"><button class="quick edit-oshi" type="button" style="text-align:left">プロフィール<small>${editable?'基本情報を見る・編集':'閲覧のみ'}</small></button><button class="quick membership-preview" type="button" style="text-align:left">FC・Membership<small>${membershipSub}</small></button><button class="quick history-preview" type="button" style="text-align:left">公演履歴<small>${performanceSub}</small></button><button class="quick memories-preview" type="button" style="text-align:left">Memories<small>${memoryN}件 / 基本記録</small></button><button class="quick premium-carte-preview" type="button" style="text-align:left">Premiumカルテ<small>写真・ファンサ・統計</small></button></div>${item.memo?`<div class="memo-preview">${esc(item.memo)}</div>`:''}</div></article>`;
+  const groupMode=(item.oshiType||'individual')==='group';
+  const metaRows=(groupMode?[item.category,item.favoriteArtist?`推し：${item.favoriteArtist}`:'']:[item.category,item.group,birthdayText(item.birthday)]).filter(Boolean);
+  const metaHtml=metaRows.length?`<div class="oshi-card-meta-lines">${metaRows.map(row=>`<span class="oshi-card-meta-line">${esc(row)}</span>`).join('')}</div>`:'<div class="osh-group">基本プロフィール</div>';
+  const cardStyle=colorHex?` style="border-left:6px solid ${colorHex}"`:'';const membershipN=getMemberships().filter(m=>m.oshiId===item.id).length;const oshiPerfCount=getPerformances().filter(p=>!p.memoryOnly&&performanceBelongsToOshi(p,item)).length;const memoryN=getMemories().filter(m=>m.oshiId===item.id).length;const membershipSub=isPremium()?`${membershipN}件 / 無制限`:`${membershipN}件 / Free合計2件まで`;const performanceSub=isPremium()?`${oshiPerfCount}公演 / 無制限`:`${oshiPerfCount}公演 / Free合計3公演まで`;const editable=isRecordEditable('oshi',item.id);const open=oshiUiIsOpen(`record:${item.id}`,false);const dot=colorHex?`<span class="oshi-color-dot" style="background:${colorHex}"></span>`:'';
+  return `<article class="osh-card${editable?'':' record-locked'}${open?' open':''}" data-id="${esc(item.id)}"${cardStyle}><div class="osh-top"><div class="${avatarClass}"${style}>♡</div><div style="min-width:0;flex:1"><div class="oshi-name-row">${dot}<div class="osh-name">${esc(item.name)}</div>${editable?'':'<span class="readonly-chip">閲覧のみ</span>'}</div>${metaHtml}</div><div class="oshi-actions"><button class="icon-btn edit-oshi" type="button" aria-label="${editable?'編集':'閲覧'}">${editable?'✎':'◉'}</button><button class="oshi-card-toggle" type="button" data-oshi-record-toggle="${esc(item.id)}" aria-label="${open?'閉じる':'開く'}"><span class="oshi-collapse-chevron">⌄</span></button></div></div><div class="oshi-card-compact"><span class="oshi-stat-pill">FC ${membershipN}</span><span class="oshi-stat-pill">公演 ${oshiPerfCount}</span><span class="oshi-stat-pill">Memories ${memoryN}</span></div><div class="oshi-card-details"><div class="quick-links"><button class="quick edit-oshi" type="button" style="text-align:left">プロフィール<small>${editable?'基本情報を見る・編集':'閲覧のみ'}</small></button><button class="quick membership-preview" type="button" style="text-align:left">FC・Membership<small>${membershipSub}</small></button><button class="quick history-preview" type="button" style="text-align:left">公演履歴<small>${performanceSub}</small></button><button class="quick memories-preview" type="button" style="text-align:left">Memories<small>${memoryN}件 / 基本記録</small></button><button class="quick premium-carte-preview" type="button" style="text-align:left">Premiumカルテ<small>写真・ファンサ・統計</small></button></div>${item.memo?`<div class="memo-preview">${esc(item.memo)}</div>`:''}</div></article>`;
 }
 function renderOshiCluster(cluster){const groupItems=cluster.groupItems||[],memberItems=cluster.members||[],ids=[...groupItems.map(g=>g.id),...memberItems.map(m=>m.id)].filter(Boolean),counts=oshiCountsForIds(ids),open=oshiUiIsOpen(cluster.key,false),hero=groupItems[0]||memberItems[0]||null,av=avatarStyleForOshi(hero),favoriteCandidates=[...groupItems.map(g=>g.favoriteArtist).filter(Boolean),...memberItems.map(m=>m.name).filter(Boolean)],favorites=[...new Set(favoriteCandidates)].slice(0,4),favorite=favorites.join('・'),colorHex=hero&&isPremium()?getOshiMemberColorHex(hero.memberColor):'',dot=colorHex?`<span class="oshi-color-dot" style="background:${colorHex}"></span>`:'',groupSection=groupItems.length?`<div class="oshi-cluster-section-label">グループ</div><div class="oshi-cluster-members">${groupItems.map(g=>renderOshiRecordCard(g)).join('')}</div>`:'',memberSection=memberItems.length?`<div class="oshi-cluster-section-label" style="margin-top:${groupItems.length?'12':'3'}px">メンバー</div><div class="oshi-cluster-members">${memberItems.map(m=>renderOshiRecordCard(m)).join('')}</div>`:'',groupCountLabel=groupItems.length>1?`グループ ${groupItems.length}`:groupItems.length===1?`グループ 1`:'';return `<section class="oshi-cluster${open?' open':''}" data-oshi-cluster="${esc(cluster.key)}"><button class="oshi-cluster-head oshi-cluster-toggle" type="button" data-oshi-cluster-toggle="${esc(cluster.key)}" aria-expanded="${open?'true':'false'}"><span class="${av.cls}"${av.style}>${av.text}</span><span class="oshi-cluster-main"><span class="oshi-cluster-name">${dot}${esc(cluster.label)}</span><span class="oshi-cluster-meta">${favorite?`推し：${esc(favorite)}`:'グループでまとめて管理'}</span><span class="oshi-cluster-stats">${groupCountLabel?`<span class="oshi-stat-pill">${groupCountLabel}</span>`:''}${memberItems.length?`<span class="oshi-stat-pill">メンバー ${memberItems.length}</span>`:''}<span class="oshi-stat-pill">FC ${counts.memberships}</span><span class="oshi-stat-pill">公演 ${counts.performances}</span><span class="oshi-stat-pill">Memories ${counts.memories}</span></span></span><span class="oshi-collapse-chevron">⌄</span></button><div class="oshi-cluster-body"${open?'':' hidden'}>${groupSection}${memberSection}</div></section>`}
 function normalizeOshiSearchText(value=''){return String(value||'').normalize('NFKC').toLocaleLowerCase('ja').replace(/\s+/g,' ').trim()}
