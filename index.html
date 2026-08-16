@@ -780,6 +780,19 @@ body.security-locked{overflow:hidden!important}
 .trade-mode-tabs{display:grid;grid-template-columns:1fr 1fr;gap:0;border:1px solid var(--line);border-radius:14px;padding:4px;background:var(--surface-soft);margin:13px 0 10px}.trade-mode-tab{border:0;border-radius:10px;background:transparent;color:var(--muted);font:inherit;font-size:12px;font-weight:850;padding:10px 8px}.trade-mode-tab.active{background:var(--surface);color:var(--accent-strong);box-shadow:0 2px 8px rgba(90,61,34,.07)}.trade-mode-tab small{font-size:9px;margin-left:4px;color:inherit}
 .trade-folder.level-5{background:var(--surface)}.trade-folder.level-5>summary{padding:8px 9px;font-size:11px}.trade-folder-session-label{display:flex;align-items:center;gap:6px}.trade-folder-session-label b{font-weight:850;color:var(--accent-strong)}
 @media(max-width:560px){.trade-dashboard-controls{grid-template-columns:1fr}.trade-dashboard-actions{grid-column:1}.trade-dashboard-note{grid-column:1}.trade-dashboard-side-grid{grid-template-columns:1fr}.trade-dashboard-heading{align-items:center}.trade-dashboard-caption{font-size:9.5px}.trade-dashboard-profit-card-result{white-space:normal;max-width:42%}}
+
+
+/* FanFolio v0.26.60 — iPhone trade form width containment */
+#tradeModal .modal-sheet,#tradeModal form,#tradeModal .trade-detail-box,#tradeModal .trade-detail-body,#tradeModal .form-inline,#tradeModal .form-group{min-width:0;max-width:100%;box-sizing:border-box}
+#tradeModal .trade-detail-body{width:100%;overflow-x:hidden}
+#tradeModal .form-inline{width:100%;grid-template-columns:minmax(0,1fr) minmax(0,1fr)}
+#tradeModal input.form-control,#tradeModal select.form-control,#tradeModal textarea.form-control{min-width:0!important;width:100%!important;max-width:100%!important;box-sizing:border-box}
+#tradeModal input.form-control[type="datetime-local"]{-webkit-appearance:none;appearance:none;display:block;box-sizing:border-box;min-width:0!important;width:100%!important;max-width:100%!important;height:52px!important;min-height:52px!important;max-height:52px!important;padding:0 12px!important;font-size:14px;line-height:50px;text-align:center;text-align-last:center;overflow:hidden;background:var(--surface)}
+#tradeModal input.form-control[type="datetime-local"]::-webkit-date-and-time-value{display:block;box-sizing:border-box;min-width:0;width:100%;max-width:100%;height:50px;min-height:50px;line-height:50px;text-align:center;margin:0;padding:0;overflow:hidden}
+#tradeModal input.form-control[type="datetime-local"]::-webkit-datetime-edit{display:flex;align-items:center;justify-content:center;box-sizing:border-box;min-width:0;width:100%;max-width:100%;height:50px;line-height:50px;padding:0;margin:0;overflow:hidden}
+#tradeModal input.form-control[type="datetime-local"]::-webkit-calendar-picker-indicator{flex:none;margin:0 0 0 4px;padding:0}
+@media(max-width:520px){#tradeModal .form-inline{grid-template-columns:minmax(0,1fr)}}
+
 </style>
 </head>
 <body>
@@ -2046,13 +2059,13 @@ const BETA_ADMIN_KEY='fanfolio_beta_admin_enabled';
 const BETA_PLAN_OVERRIDE_KEY='fanfolio_beta_plan_override';
 const FREE_ACCESS_KEY='fanfolio_v1_free_access';
 const THEME_KEY='fanfolio_v1_theme';
-const APP_VERSION='0.26.59';
+const APP_VERSION='0.26.60';
 const RELEASE_NOTES_SEEN_KEY='fanfolio_v1_release_notes_seen';
 const CURRENT_RELEASE_NOTES={
-  version:'0.26.59',date:'2026.08.17',
+  version:'0.26.60',date:'2026.08.17',
   items:[
-    {title:'取引ダッシュボードをFolio式に拡張',text:'今日から新しい集計／全期間、買い手・売り手別KPI、公演・ツアー別損益、公演別（昼・夜）／日別損益を追加しました。'},
-    {title:'買い手・売り手を完全分離',text:'取引一覧を買い手／売り手タブで分け、各タブ内を団体→ツアー→会場→公演日→昼夜で整理できるようになりました。'}
+    {title:'取引詳細フォームの幅を修正',text:'iPhoneで受渡日時など一部の取引詳細欄がカード外へはみ出す問題を修正しました。'},
+    {title:'取引ダッシュボードはそのまま維持',text:'買い手／売り手分離、公演フォルダ、損益集計などv0.26.59の取引機能は変更していません。'}
   ]
 };
 if(location.search.includes('__fanfolio_refresh')){try{const cleanUrl=new URL(location.href);cleanUrl.searchParams.delete('__fanfolio_refresh');history.replaceState(null,'',cleanUrl.pathname+(cleanUrl.searchParams.toString()?`?${cleanUrl.searchParams}`:'')+cleanUrl.hash)}catch{}}
