@@ -797,7 +797,7 @@ body.security-locked{overflow:hidden!important}
 
 
 
-/* FanFolio v0.26.61 — iPhone horizontal-lock + universal edit close */
+/* FanFolio v0.26.69 — current release notes sync + accumulated UI fixes */
 html,body{max-width:100%;overflow-x:hidden}
 body{width:100%;overscroll-behavior-x:none}
 .app{max-width:100%;overflow-x:clip}
@@ -2092,13 +2092,14 @@ const BETA_ADMIN_KEY='fanfolio_beta_admin_enabled';
 const BETA_PLAN_OVERRIDE_KEY='fanfolio_beta_plan_override';
 const FREE_ACCESS_KEY='fanfolio_v1_free_access';
 const THEME_KEY='fanfolio_v1_theme';
-const APP_VERSION='0.26.68';
+const APP_VERSION='0.26.69';
 const RELEASE_NOTES_SEEN_KEY='fanfolio_v1_release_notes_seen';
 const CURRENT_RELEASE_NOTES={
-  version:'0.26.61',date:'2026.08.17',
+  version:APP_VERSION,date:'2026.08.17',
   items:[
-    {title:'編集画面の横揺れを防止',text:'iPhoneで長い編集フォームをスクロールした際に画面が左右へ動く問題を、モーダル全体と入力欄の幅制御で修正しました。'},
-    {title:'編集中いつでも右上から閉じる',text:'長い編集画面を最後までスクロールしなくても、右上の×から現在の編集をキャンセル／閉じることができます。既存のキャンセル処理をそのまま利用します。'}
+    {title:'アップデート表示を現在のバージョンと同期',text:'「アップデートのお知らせ」のバージョン表示が古いまま残る問題を修正しました。今後は現在のFanFolioバージョンと自動で一致します。'},
+    {title:'取引管理の表示・操作を改善',text:'買い手／売り手の公演フォルダ分類、SNSアカウントリンク、取引カードの一行表示、完了チェック後も同じ位置に留まる操作を反映しています。'},
+    {title:'カレンダー・遠征・Memoriesの整理を強化',text:'毎年繰り返す予定、遠征・参戦メモの分類など、Folioの使いやすさをFanFolioの既存UIに合わせて補強しました。'}
   ]
 };
 if(location.search.includes('__fanfolio_refresh')){try{const cleanUrl=new URL(location.href);cleanUrl.searchParams.delete('__fanfolio_refresh');history.replaceState(null,'',cleanUrl.pathname+(cleanUrl.searchParams.toString()?`?${cleanUrl.searchParams}`:'')+cleanUrl.hash)}catch{}}
@@ -3825,7 +3826,7 @@ async function requestPwaInstall(){
   if(deferredInstallPrompt){try{deferredInstallPrompt.prompt();await deferredInstallPrompt.userChoice;deferredInstallPrompt=null;renderPwaStatus();return}catch(err){console.error(err)}}
   openInstallModal();
 }
-function renderReleaseNotes(){if(releaseNotesMeta)releaseNotesMeta.textContent=`FanFolio v${CURRENT_RELEASE_NOTES.version} ・ ${CURRENT_RELEASE_NOTES.date.replaceAll('.','/')}`;if(releaseNotesList)releaseNotesList.innerHTML=CURRENT_RELEASE_NOTES.items.map(item=>`<div class="release-note-item"><strong>${esc(item.title)}</strong><p>${esc(item.text)}</p></div>`).join('')}
+function renderReleaseNotes(){if(releaseNotesMeta)releaseNotesMeta.textContent=`FanFolio v${APP_VERSION} ・ ${CURRENT_RELEASE_NOTES.date.replaceAll('.','/')}`;if(releaseNotesList)releaseNotesList.innerHTML=CURRENT_RELEASE_NOTES.items.map(item=>`<div class="release-note-item"><strong>${esc(item.title)}</strong><p>${esc(item.text)}</p></div>`).join('')}
 function openReleaseNotes(){renderReleaseNotes();releaseNotesModal?.classList.add('open');releaseNotesModal?.setAttribute('aria-hidden','false');document.body.style.overflow='hidden'}
 function markReleaseNotesSeen(){try{localStorage.setItem(RELEASE_NOTES_SEEN_KEY,APP_VERSION)}catch{}}
 function closeReleaseNotes(markSeen=true){if(markSeen)markReleaseNotesSeen();releaseNotesModal?.classList.remove('open');releaseNotesModal?.setAttribute('aria-hidden','true');document.body.style.overflow=''}
