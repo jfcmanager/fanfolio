@@ -793,6 +793,24 @@ body.security-locked{overflow:hidden!important}
 #tradeModal input.form-control[type="datetime-local"]::-webkit-calendar-picker-indicator{flex:none;margin:0 0 0 4px;padding:0}
 @media(max-width:520px){#tradeModal .form-inline{grid-template-columns:minmax(0,1fr)}}
 
+
+
+/* FanFolio v0.26.61 — iPhone horizontal-lock + universal edit close */
+html,body{max-width:100%;overflow-x:hidden}
+body{width:100%;overscroll-behavior-x:none}
+.app{max-width:100%;overflow-x:clip}
+.modal-backdrop{max-width:100vw;overflow:hidden;overscroll-behavior-x:none}
+.modal-sheet{position:relative;max-width:100vw;overflow-y:auto;overflow-x:hidden;overscroll-behavior-x:none;touch-action:pan-y}
+.modal-sheet form,.modal-sheet fieldset,.modal-sheet details,.modal-sheet .list-view,.modal-sheet .form-view,.modal-sheet .form-inline,.modal-sheet .form-group,.modal-sheet .trade-detail-box,.modal-sheet .trade-detail-body,.modal-sheet .trip-rich-panel,.modal-sheet .trip-rich-body,.modal-sheet .trip-rich-row{min-width:0;max-width:100%;box-sizing:border-box}
+.modal-sheet input,.modal-sheet select,.modal-sheet textarea,.modal-sheet button{box-sizing:border-box;max-width:100%}
+.modal-sheet input.form-control[type="datetime-local"]{-webkit-appearance:none;appearance:none;display:block;box-sizing:border-box;min-width:0!important;width:100%!important;max-width:100%!important;height:52px!important;min-height:52px!important;max-height:52px!important;padding:0 12px!important;overflow:hidden;text-align:center;text-align-last:center;background:var(--surface)}
+.modal-sheet input.form-control[type="datetime-local"]::-webkit-date-and-time-value{display:block;box-sizing:border-box;min-width:0;width:100%;max-width:100%;height:50px;line-height:50px;text-align:center;margin:0;padding:0;overflow:hidden}
+.modal-sheet input.form-control[type="datetime-local"]::-webkit-datetime-edit{display:flex;align-items:center;justify-content:center;box-sizing:border-box;min-width:0;width:100%;max-width:100%;height:50px;line-height:50px;padding:0;margin:0;overflow:hidden}
+.modal-quick-close{position:sticky;top:0;z-index:45;display:grid;place-items:center;width:40px;height:40px;margin:0 0 -40px auto;border:1px solid var(--line);border-radius:50%;background:rgba(255,253,250,.96);color:var(--accent-strong);font:inherit;font-size:28px;font-weight:350;line-height:1;padding:0;box-shadow:0 3px 12px rgba(50,43,37,.08);-webkit-backdrop-filter:blur(8px);backdrop-filter:blur(8px)}
+.modal-quick-close:active{transform:scale(.96)}
+.modal-sheet.has-quick-close>.modal-title,.modal-sheet.has-quick-close>.list-view>.modal-title,.modal-sheet.has-quick-close>.form-view>.modal-title{padding-right:48px}
+@supports (width:100dvw){.modal-backdrop{max-width:100dvw}.modal-sheet{max-width:100dvw}}
+
 </style>
 </head>
 <body>
@@ -2059,13 +2077,13 @@ const BETA_ADMIN_KEY='fanfolio_beta_admin_enabled';
 const BETA_PLAN_OVERRIDE_KEY='fanfolio_beta_plan_override';
 const FREE_ACCESS_KEY='fanfolio_v1_free_access';
 const THEME_KEY='fanfolio_v1_theme';
-const APP_VERSION='0.26.60';
+const APP_VERSION='0.26.61';
 const RELEASE_NOTES_SEEN_KEY='fanfolio_v1_release_notes_seen';
 const CURRENT_RELEASE_NOTES={
-  version:'0.26.60',date:'2026.08.17',
+  version:'0.26.61',date:'2026.08.17',
   items:[
-    {title:'取引詳細フォームの幅を修正',text:'iPhoneで受渡日時など一部の取引詳細欄がカード外へはみ出す問題を修正しました。'},
-    {title:'取引ダッシュボードはそのまま維持',text:'買い手／売り手分離、公演フォルダ、損益集計などv0.26.59の取引機能は変更していません。'}
+    {title:'編集画面の横揺れを防止',text:'iPhoneで長い編集フォームをスクロールした際に画面が左右へ動く問題を、モーダル全体と入力欄の幅制御で修正しました。'},
+    {title:'編集中いつでも右上から閉じる',text:'長い編集画面を最後までスクロールしなくても、右上の×から現在の編集をキャンセル／閉じることができます。既存のキャンセル処理をそのまま利用します。'}
   ]
 };
 if(location.search.includes('__fanfolio_refresh')){try{const cleanUrl=new URL(location.href);cleanUrl.searchParams.delete('__fanfolio_refresh');history.replaceState(null,'',cleanUrl.pathname+(cleanUrl.searchParams.toString()?`?${cleanUrl.searchParams}`:'')+cleanUrl.hash)}catch{}}
@@ -4121,6 +4139,38 @@ window.addEventListener('load',registerFanFolioServiceWorker);
   fileInput.addEventListener('change',async()=>{const f=fileInput.files?.[0];if(!f)return;try{const rows=rowObjects(parseCsv(await f.text()));if(!rows.length){showToast('CSVにデータ行がありません。');resetPreview();return}renderPlan(kind==='membership'?buildMembershipPlan(rows):await buildApplicationPlan(rows))}catch(err){console.error(err);showToast('CSVを読み込めませんでした。');resetPreview()}});
   confirmBtn.addEventListener('click',async()=>{if(!plan||confirmBtn.disabled)return;if(!isPremium()){openPremiumModal();return}const adds=plan.items.filter(x=>x.action==='add').length;if(!adds)return;if(!window.confirm(`${adds}件をFanFolioへ新增します。既存データは上書きしません。よろしいですか？`))return;confirmBtn.disabled=true;confirmBtn.textContent='インポート中…';try{const n=kind==='membership'?await importMemberships():await importApplications();showToast(`${n}件をインポートしました。`);setOverlayOpen(modal,false);resetPreview()}catch(err){console.error(err);showToast('CSVインポートを完了できませんでした。');confirmBtn.disabled=false;confirmBtn.textContent='新增分だけインポート'}});
 })();
+
+
+
+// FanFolio v0.26.61 — universal quick-close for long modal/edit screens
+function fanfolioVisibleAction(el){
+  if(!el||el.hidden||el.disabled)return false;
+  const s=getComputedStyle(el);
+  return s.display!=='none'&&s.visibility!=='hidden'&&s.opacity!=='0'&&(el.offsetWidth>0||el.offsetHeight>0||el.getClientRects().length>0);
+}
+function fanfolioInstallModalQuickClose(){
+  document.querySelectorAll('.modal-backdrop .modal-sheet').forEach(sheet=>{
+    if(sheet.querySelector(':scope > .sheet-head-row .sheet-close-btn')||sheet.querySelector(':scope > .modal-quick-close'))return;
+    const backdrop=sheet.closest('.modal-backdrop');
+    if(!backdrop)return;
+    const btn=document.createElement('button');
+    btn.type='button';btn.className='modal-quick-close';btn.setAttribute('aria-label','編集をキャンセルして閉じる');btn.textContent='×';
+    btn.addEventListener('click',()=>{
+      const visible=[...sheet.querySelectorAll('button')].filter(el=>el!==btn&&fanfolioVisibleAction(el));
+      const cancel=visible.find(el=>/^cancel/i.test(el.id||'')||/キャンセル/.test((el.textContent||'').trim()));
+      if(cancel){cancel.click();return}
+      const back=visible.find(el=>/^back/i.test(el.id||'')||/一覧に戻る/.test((el.textContent||'').trim()));
+      if(back){back.click();return}
+      const close=visible.find(el=>/^close/i.test(el.id||'')||/閉じる/.test((el.textContent||'').trim()));
+      if(close){close.click();return}
+      backdrop.click();
+      if(backdrop.classList.contains('open')){backdrop.classList.remove('open');backdrop.setAttribute('aria-hidden','true');document.body.style.overflow=''}
+    });
+    sheet.classList.add('has-quick-close');
+    sheet.insertBefore(btn,sheet.firstChild);
+  });
+}
+fanfolioInstallModalQuickClose();
 
 </script>
 </body>
