@@ -12,7 +12,7 @@
 <link rel="icon" type="image/png" sizes="32x32" href="./favicon-32.png" />
 <link rel="icon" type="image/png" sizes="192x192" href="./icon-192.png" />
 <meta name="mobile-web-app-capable" content="yes" />
-<title>FanFolio ver. 2026.08.17.05</title>
+<title>FanFolio ver. 2026.08.17.06</title>
 <style>
 :root{
   --bg:#f7f5f0;
@@ -2117,15 +2117,14 @@ const BETA_ADMIN_KEY='fanfolio_beta_admin_enabled';
 const BETA_PLAN_OVERRIDE_KEY='fanfolio_beta_plan_override';
 const FREE_ACCESS_KEY='fanfolio_v1_free_access';
 const THEME_KEY='fanfolio_v1_theme';
-const APP_VERSION='2026.08.17.05';
+const APP_VERSION='2026.08.17.06';
 const APP_VERSION_DATE='2026.08.17';
 const APP_VERSION_DISPLAY=`ver. ${APP_VERSION}`;
 const RELEASE_NOTES_SEEN_KEY='fanfolio_v1_release_notes_seen';
 const CURRENT_RELEASE_NOTES={
   version:APP_VERSION,date:APP_VERSION_DATE,
   userItems:[
-    {title:'参戦記録の入力を整理',text:'手入力公演の会場候補が意図せず開く問題を修正し、開演時間を選択式にしました。'},
-    {title:'座席記録をPremiumに統一',text:'参戦記録の座席入力を「座席・チケット詳細」にまとめ、重複していた座席欄を整理しました。'}
+    {title:'好きなアーティスト候補を整理',text:'グループ選択時のメンバー候補を正式なグループ情報だけに統一し、過去の手入力名やニックネームが混ざらないようにしました。'}
   ],
   internalItems:[]
 };
@@ -2989,12 +2988,15 @@ function populateOshiGroupChoices(currentGroupName='',individualGroup=''){
   if(individualGroup&&!names.includes(oshiCleanText(individualGroup))&&oshiGroupCustom)oshiGroupCustom.value=individualGroup;
   syncOshiCustomInputs();
 }
+function oshiOfficialMemberChoices(groupName=''){
+  const group=oshiCleanText(groupName),preset=OSHI_GROUP_PRESETS[group];
+  return [...new Set((preset?.members||[]).map(oshiCleanText).filter(Boolean))];
+}
 function populateFavoriteArtistChoices(groupName='',currentArtist=''){
   if(!oshiFavoriteArtist)return;
-  const group=oshiCleanText(groupName),info=oshiGroupInfo(group),members=new Set(info?[...info.members]:[]);
-  getOshi().filter(o=>inferOshiType(o)==='individual'&&oshiCleanText(o.group)===group&&o.name).forEach(o=>members.add(oshiCleanText(o.name)));
-  const preset=OSHI_GROUP_PRESETS[group];(preset?.members||[]).forEach(m=>members.add(m));
-  const values=[...members].filter(Boolean);
+  const group=oshiCleanText(groupName),values=oshiOfficialMemberChoices(group);
+  // 「好きなアーティスト」は登録履歴・個人推し・削除済みデータを混ぜず、
+  // グループマスターに定義された正式メンバーだけを候補として表示する。
   renderSelectOptions(oshiFavoriteArtist,values,oshiCleanText(currentArtist),'選択してください');
   if(currentArtist&&!values.includes(oshiCleanText(currentArtist))&&oshiFavoriteArtistCustom)oshiFavoriteArtistCustom.value=currentArtist;
   syncOshiCustomInputs();
@@ -3004,8 +3006,7 @@ function applyGroupAutofill(groupName,{forceCategory=true,currentArtist=''}={}){
   if(info?.category&&oshiCategory&&(forceCategory||!oshiCategory.value.trim()))oshiCategory.value=info.category;
   populateFavoriteArtistChoices(group,currentArtist||currentFavoriteArtistName());
   if(oshiType.value==='individual'&&!currentFavoriteArtistName()){
-    const candidate=oshiCleanText(oshiName?.value);
-    const members=new Set([...(info?.members||[])]);
+    const candidate=oshiCleanText(oshiName?.value),members=new Set(oshiOfficialMemberChoices(group));
     if(candidate&&members.has(candidate)){oshiFavoriteArtist.value=candidate;syncOshiCustomInputs()}
   }
 }
@@ -3060,7 +3061,7 @@ oshiTypeSwitch?.addEventListener('click',e=>{const btn=e.target.closest('.oshi-t
 oshiGroupNameSelect?.addEventListener('change',()=>{syncOshiCustomInputs();if(oshiGroupNameSelect.value===OSHI_CUSTOM_OPTION&&oshiCategory)oshiCategory.value='';const group=currentGroupRecordName();if(group)applyGroupAutofill(group,{forceCategory:true});else populateFavoriteArtistChoices('','');if(oshiMemberColorField)oshiMemberColorField.hidden=!currentFavoriteArtistName()});
 oshiGroupNameCustom?.addEventListener('input',()=>{if(oshiType.value==='group'){populateFavoriteArtistChoices(currentGroupRecordName(),currentFavoriteArtistName());if(oshiMemberColorField)oshiMemberColorField.hidden=!currentFavoriteArtistName()}});
 oshiGroup?.addEventListener('change',()=>{syncOshiCustomInputs();if(oshiGroup.value===OSHI_CUSTOM_OPTION&&oshiCategory)oshiCategory.value='';const group=currentIndividualGroupName();if(group)applyGroupAutofill(group,{forceCategory:true,currentArtist:currentFavoriteArtistName()});else populateFavoriteArtistChoices('',currentFavoriteArtistName())});
-oshiName?.addEventListener('input',()=>{if(oshiType.value!=='individual')return;const group=currentIndividualGroupName(),info=oshiGroupInfo(group),candidate=oshiCleanText(oshiName.value);if(group&&candidate&&info?.members?.has(candidate)&&!currentFavoriteArtistName()){populateFavoriteArtistChoices(group,candidate)}});
+oshiName?.addEventListener('input',()=>{if(oshiType.value!=='individual')return;const group=currentIndividualGroupName(),candidate=oshiCleanText(oshiName.value),members=new Set(oshiOfficialMemberChoices(group));if(group&&candidate&&members.has(candidate)&&!currentFavoriteArtistName()){populateFavoriteArtistChoices(group,candidate)}});
 oshiFavoriteArtist?.addEventListener('change',()=>{syncOshiCustomInputs();if(oshiMemberColorField)oshiMemberColorField.hidden=!currentFavoriteArtistName()});
 oshiFavoriteArtistCustom?.addEventListener('input',()=>{if(oshiMemberColorField)oshiMemberColorField.hidden=!currentFavoriteArtistName()});
 oshiColorPicker?.addEventListener('click',e=>{const btn=e.target.closest('.oshi-color-btn[data-color]');if(!btn)return;if(!isPremium()){openPremiumModal();return}selectedOshiColor=btn.dataset.color||'';setSelectedOshiColor(selectedOshiColor)});
