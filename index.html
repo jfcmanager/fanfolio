@@ -12,7 +12,7 @@
 <link rel="icon" type="image/png" sizes="32x32" href="./favicon-32.png" />
 <link rel="icon" type="image/png" sizes="192x192" href="./icon-192.png" />
 <meta name="mobile-web-app-capable" content="yes" />
-<title>FanFolio v0.26.24</title>
+<title>FanFolio v0.26.25</title>
 <style>
 :root{
   --bg:#f7f5f0;
@@ -630,6 +630,8 @@ body.security-locked{overflow:hidden!important}
 /* FanFolio v0.26.22 — 名義別座席分析 / カテゴリー別当選分布 */
 /* FanFolio v0.26.24 — カテゴリー別当選分布ラベル1行表示 */
 /* FanFolio v0.26.23 — 推し候補選択 / 入力履歴 */
+/* FanFolio v0.26.25 — 推し追加フォーム表示整理 */
+#oshiName[hidden],#oshiGroupNameSelect[hidden],#oshiGroupNameCustom[hidden],#oshiGroupCustom[hidden],#oshiFavoriteArtistCustom[hidden]{display:none!important}
 #oshiGroupNameCustom:not([hidden]),#oshiGroupCustom:not([hidden]),#oshiFavoriteArtistCustom:not([hidden]){margin-top:8px}
 
 .lottery-analysis-secondary{margin-top:14px}.lottery-analysis-secondary[hidden]{display:none!important}.seat-analysis-list{display:grid;gap:9px}.seat-analysis-card{border:1px solid var(--lottery-line,var(--line));border-radius:14px;background:var(--lottery-surface,var(--surface));padding:12px 13px}.seat-analysis-head{display:flex;align-items:flex-start;justify-content:space-between;gap:10px}.seat-analysis-name{font-size:13px;font-weight:850;color:var(--ink);line-height:1.4}.seat-analysis-meta{font-size:9.8px;color:var(--lottery-muted,var(--muted));line-height:1.5;margin-top:3px}.seat-analysis-count{flex:none;border-radius:999px;background:var(--lottery-pale,var(--accent-pale));color:var(--lottery-strong,var(--accent-strong));padding:4px 8px;font-size:9.5px;font-weight:850;white-space:nowrap}.seat-analysis-kpis{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:6px;margin-top:9px}.seat-analysis-kpi{border-radius:10px;background:var(--lottery-soft,var(--surface-soft));padding:8px 7px;text-align:center}.seat-analysis-kpi span{display:block;font-size:8.7px;color:var(--lottery-muted,var(--muted));line-height:1.3}.seat-analysis-kpi strong{display:block;font-size:11.5px;color:var(--lottery-strong,var(--accent-strong));margin-top:3px;overflow-wrap:anywhere}.seat-analysis-buckets{display:flex;gap:5px;flex-wrap:wrap;margin-top:8px}.seat-analysis-bucket{display:inline-flex;align-items:center;border:1px solid var(--lottery-line,var(--line));border-radius:999px;background:var(--lottery-surface,var(--surface));padding:4px 7px;font-size:9px;color:var(--lottery-muted,var(--muted));font-weight:750}.seat-analysis-history{display:grid;gap:5px;margin-top:9px;padding-top:9px;border-top:1px dashed var(--lottery-line,var(--line))}.seat-analysis-row{display:grid;grid-template-columns:70px minmax(0,1fr);gap:8px;font-size:9.8px;line-height:1.5}.seat-analysis-row span{color:var(--lottery-muted,var(--muted))}.seat-analysis-row strong{color:var(--ink);font-weight:700;overflow-wrap:anywhere}.seat-analysis-note{font-size:9.5px;color:var(--lottery-muted,var(--muted));line-height:1.55;margin-top:8px}.category-distribution-list{display:grid;gap:10px}.category-distribution-row{display:grid;grid-template-columns:118px minmax(0,1fr) auto;gap:9px;align-items:center}.category-distribution-label{font-size:10.8px;font-weight:800;color:var(--ink);white-space:nowrap;letter-spacing:-.035em}.category-distribution-track{height:11px;border-radius:999px;background:var(--lottery-soft,var(--surface-soft));overflow:hidden}.category-distribution-bar{display:block;height:100%;min-width:0;border-radius:inherit;background:var(--lottery-strong,var(--accent-strong));opacity:.72}.category-distribution-value{text-align:right;white-space:nowrap}.category-distribution-value strong{display:block;font-size:12px;color:var(--ink)}.category-distribution-value span{display:block;font-size:8.5px;color:var(--lottery-muted,var(--muted));margin-top:1px}.category-distribution-foot{margin-top:11px;padding-top:9px;border-top:1px dashed var(--lottery-line,var(--line));font-size:9.5px;line-height:1.55;color:var(--lottery-muted,var(--muted))}@media(max-width:360px){.seat-analysis-kpis{grid-template-columns:1fr 1fr}.seat-analysis-row{grid-template-columns:62px minmax(0,1fr)}.category-distribution-row{grid-template-columns:102px minmax(0,1fr) auto;gap:7px}.category-distribution-label{font-size:9.6px;letter-spacing:-.055em}}
@@ -706,7 +708,7 @@ body.security-locked{overflow:hidden!important}
   </section>
 
   <section class="screen" data-screen="lottery"><header class="page-head"><h1>当落</h1><div class="en">Results</div></header><main class="page-body"><div class="lottery-page-tabs" id="lotteryPageTabs"><button class="active" data-lottery-page="record">抽選記録</button><button data-lottery-page="application">申込管理</button><button data-lottery-page="analysis">分析</button></div><section class="lottery-panel" data-lottery-panel="record"><div class="record-summary-grid"><div class="record-summary-card"><span>総当選</span><strong id="statWon">0</strong></div><div class="record-summary-card"><span>総落選</span><strong id="statLost">0</strong></div><div class="record-summary-card"><span>申込中</span><strong id="statApplying">0</strong></div><div class="record-summary-card"><span>結果待ち</span><strong id="statWaiting">0</strong></div></div><div class="category-summary" id="lotteryCategorySummary"></div><div class="category-chip-row" id="lotteryCategoryFilters"></div><div class="mini-tabs" id="lotteryTabs"><button class="active" data-view="tour">ツアー別</button><button data-view="oshi">名義別</button></div><label class="search lottery-search"><span>⌕</span><input id="lotterySearch" type="search" placeholder="ツアー名・会場・名義で検索..." /></label><div class="lottery-toolbar"><button class="ghost-btn" id="addPerformanceBtn" type="button">＋ 抽選追加</button><button class="ghost-btn" id="addTourBtn" type="button">＋ ツアー・イベント</button></div><div class="oshi-count" id="performanceCount">抽選 0 / 3 ・ ツアー 0 / 3</div><div id="lotteryList"></div><div class="premium-limit">Freeでは抽選記録を3件、ツアー・イベントを3件まで登録できます</div></section><section class="lottery-panel" data-lottery-panel="application" hidden><div class="application-intro"><strong>申込管理</strong><p>当落前の申込内容をメモして、結果が出たら当選・落選として抽選記録に残せます♡</p></div><label class="search lottery-search"><span>⌕</span><input id="applicationSearch" type="search" placeholder="公演名・会場・名義・同行者で検索..." /></label><div class="application-toolbar"><button class="solid-btn" id="addApplicationBtn" type="button">＋ 申込を追加</button><button class="ghost-btn" id="performanceMasterBtn" type="button">公演マスタ管理</button></div><div class="oshi-count" id="applicationCount">0 / 3 申込</div><div class="application-tour-list" id="applicationTourList"></div><div class="premium-limit">Freeでは申込管理を3件まで登録できます</div></section><section class="lottery-panel" data-lottery-panel="analysis" hidden>
-<div class="lottery-analysis-intro"><strong>当選履歴の玄学分析</strong><p>登録済みのFC名義・代表者当選・FC同行者当選をもとに、「最近どのくらい当選していないか」「直近の連続落選」「カテゴリー別の当選傾向」を整理します。狙い目スコアは当選確率ではなく、次回申込でどの名義を優先するか考えるための参考指標です。※あくまで参考用です。あまり真に受けすぎないでください。もし当たらなくても、私のせいにしないでくださいねww</p></div>
+<div class="lottery-analysis-intro"><strong>当選履歴の玄学分析</strong><p>登録済みのFC名義・代表者当選・FC同行者当選などの履歴をもとに、「前回のツアー当選からどのくらい空いているか」「直近の連続落選」「カウコン・合同ライブを含む関連当選」「カテゴリー別の当選傾向」などを整理します。次回のツアー申込で、どの名義を優先して使うか考えるための玄学的な参考指標です。※狙い目スコアは実際の当選確率ではありません。あくまで参考用なので、あまり真に受けすぎないでください。もし当たらなくても、私のせいにしないでくださいねww</p></div>
 <div class="lottery-analysis-toolbar"><select id="lotteryAnalysisFc"><option value="">全てのFC</option></select><select id="lotteryAnalysisCategory"><option value="tour" selected>ツアー（次回ツアー向け）</option></select></div>
 <div class="lottery-analysis-kpis"><div class="lottery-analysis-kpi"><span>対象名義</span><strong id="analysisMembershipCount">0件</strong></div><div class="lottery-analysis-kpi"><span>代表者当選</span><strong id="analysisTotalWins">0件</strong></div><div class="lottery-analysis-kpi"><span>同行者当選</span><strong id="analysisAverageWins">0件</strong></div><div class="lottery-analysis-kpi"><span>判定済み</span><strong id="analysisHotMembership">0件</strong></div></div>
 <div class="lottery-analysis-premium-note" id="lotteryAnalysisPremiumNote"><div class="lottery-analysis-premium-head"><span class="premium-chip">PREMIUM</span><strong>Premiumなら、名義ごとの玄学分析を詳しく確認</strong></div><p>Freeでは上の基本集計を確認できます。Premiumでは代表者・FC同行者の履歴を分け、カテゴリー別の狙い目と「なぜその順位なのか」を確認できます。</p><div class="lottery-analysis-premium-grid"><span>FC別 狙い目ランキング</span><span>カテゴリー別 狙い目</span><span>直近の連続落選</span><span>FC同行者当選</span><span>カウコン・合同ライブ補正</span><span>次回ツアー優先候補</span><span>名義別 座席分析</span><span>カテゴリー別当選分布</span><span>参考度・スコア理由</span></div><button class="ghost-btn wide premium-preview-btn" type="button" id="lotteryAnalysisPremiumBtn">Premiumを見る</button></div>
@@ -849,7 +851,7 @@ body.security-locked{overflow:hidden!important}
         <input class="form-control" id="oshiName" maxlength="50" placeholder="例：大橋和也" required data-history-key="oshi-name" />
         <select class="form-control" id="oshiGroupNameSelect" hidden aria-label="グループ名を選択"></select>
         <input class="form-control" id="oshiGroupNameCustom" maxlength="60" placeholder="グループ名を入力" hidden data-history-key="group" />
-        <div class="modal-note" id="oshiGroupNameNote" hidden>登録済み・過去に入力したグループから選べます。「その他（直接入力）」で新しいグループも登録できます。</div>
+        <div class="modal-note" id="oshiGroupNameNote" hidden>登録済み・過去に入力したグループから選べます。「その他（直接入力）」を選んだ場合だけ、グループ名入力欄が表示されます。</div>
       </div>
       <div class="form-group">
         <label class="form-label" for="oshiCategory">カテゴリ・事務所</label>
@@ -857,10 +859,10 @@ body.security-locked{overflow:hidden!important}
         <datalist id="oshiCategorySuggestions"><option value="STARTO ENTERTAINMENT"></option><option value="K-POP"></option><option value="俳優"></option><option value="声優"></option><option value="アニメ"></option><option value="VTuber"></option></datalist>
       </div>
       <div class="form-group conditional-field" id="oshiGroupField">
-        <label class="form-label" for="oshiGroup">グループ・作品名</label>
-        <select class="form-control" id="oshiGroup" aria-label="グループ・作品名を選択"></select>
-        <input class="form-control" id="oshiGroupCustom" maxlength="60" placeholder="グループ・作品名を入力" hidden data-history-key="group" />
-        <div class="modal-note">登録済み・過去に入力した候補から選択できます。新しいグループは「その他（直接入力）」から追加できます。</div>
+        <label class="form-label" for="oshiGroup">所属グループ <span class="form-label-note">任意</span></label>
+        <select class="form-control" id="oshiGroup" aria-label="所属グループを選択"></select>
+        <input class="form-control" id="oshiGroupCustom" maxlength="60" placeholder="グループ名を入力" hidden data-history-key="group" />
+        <div class="modal-note">所属グループがある場合だけ選択してください。新しいグループは「その他（直接入力）」を選ぶと入力欄が表示されます。</div>
       </div>
       <div class="form-group conditional-field" id="oshiFavoriteArtistField" hidden>
         <label class="form-label" for="oshiFavoriteArtist">好きなアーティスト</label>
@@ -1639,12 +1641,14 @@ const BETA_ADMIN_KEY='fanfolio_beta_admin_enabled';
 const BETA_PLAN_OVERRIDE_KEY='fanfolio_beta_plan_override';
 const FREE_ACCESS_KEY='fanfolio_v1_free_access';
 const THEME_KEY='fanfolio_v1_theme';
-const APP_VERSION='0.26.24';
+const APP_VERSION='0.26.25';
 const RELEASE_NOTES_SEEN_KEY='fanfolio_v1_release_notes_seen';
 const CURRENT_RELEASE_NOTES={
-  version:'0.26.24',date:'2026.08.16',
+  version:'0.26.25',date:'2026.08.16',
   items:[
-    {title:'カテゴリー別当選分布の表示を調整',text:'「ファンミーティング」など左側のカテゴリー名が改行されないよう、ラベル幅と文字サイズを調整しました。全カテゴリー名を1行で確認できます。'}
+    {title:'推し追加フォームを整理',text:'個人登録では推し名の直下にグループ選択欄が重複表示されないよう修正し、関連項目を「所属グループ（任意）」として整理しました。'},
+    {title:'グループ登録の候補入力を整理',text:'グループ登録ではグループ選択を基本にし、「その他（直接入力）」を選んだ場合だけグループ名入力欄を表示します。好きなアーティスト候補の連動はそのまま利用できます。'},
+    {title:'玄学分析の説明を現在の仕様に合わせて更新',text:'次回ツアー申込で優先する名義を考える機能であること、カウコン・合同ライブなどの関連当選も参考にすることが伝わる説明へ更新しました。'}
   ]
 };
 if(location.search.includes('__fanfolio_refresh')){try{const cleanUrl=new URL(location.href);cleanUrl.searchParams.delete('__fanfolio_refresh');history.replaceState(null,'',cleanUrl.pathname+(cleanUrl.searchParams.toString()?`?${cleanUrl.searchParams}`:'')+cleanUrl.hash)}catch{}}
@@ -2090,7 +2094,7 @@ function syncOshiCustomInputs(){
 function populateOshiGroupChoices(currentGroupName='',individualGroup=''){
   const names=oshiGroupCatalog().map(item=>item.name);
   renderSelectOptions(oshiGroupNameSelect,names,oshiCleanText(currentGroupName),'グループを選択してください');
-  renderSelectOptions(oshiGroup,names,oshiCleanText(individualGroup),'選択してください');
+  renderSelectOptions(oshiGroup,names,oshiCleanText(individualGroup),'所属グループを選択');
   if(currentGroupName&&!names.includes(oshiCleanText(currentGroupName))&&oshiGroupNameCustom)oshiGroupNameCustom.value=currentGroupName;
   if(individualGroup&&!names.includes(oshiCleanText(individualGroup))&&oshiGroupCustom)oshiGroupCustom.value=individualGroup;
   syncOshiCustomInputs();
@@ -2461,7 +2465,7 @@ function cartePhotoCount(oshiId){return getOshiPremiumPhotos().filter(x=>x.oshiI
 function carteFanCount(oshiId){return getFanserviceRecords().filter(x=>x.oshiId===oshiId).length}
 function setOshiCarteTab(tab='profile'){activeOshiCarteTab=['profile','photos','fanservice','stats'].includes(tab)?tab:'profile';oshiCarteTabs?.querySelectorAll('[data-carte-tab]').forEach(b=>b.classList.toggle('active',b.dataset.carteTab===activeOshiCarteTab));oshiCarteModal?.querySelectorAll('[data-carte-panel]').forEach(p=>p.hidden=p.dataset.cartePanel!==activeOshiCarteTab);if(activeOshiCarteTab==='photos')renderCartePhotos();if(activeOshiCarteTab==='fanservice')renderFanserviceList();if(activeOshiCarteTab==='stats')renderCarteStats()}
 function fillOshiCarteSelect(selected=''){const items=getOshi();oshiCarteSelect.innerHTML=items.map(o=>`<option value="${esc(o.id)}">${esc(o.name)}${o.group?` / ${esc(o.group)}`:''}</option>`).join('');activeOshiCarteId=selected&&items.some(o=>o.id===selected)?selected:(items[0]?.id||'');oshiCarteSelect.value=activeOshiCarteId}
-function carteProfileRows(oshi){const rows=[['種類',(oshi.oshiType||'individual')==='group'?'グループ':'個人'],['カテゴリ・事務所',oshi.category||'—'],['グループ・作品名',oshi.group||'—'],['好きなアーティスト',oshi.favoriteArtist||'—'],['誕生日',oshi.birthday?formatDateJP(oshi.birthday):'—'],['メンカラ',oshi.memberColor?memberColorLabel(oshi.memberColor):'未設定']];return rows.map(([k,v])=>`<div class="carte-detail-row"><span>${esc(k)}</span><strong>${esc(v)}</strong></div>`).join('')}
+function carteProfileRows(oshi){const rows=[['種類',(oshi.oshiType||'individual')==='group'?'グループ':'個人'],['カテゴリ・事務所',oshi.category||'—'],['所属グループ',oshi.group||'—'],['好きなアーティスト',oshi.favoriteArtist||'—'],['誕生日',oshi.birthday?formatDateJP(oshi.birthday):'—'],['メンカラ',oshi.memberColor?memberColorLabel(oshi.memberColor):'未設定']];return rows.map(([k,v])=>`<div class="carte-detail-row"><span>${esc(k)}</span><strong>${esc(v)}</strong></div>`).join('')}
 function memberColorLabel(key=''){return ({red:'赤',pink:'ピンク',orange:'オレンジ',yellow:'黄色',green:'緑',blue:'青',lime:'黄緑',purple:'紫',gray:'グレー',white:'白',black:'黒'})[key]||key||'未設定'}
 function renderOshiCarte(){const o=carteOshi();if(!o)return;const perfs=oshiCartePerformances(o),memories=oshiCarteMemories(o),attended=memories.filter(m=>m.attended!==false),membershipN=getMemberships().filter(m=>m.oshiId===o.id).length,fanN=carteFanCount(o.id),photoN=cartePhotoCount(o.id),colorHex=isPremium()?getOshiMemberColorHex(o.memberColor):'',avStyle=o.photo?`background-image:url('${o.photo}')`:(colorHex?`background:${colorHex}22;color:${colorHex}`:'');const meta=[o.category,o.group,o.favoriteArtist?`推し：${o.favoriteArtist}`:''].filter(Boolean).join(' ・ ')||'Premiumカルテ';oshiCarteHero.innerHTML=`<div class="carte-avatar" style="${avStyle}">${o.photo?'':'♡'}</div><div class="carte-hero-main"><div class="carte-hero-name">${colorHex?`<span class="oshi-color-dot" style="background:${colorHex}"></span>`:''}${esc(o.name)}</div><div class="carte-hero-meta">${esc(meta)}</div></div>`;oshiCarteProfilePanel.innerHTML=`<div class="carte-kpis"><div class="carte-kpi"><span>FC・Membership</span><strong>${membershipN}</strong></div><div class="carte-kpi"><span>参戦記録</span><strong>${attended.length}</strong></div><div class="carte-kpi"><span>写真</span><strong>${photoN}</strong></div><div class="carte-kpi"><span>ファンサ</span><strong>${fanN}</strong></div></div><div class="carte-section"><div class="carte-section-title"><span>プロフィール</span><button class="carte-mini-btn" id="editCarteProfileBtn" type="button">編集</button></div>${carteProfileRows(o)}</div>${o.memo?`<div class="carte-section"><div class="carte-section-title">メモ</div><div style="font-size:12.5px;line-height:1.6">${esc(o.memo)}</div></div>`:''}`;document.getElementById('editCarteProfileBtn')?.addEventListener('click',()=>{closeOshiCarte();openOshiModal(o)});renderCartePhotos();renderFanserviceList();renderCarteStats()}
 function openOshiCarte(oshiId=''){if(!isPremium()){openPremiumModal();return}const items=getOshi();if(!items.length){showToast('先に推しを登録してください。');return}fillOshiCarteSelect(oshiId);activeOshiCarteTab='profile';renderOshiCarte();setOshiCarteTab('profile');oshiCarteModal.classList.add('open');oshiCarteModal.setAttribute('aria-hidden','false');document.body.style.overflow='hidden'}
