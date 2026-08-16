@@ -12,7 +12,7 @@
 <link rel="icon" type="image/png" sizes="32x32" href="./favicon-32.png" />
 <link rel="icon" type="image/png" sizes="192x192" href="./icon-192.png" />
 <meta name="mobile-web-app-capable" content="yes" />
-<title>FanFolio v0.26.30</title>
+<title>FanFolio v0.26.31</title>
 <style>
 :root{
   --bg:#f7f5f0;
@@ -120,7 +120,7 @@ button{cursor:pointer}
 .backup-summary-item{border:1px solid var(--line);border-radius:13px;background:var(--surface-soft);padding:11px 12px}
 .backup-summary-item span{display:block;color:var(--muted);font-size:11px;margin-bottom:3px}
 .backup-summary-item strong{display:block;color:var(--accent-strong);font-size:17px}
-/* FanFolio v0.26.30 — Phase 1B recovery patch */
+/* FanFolio v0.26.31 — FC名義 list rendering hotfix */
 .migration-preview-sheet{max-height:min(92vh,860px);overflow:auto}.migration-preview-kicker{display:inline-flex;align-items:center;border-radius:999px;background:var(--accent-pale);color:var(--accent-strong);font-size:10px;font-weight:900;letter-spacing:.08em;padding:5px 9px;margin:0 0 9px}.migration-preview-lead{font-size:11.5px;line-height:1.65;color:var(--muted);margin:0 0 13px}.migration-safety-note{border:1px solid var(--line-strong);border-radius:14px;background:var(--surface-soft);padding:11px 12px;font-size:10.8px;line-height:1.6;color:var(--muted);margin:11px 0}.migration-safety-note strong{color:var(--accent-strong)}.migration-status-grid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:7px;margin:12px 0}.migration-status-card{border:1px solid var(--line);border-radius:13px;background:var(--surface);padding:10px 8px;text-align:center}.migration-status-card span{display:block;font-size:9.8px;color:var(--muted);margin-bottom:3px}.migration-status-card strong{display:block;font-size:17px;color:var(--accent-strong)}.migration-preview-section{margin:16px 0 8px}.migration-preview-section-title{font-size:12.5px;font-weight:850;color:var(--accent-strong);margin:0 1px 8px}.migration-map-list{display:grid;gap:7px}.migration-map-row{border:1px solid var(--line);border-radius:14px;background:var(--surface);padding:10px 11px}.migration-map-head{display:flex;justify-content:space-between;gap:10px;align-items:flex-start}.migration-map-title{font-size:12px;font-weight:800;color:var(--ink);line-height:1.4}.migration-map-source{font-size:9.8px;color:var(--muted);white-space:nowrap}.migration-map-counts{display:flex;gap:5px;flex-wrap:wrap;margin-top:7px}.migration-status-chip{display:inline-flex;align-items:center;border-radius:999px;padding:3px 7px;font-size:9.5px;font-weight:800;background:var(--surface-soft);color:var(--muted);border:1px solid var(--line)}.migration-status-chip.add{background:var(--accent-pale);color:var(--accent-strong);border-color:var(--line-strong)}.migration-status-chip.merge{background:#f6f2ff;color:#6d5b8e;border-color:#d8cfee}.migration-status-chip.skip{background:#f3f3f3;color:#777;border-color:#ddd}.migration-status-chip.manual{background:#fff6ea;color:#936628;border-color:#ead3af}.migration-map-note{font-size:10.3px;line-height:1.55;color:var(--muted);margin-top:7px}.migration-risk-list{display:grid;gap:7px}.migration-risk-item{border:1px solid var(--line);border-radius:13px;background:var(--surface-soft);padding:10px 11px}.migration-risk-item strong{display:block;font-size:11px;color:var(--ink);margin-bottom:3px}.migration-risk-item span{display:block;font-size:10.3px;line-height:1.55;color:var(--muted)}.migration-source-meta{font-size:10.3px;line-height:1.55;color:var(--muted);overflow-wrap:anywhere}.migration-preview-actions{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:14px}@media(max-width:360px){.migration-status-grid{grid-template-columns:repeat(2,minmax(0,1fr))}.migration-preview-actions{grid-template-columns:1fr}}
 .backup-warning{border:1px dashed #c7ad8f;border-radius:13px;background:#faf4ea;padding:11px 12px;color:#7f684f;font-size:11.5px;line-height:1.55;margin:12px 0}
 .bottom-nav{position:fixed;z-index:50;left:50%;transform:translateX(-50%);bottom:0;width:min(100%,760px);height:calc(var(--nav-h) + env(safe-area-inset-bottom));padding:10px 18px calc(8px + env(safe-area-inset-bottom));background:rgba(255,253,249,.97);border-top:1px solid var(--line);display:grid;grid-template-columns:repeat(5,1fr);backdrop-filter:blur(14px)}
@@ -1681,14 +1681,14 @@ const BETA_ADMIN_KEY='fanfolio_beta_admin_enabled';
 const BETA_PLAN_OVERRIDE_KEY='fanfolio_beta_plan_override';
 const FREE_ACCESS_KEY='fanfolio_v1_free_access';
 const THEME_KEY='fanfolio_v1_theme';
-const APP_VERSION='0.26.30';
+const APP_VERSION='0.26.31';
 const RELEASE_NOTES_SEEN_KEY='fanfolio_v1_release_notes_seen';
 const CURRENT_RELEASE_NOTES={
-  version:'0.26.30',date:'2026.08.16',
+  version:'0.26.31',date:'2026.08.16',
   items:[
-    {title:'Phase 1 Recovery Patch',text:'v0.26.29で途中停止したIdentity移行を安全に再判定できるよう、移行先が存在しない孤立Ledgerだけを自動整理し、既に存在するレコードは強一致キーで再利用します。'},
-    {title:'書き込み順序を安全化',text:'推し・名義は移行先レコードを先に保存し、保存成功後にSource Ledgerを書き込む順序へ変更しました。途中停止しても再実行時に重複を作りにくい構成です。'},
-    {title:'データ処理と画面更新を分離',text:'移行後の画面再描画でエラーが起きても、正常に完了したデータ移行を「失敗」と表示しないよう処理を分離しました。停止時は処理段階とエラー種別も表示します。'}
+    {title:'FC名義一覧の表示を修正',text:'Phase 1移行後、件数は15件と表示されるのにFC名義カードが描画されない問題を修正しました。移行済みデータ自体は変更せず、そのまま表示します。'},
+    {title:'移行後の即時再描画を修正',text:'同じ描画エラーが原因でPhase 1完了時に「一部画面の即時再描画だけに失敗」と表示される問題も解消しました。'},
+    {title:'Phase 1 Recovery保護を維持',text:'Source Ledger、防重複、既存値を上書きしない移行ルール、Phase 1以外を触らない制限はそのまま維持します。'}
   ]
 };
 if(location.search.includes('__fanfolio_refresh')){try{const cleanUrl=new URL(location.href);cleanUrl.searchParams.delete('__fanfolio_refresh');history.replaceState(null,'',cleanUrl.pathname+(cleanUrl.searchParams.toString()?`?${cleanUrl.searchParams}`:'')+cleanUrl.hash)}catch{}}
@@ -2182,7 +2182,7 @@ async function executeFolioIdentityImport(){
     console.error('phase1 identity import failed',phase1Stage,err);
     folioIdentityImportLead.textContent='移行を完了できませんでした。既に保存済みのデータは削除せず、次回は未完了分だけを再判定します。';
     const errorName=String(err?.name||'Error'),errorMessage=String(err?.message||'unknown-error');
-    folioIdentityImportRiskList.innerHTML=`<div class="migration-risk-item"><strong>処理を停止しました</strong><span>停止段階：${esc(phase1Stage)} ／ ${esc(errorName)}${errorMessage?` ／ ${esc(errorMessage)}`:''}</span></div><div class="migration-risk-item"><strong>Recovery対応</strong><span>v0.26.30では、移行先が存在しない孤立Ledgerだけを次回PRECHECK時に整理し、既に保存済みのレコードは強一致キーで再利用します。</span></div>`;
+    folioIdentityImportRiskList.innerHTML=`<div class="migration-risk-item"><strong>処理を停止しました</strong><span>停止段階：${esc(phase1Stage)} ／ ${esc(errorName)}${errorMessage?` ／ ${esc(errorMessage)}`:''}</span></div><div class="migration-risk-item"><strong>Recovery対応</strong><span>v0.26.31では、移行先が存在しない孤立Ledgerだけを次回PRECHECK時に整理し、既に保存済みのレコードは強一致キーで再利用します。</span></div>`;
     try{await identityExtPut(IDENTITY_LEDGER_STORE,{id:phase1LedgerId(currentFolioIdentityImportSourceHash,'batch','identity'),phase:'identity',sourceApp:'FCfolio',sourceHash:currentFolioIdentityImportSourceHash,dataset:'batch',sourceId:'identity',targetType:'batch',targetId:'identity',status:'partial',failedStage:phase1Stage,errorName,updatedAt:new Date().toISOString(),appVersion:APP_VERSION})}catch{}
     showToast('Phase 1移行を停止しました。表示された停止段階を確認してください。');
   }finally{if(!confirmFolioIdentityImportBtn.hidden)confirmFolioIdentityImportBtn.disabled=false;cancelFolioIdentityImportBtn.disabled=false}
@@ -2477,6 +2477,7 @@ function membershipNeedsRenewalAttention(item){if(!item)return false;const notic
 function fanfolioStartoAutoRenewal(joinMonth){const match=String(joinMonth||'').match(/^(\d{4})-(\d{2})$/);if(!match)return null;const joinMonthNum=Number(match[2]);let expiryMonth=joinMonthNum-1;if(expiryMonth===0)expiryMonth=12;const today=new Date();today.setHours(0,0,0,0);let expiryYear=today.getFullYear();let expiryDate=new Date(expiryYear,expiryMonth,0);expiryDate.setHours(23,59,59,999);if(expiryDate<today){expiryYear+=1;expiryDate=new Date(expiryYear,expiryMonth,0)}const ymd=d=>`${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}-${String(d.getDate()).padStart(2,'0')}`;let noticeYear=expiryYear,noticeMonth=expiryMonth-1;if(noticeMonth===0){noticeMonth=12;noticeYear-=1}const noticeDate=new Date(noticeYear,noticeMonth-1,2);return{expiry:ymd(expiryDate),renewalNoticeDate:ymd(noticeDate)}}
 function membershipExpiryState(item){if(!item?.expiry)return 'active';const end=new Date(`${item.expiry}T23:59:59`),today=new Date();today.setHours(0,0,0,0);const days=Math.ceil((end-today)/86400000);if(days<0)return 'expired';if(days<=60)return 'soon';return 'active'}
 function membershipMatchesSearch(item,q){if(!q)return true;const text=[item.name,item.account,item.memberNumber,item.realName,item.phone,item.email,item.postalCode,item.prefecture,item.address].filter(Boolean).join(' ').toLocaleLowerCase('ja');return text.includes(q.toLocaleLowerCase('ja'))}
+function homeMembershipSearchMatch(item,q){return membershipMatchesSearch(item,q)}
 function membershipSortItems(items,mode){const arr=items.slice();if(mode==='expiry')return arr.sort((a,b)=>(a.expiry||'9999-99-99').localeCompare(b.expiry||'9999-99-99')||(a.account||a.name||'').localeCompare(b.account||b.name||'','ja'));if(mode==='join')return arr.sort((a,b)=>(a.joinMonth||'9999-99').localeCompare(b.joinMonth||'9999-99')||(a.account||a.name||'').localeCompare(b.account||b.name||'','ja'));return arr.sort((a,b)=>(a.account||a.name||'').localeCompare(b.account||b.name||'','ja',{numeric:true}))}
 function membershipDetailRows(item){const renewalNotice=membershipRenewalNoticeValue(item);const rows=[['氏名',item.realName],['郵便番号',item.postalCode],['都道府県',item.prefecture],['住所',item.address],['電話番号',item.phone],['生年月日',item.birthdate?formatDateJP(item.birthdate):''],['メール',item.email],['入会年月',item.joinMonth?formatMonthJP(item.joinMonth):''],['有効期限',item.expiry?formatDateJP(item.expiry):''],['更新通知日',renewalNotice?formatDateJP(renewalNotice):'']].filter(([,v])=>v);return rows.length?`<dl class="membership-detail-grid">${rows.map(([k,v])=>`<div class="membership-detail-row"><dt>${esc(k)}</dt><dd>${esc(v)}</dd></div>`).join('')}</dl>`:''}
 function renderMemberships(){
