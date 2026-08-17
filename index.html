@@ -12,7 +12,7 @@
 <link rel="icon" type="image/png" sizes="32x32" href="./favicon-32.png" />
 <link rel="icon" type="image/png" sizes="192x192" href="./icon-192.png" />
 <meta name="mobile-web-app-capable" content="yes" />
-<title>FanFolio ver. 2026.08.17.11</title>
+<title>FanFolio ver. 2026.08.17.12</title>
 <style>
 :root{
   --bg:#f7f5f0;
@@ -2117,14 +2117,14 @@ const BETA_ADMIN_KEY='fanfolio_beta_admin_enabled';
 const BETA_PLAN_OVERRIDE_KEY='fanfolio_beta_plan_override';
 const FREE_ACCESS_KEY='fanfolio_v1_free_access';
 const THEME_KEY='fanfolio_v1_theme';
-const APP_VERSION='2026.08.17.11';
+const APP_VERSION='2026.08.17.12';
 const APP_VERSION_DATE='2026.08.17';
 const APP_VERSION_DISPLAY=`ver. ${APP_VERSION}`;
 const RELEASE_NOTES_SEEN_KEY='fanfolio_v1_release_notes_seen';
 const CURRENT_RELEASE_NOTES={
   version:APP_VERSION,date:APP_VERSION_DATE,
   userItems:[
-    {title:'FC同行者の座席を名義カルテから編集',text:'FC同行者として当選した公演でも、名義カルテからその名義本人の座席を直接編集できるようにしました。代表者と同行者の座席は別々に保存されます。'}
+    {title:'座席表記のブロック名を自動整形',text:'座席のブロック欄に「C4」のように入力すると、座席表記では自動的に「C4ブロック」として表示されるようにしました。'}
   ],
   internalItems:[]
 };
@@ -4190,7 +4190,7 @@ let performanceSeatDrafts={},activePerformanceSeatOwnerKey='representative';
 const performanceSeatInputs=[performanceSeatType,performanceSeatGate,performanceSeatBlock,performanceSeatRow,performanceSeatNumber,performanceSeatText,performanceSeatDetail,performanceSeatView,performanceSeatRating,performanceTicketSource,performanceTicketType,performanceTicketMemberNo];
 function blankPerformanceSeatRecord(key='representative'){return{key,role:key==='representative'?'representative':'companion',membershipId:key.startsWith('companion:')?key.slice(10):'',seatType:'',gate:'',block:'',row:'',number:'',seat:'',detail:'',view:'',rating:'',ticketSource:'',ticketType:'',ticketMemberNo:''}}
 function resetPerformanceSeatFormFields(){performanceSeatType.value='';performanceSeatGate.value='';performanceSeatBlock.value='';performanceSeatRow.value='';performanceSeatNumber.value='';performanceSeatText.value='';performanceSeatDetail.value='';performanceSeatView.value='';performanceSeatRating.value='';performanceTicketSource.value='';performanceTicketType.value='';performanceTicketMemberNo.value=''}
-function normalizeSeatPart(value='',suffix=''){const v=String(value||'').trim();if(!v)return'';if(!suffix||v.endsWith(suffix))return v;return /^\d+$/.test(v)?`${v}${suffix}`:v}
+function normalizeSeatPart(value='',suffix=''){const v=String(value||'').trim();if(!v)return'';if(!suffix||v.endsWith(suffix))return v;if(suffix==='ブロック')return `${v}${suffix}`;return /^\d+$/.test(v)?`${v}${suffix}`:v}
 function composedPerformanceSeatText(){const type=String(performanceSeatType?.value||'').trim(),block=normalizeSeatPart(performanceSeatBlock?.value,'ブロック'),row=normalizeSeatPart(performanceSeatRow?.value,'列'),num=normalizeSeatPart(performanceSeatNumber?.value,'番'),tail=[row,num].filter(Boolean).join('');return [type,block,tail].filter(Boolean).join(' ').trim()}
 function syncPerformanceSeatTextFromParts(){const text=composedPerformanceSeatText();if(text)performanceSeatText.value=text;else if(!performanceSeatBlock.value.trim()&&!performanceSeatRow.value.trim()&&!performanceSeatNumber.value.trim()&&!performanceSeatType.value)performanceSeatText.value=''}
 function seatComponentsFromText(text=''){const s=String(text||'').normalize('NFKC').trim();const block=s.match(/([^\s　]+ブロック)/)?.[1]||'',row=s.match(/([^\s　]+列)/)?.[1]||'',number=s.match(/([^\s　]+番)/)?.[1]||'';return{block,row,number}}
