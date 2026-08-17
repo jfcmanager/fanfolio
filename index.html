@@ -12,7 +12,7 @@
 <link rel="icon" type="image/png" sizes="32x32" href="./favicon-32.png" />
 <link rel="icon" type="image/png" sizes="192x192" href="./icon-192.png" />
 <meta name="mobile-web-app-capable" content="yes" />
-<title>FanFolio ver. 2026.08.17.24</title>
+<title>FanFolio ver. 2026.08.17.25</title>
 <style>
 :root{
   --bg:#f7f5f0;
@@ -1070,6 +1070,22 @@ body{width:100%;overscroll-behavior-x:none}
 }
 @media(max-width:390px){
   #currentPlanFoot{padding-left:14px!important;padding-right:14px!important}
+}
+/* FanFolio ver. 2026.08.17.25 — Premium status is left aligned; Free pricing lines stay centered */
+#currentPlanFoot.plan-foot-status{
+  padding-left:0!important;
+  padding-right:0!important;
+  text-align:left!important;
+  align-items:flex-start!important;
+  overflow:visible!important;
+}
+#currentPlanFoot.plan-foot-status .plan-foot-line{
+  width:100%!important;
+  margin-left:0!important;
+  margin-right:0!important;
+  text-align:left!important;
+  transform:none!important;
+  white-space:normal!important;
 }
 
 </style>
@@ -2380,17 +2396,17 @@ const BETA_ADMIN_KEY='fanfolio_beta_admin_enabled';
 const BETA_PLAN_OVERRIDE_KEY='fanfolio_beta_plan_override';
 const FREE_ACCESS_KEY='fanfolio_v1_free_access';
 const THEME_KEY='fanfolio_v1_theme';
-const APP_VERSION='2026.08.17.24';
+const APP_VERSION='2026.08.17.25';
 const APP_VERSION_DATE='2026.08.17';
 const APP_VERSION_DISPLAY=`ver. ${APP_VERSION}`;
 const RELEASE_NOTES_SEEN_KEY='fanfolio_v1_release_notes_seen';
 const CURRENT_RELEASE_NOTES={
   version:APP_VERSION,date:APP_VERSION_DATE,
   userItems:[
-    {title:'料金案内の表示を調整',text:'無料体験・Early Access・Founding Memberの案内が画面からはみ出さないよう、余白と文字サイズを整えました。'}
+    {title:'Premium無料体験の表示を改善',text:'無料体験の終了予定を見やすくし、正式決済の準備中は分かりやすくご案内するようにしました。'}
   ],
   internalItems:[
-    {title:'Sandbox checkout fix',text:'管理者テストモードの2日無料体験で、テストカード画面へ確実に遷移するよう修正しました。'}
+    {title:'Premium checkout routing',text:'Live Checkout URL未設定時の案内を入口で固定し、管理者Sandboxとの分岐を明確化しました。'}
   ]
 };
 if(location.search.includes('__fanfolio_refresh')){try{const cleanUrl=new URL(location.href);cleanUrl.searchParams.delete('__fanfolio_refresh');history.replaceState(null,'',cleanUrl.pathname+(cleanUrl.searchParams.toString()?`?${cleanUrl.searchParams}`:'')+cleanUrl.hash)}catch{}}
@@ -2640,6 +2656,7 @@ function fitPlanFootLines(){
 function renderPlanState(){
   syncSandboxTrialState();
   const plan=getPlanState(),tier=getEffectiveTier(),betaOverride=isBetaAdminEnabled()?getBetaPlanOverride():'';
+  currentPlanFoot?.classList.toggle('plan-foot-status',tier==='premium');
   if(tier==='premium'){
     const trial=isTrialPlan(plan)&&!betaOverride;
     currentPlanName.textContent='FanFolio Premium';
@@ -2685,7 +2702,7 @@ function resetSandboxCardForm(){if(sandboxCardName)sandboxCardName.value='';if(s
 function fillSandboxTestCard(){if(sandboxCardName)sandboxCardName.value='MEI TEST';if(sandboxCardNumber)sandboxCardNumber.value='4242 4242 4242 4242';if(sandboxCardExpiry)sandboxCardExpiry.value='12/35';if(sandboxCardCvc)sandboxCardCvc.value='123';syncSandboxCheckoutButton()}
 function openSandboxCheckoutModal(force=false){if(!force&&!isAdminSandboxMode()){showToast('Sandbox決済は管理者テストモード専用です。');return}const d=selectedPlanDetails(),now=new Date(),trialEnd=addTrialDays(now,2);setOverlayOpen(premiumModal,false,true);if(checkoutConfirm)checkoutConfirm.checked=false;resetSandboxCardForm();if(completeCheckoutBtn)completeCheckoutBtn.disabled=true;const title=document.getElementById('checkoutModalTitle');if(title)title.textContent='Premium 2日間無料体験（Sandbox）';checkoutSummary.innerHTML=`<div class="checkout-summary-row"><span>プラン</span><strong>${esc(d.label)}</strong></div><div class="checkout-summary-row"><span>今日</span><strong>¥0</strong></div><div class="checkout-summary-row"><span>無料体験終了</span><strong>${esc(formatDateJP(trialEnd))}</strong></div><div class="checkout-summary-row"><span>体験終了後</span><strong>${esc(d.price)}で自動更新（テスト）</strong></div>${d.foundingBadge?'<div class="checkout-summary-row"><span>特典</span><strong>Founding Member Badge</strong></div>':''}`;if(completeCheckoutBtn)completeCheckoutBtn.textContent='テストカードで2日間無料体験を開始';setOverlayOpen(checkoutModal,true);requestAnimationFrame(()=>{checkoutModal.scrollTop=0;checkoutModal.querySelector('.modal-sheet')?.scrollTo?.(0,0)})}
 function openLiveCheckout(){const d=selectedPlanDetails(),url=LEMON_LIVE_CHECKOUT_URLS[d.billing]||'';if(!url){showToast('Lemon Squeezyの正式決済は準備中です。Freeはそのまま利用できます。');return}try{const target=new URL(url,location.href);target.searchParams.set('checkout[custom][fanfolio_plan]',d.billing);location.href=target.toString()}catch{location.href=url}}
-function startPremiumTrialFlow(e){e?.preventDefault?.();e?.stopPropagation?.();const mode=startPremiumBtn?.dataset.checkoutMode||premiumPaymentModeNote?.dataset.checkoutMode||(isAdminSandboxMode()?'sandbox':'live');if(mode==='sandbox'||isAdminSandboxMode()){openSandboxCheckoutModal(true);return}openLiveCheckout()}
+function startPremiumTrialFlow(e){e?.preventDefault?.();e?.stopPropagation?.();if(isAdminSandboxMode()){openSandboxCheckoutModal(true);return}const d=selectedPlanDetails(),url=LEMON_LIVE_CHECKOUT_URLS[d.billing]||'';if(!url){showToast('Lemon Squeezyの正式決済は準備中です。Freeはそのまま利用できます。');return}openLiveCheckout()}
 function closeCheckoutModal(){checkoutModal.classList.remove('open');checkoutModal.setAttribute('aria-hidden','true');document.body.style.overflow=''}
 function completeSandboxCheckout(){if(!isAdminSandboxMode()){showToast('管理者表示でのみSandbox決済を実行できます。');return}if(!checkoutConfirm?.checked||!sandboxCardIsValid()){syncSandboxCheckoutButton();return}const d=selectedPlanDetails(),now=new Date(),trialEnd=addTrialDays(now,2),previous=getPlanState();savePlanState({tier:'premium',billing:d.billing,region:d.region,founding:d.founding,foundingBadge:Boolean(previous.foundingBadge||d.foundingBadge),renewalDate:addPlanPeriod(trialEnd,d.billing),status:'on_trial',cancelAtPeriodEnd:false,startedAt:now.toISOString(),trialStartedAt:now.toISOString(),trialEndsAt:trialEnd.toISOString(),subscriptionSource:'sandbox'});try{localStorage.removeItem(BETA_PLAN_OVERRIDE_KEY)}catch{}closeCheckoutModal();syncFreeAccessPlanState();refreshAfterBetaPlanChange();showToast('Sandbox：Premiumの2日間無料体験を開始しました。')}
 function planPriceLabel(plan){const p=PREMIUM_PRICES[plan.region]||PREMIUM_PRICES.jp;return plan.billing==='monthly'?p.monthly:p.annual}
@@ -3163,7 +3180,7 @@ function getMemberships(){
   try{const v=JSON.parse(localStorage.getItem(MEMBERSHIP_KEY)||'[]');return Array.isArray(v)?v:[]}catch{return []}
 }
 function saveMemberships(items){localStorage.setItem(MEMBERSHIP_KEY,JSON.stringify(items))}
-function formatDateJP(v){if(!v)return '';if(v instanceof Date){if(Number.isNaN(v.getTime()))return '';v=dateKeyFromDate(v)}const s=String(v);const p=s.split('-');return p.length===3?`${p[0]}.${p[1]}.${p[2]}`:s}
+function formatDateJP(v){if(!v)return '';if(v instanceof Date){if(Number.isNaN(v.getTime()))return '';v=dateKeyFromDate(v)}const s=String(v).trim();const iso=s.match(/^(\d{4})-(\d{2})-(\d{2})/);if(iso)return `${iso[1]}.${iso[2]}.${iso[3]}`;const dot=s.match(/^(\d{4})\.(\d{2})\.(\d{2})/);if(dot)return `${dot[1]}.${dot[2]}.${dot[3]}`;return s}
 function formatMonthJP(v){if(!v)return '';const p=v.split('-');return p.length===2?`${p[0]}.${p[1]}`:v}
 function expiryInfo(v){
   if(!v)return {text:'',soon:false};
