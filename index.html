@@ -978,6 +978,68 @@ body{width:100%;overscroll-behavior-x:none}
   }
 }
 
+
+
+/* FanFolio ver. 2026.08.17.20 — typography polish + compact About menu */
+/* Keep the Premium calendar hint visibly larger while still fitting on one phone-width line. */
+.calendar-color-note.show{
+  font-size:10.3px!important;
+  letter-spacing:-.018em!important;
+  line-height:1.25!important;
+  white-space:nowrap!important;
+  width:119%;
+  max-width:none!important;
+  transform:scaleX(.84);
+  transform-origin:left center;
+}
+@media(max-width:360px){
+  .calendar-color-note.show{font-size:10px!important;width:125%;transform:scaleX(.80);letter-spacing:-.025em!important}
+}
+
+/* Analysis: readable size, compact one-row facts, and a larger one-line previous-win value. */
+@media(max-width:520px){
+  .target-score-history-row{font-size:11.2px!important;line-height:1.42!important;column-gap:8px!important}
+  .target-score-history-row>span{font-size:11.2px!important;line-height:1.42!important}
+  .target-score-history-row>strong{font-size:11.4px!important;line-height:1.42!important;white-space:nowrap}
+  .target-score-history-row:first-child>strong{
+    font-size:12.2px!important;
+    letter-spacing:-.012em!important;
+    white-space:nowrap!important;
+    width:118%;
+    max-width:none;
+    transform:scaleX(.85);
+    transform-origin:left center;
+  }
+}
+
+/* Trip cards: wrap only at logical separators, never in the middle of a hotel name. */
+.trip-meta{display:flex!important;flex-wrap:wrap;align-items:baseline;gap:2px 4px;word-break:keep-all!important;overflow-wrap:normal!important}
+.trip-meta>span{white-space:nowrap;max-width:100%}
+.trip-meta-sep{font-style:normal;white-space:nowrap;color:var(--muted)}
+
+/* About / Help menu: narrower rows with a cleaner icon and a compact single-line feature description. */
+.about-settings-card .setting-row{min-height:52px!important;padding:11px 15px!important;gap:9px!important}
+.about-settings-card .setting-main{gap:12px!important}
+.about-settings-card .setting-line-icon,.about-settings-card .setting-line-icon svg{width:22px!important;height:22px!important}
+.about-settings-card .setting-content h3{font-size:15px!important;line-height:1.25!important;margin:0!important}
+.about-settings-card .chev{font-size:20px!important;line-height:1!important}
+.about-settings-card #featuresBtn{min-height:58px!important}
+.about-settings-card #featuresBtn .setting-content p{
+  margin-top:3px!important;
+  font-size:10.6px!important;
+  line-height:1.25!important;
+  white-space:nowrap!important;
+  letter-spacing:-.012em;
+  width:113.7%;
+  max-width:none;
+  transform:scaleX(.88);
+  transform-origin:left center;
+}
+@media(max-width:360px){
+  .about-settings-card .setting-row{padding:10px 13px!important}
+  .about-settings-card .setting-main{gap:10px!important}
+  .about-settings-card #featuresBtn .setting-content p{font-size:10.2px!important;width:119%;transform:scaleX(.84)}
+}
 </style>
 </head>
 <body>
@@ -1168,7 +1230,7 @@ body{width:100%;overscroll-behavior-x:none}
 
       <div class="settings-section" id="developerSettingsSection"><div class="section-title">開発者設定</div><div class="settings-card"><div class="beta-admin-panel" id="betaAdminPanel" hidden><div class="beta-admin-head"><strong>管理者テストモード</strong><span class="premium-chip">BETA</span></div><div class="beta-admin-note">Free／Premiumの実機確認用です。保存済みデータは削除しません。</div><div class="beta-admin-actions"><button class="ghost-btn" id="testAsFreeBtn" type="button">Freeとして確認</button><button class="solid-btn" id="testAsPremiumBtn" type="button">Premiumとして確認</button></div><div class="beta-admin-status" id="betaAdminStatus">通常モード</div><button class="beta-admin-exit" id="resetBetaPreviewBtn" type="button" hidden>管理者表示に戻る</button><button class="beta-admin-exit" id="disableBetaAdminBtn" type="button">管理者テストモードを終了</button></div></div></div>
 
-      <div class="settings-section"><div class="section-title">アプリについて</div><div class="settings-card about-settings-card"><button class="setting-row setting-action" id="aboutToolBtn" type="button"><div class="setting-main"><span class="setting-line-icon" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M20.8 4.6a5.5 5.5 0 0 0-7.8 0L12 5.6l-1-1a5.5 5.5 0 0 0-7.8 7.8l1 1L12 21l7.8-7.6 1-1a5.5 5.5 0 0 0 0-7.8Z"/></svg></span><div class="setting-content"><h3>このツールについて</h3></div></div><span class="chev">›</span></button><button class="setting-row setting-action" id="featuresBtn" type="button"><div class="setting-main"><span class="setting-line-icon" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M12 3l2.1 4.3L19 8l-3.5 3.4.8 4.8L12 14l-4.3 2.2.8-4.8L5 8l4.9-.7z"/><path d="M18.5 15.5 20 17l-1.5 1.5L17 17zM4 14l1 1-1 1-1-1z"/></svg></span><div class="setting-content"><h3>FanFolioでできること</h3><p>FreeからPremiumまで、推し活管理の魅力を紹介します。</p></div></div><span class="chev">›</span></button><button class="setting-row setting-action" id="termsBtn" type="button"><div class="setting-main"><span class="setting-line-icon" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M6 2.8h8l4 4V21H6z"/><path d="M14 2.8V7h4M9 11h6M9 15h6"/></svg></span><div class="setting-content"><h3>利用規約</h3></div></div><span class="chev">›</span></button><button class="setting-row setting-action" id="privacyBtn" type="button"><div class="setting-main"><span class="setting-line-icon" aria-hidden="true"><svg viewBox="0 0 24 24"><rect x="5" y="10" width="14" height="10" rx="2"/><path d="M8 10V7a4 4 0 0 1 8 0v3"/></svg></span><div class="setting-content"><h3>プライバシーポリシー</h3></div></div><span class="chev">›</span></button><button class="setting-row setting-action" id="faqBtn" type="button"><div class="setting-main"><span class="setting-line-icon" aria-hidden="true"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M9.8 9.2a2.4 2.4 0 1 1 4.2 1.6c-1.1 1-2 1.4-2 3M12 17h.01"/></svg></span><div class="setting-content"><h3>よくある質問</h3></div></div><span class="chev">›</span></button><button class="setting-row setting-action" id="feedbackBtn" type="button"><div class="setting-main"><span class="setting-line-icon" aria-hidden="true"><svg viewBox="0 0 24 24"><rect x="3" y="5" width="18" height="14" rx="2"/><path d="m4 7 8 6 8-6"/></svg></span><div class="setting-content"><h3>不具合の報告・ご要望</h3></div></div><span class="chev">›</span></button></div></div>
+      <div class="settings-section"><div class="section-title">アプリについて</div><div class="settings-card about-settings-card"><button class="setting-row setting-action" id="aboutToolBtn" type="button"><div class="setting-main"><span class="setting-line-icon" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M20.8 4.6a5.5 5.5 0 0 0-7.8 0L12 5.6l-1-1a5.5 5.5 0 0 0-7.8 7.8l1 1L12 21l7.8-7.6 1-1a5.5 5.5 0 0 0 0-7.8Z"/></svg></span><div class="setting-content"><h3>このツールについて</h3></div></div><span class="chev">›</span></button><button class="setting-row setting-action" id="featuresBtn" type="button"><div class="setting-main"><span class="setting-line-icon" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M4 5.5c2.5-.8 5-.5 8 1.3v12c-3-1.8-5.5-2.1-8-1.3z"/><path d="M20 5.5c-2.5-.8-5-.5-8 1.3v12c3-1.8 5.5-2.1 8-1.3z"/><path d="M9.7 10.2c.7-.8 1.8-.7 2.3.2.5-.9 1.6-1 2.3-.2.8 1 .1 2.1-2.3 3.7-2.4-1.6-3.1-2.7-2.3-3.7Z"/></svg></span><div class="setting-content"><h3>FanFolioでできること</h3><p>FreeからPremiumまで、推し活管理の魅力を紹介します。</p></div></div><span class="chev">›</span></button><button class="setting-row setting-action" id="termsBtn" type="button"><div class="setting-main"><span class="setting-line-icon" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M6 2.8h8l4 4V21H6z"/><path d="M14 2.8V7h4M9 11h6M9 15h6"/></svg></span><div class="setting-content"><h3>利用規約</h3></div></div><span class="chev">›</span></button><button class="setting-row setting-action" id="privacyBtn" type="button"><div class="setting-main"><span class="setting-line-icon" aria-hidden="true"><svg viewBox="0 0 24 24"><rect x="5" y="10" width="14" height="10" rx="2"/><path d="M8 10V7a4 4 0 0 1 8 0v3"/></svg></span><div class="setting-content"><h3>プライバシーポリシー</h3></div></div><span class="chev">›</span></button><button class="setting-row setting-action" id="faqBtn" type="button"><div class="setting-main"><span class="setting-line-icon" aria-hidden="true"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M9.8 9.2a2.4 2.4 0 1 1 4.2 1.6c-1.1 1-2 1.4-2 3M12 17h.01"/></svg></span><div class="setting-content"><h3>よくある質問</h3></div></div><span class="chev">›</span></button><button class="setting-row setting-action" id="feedbackBtn" type="button"><div class="setting-main"><span class="setting-line-icon" aria-hidden="true"><svg viewBox="0 0 24 24"><rect x="3" y="5" width="18" height="14" rx="2"/><path d="m4 7 8 6 8-6"/></svg></span><div class="setting-content"><h3>不具合の報告・ご要望</h3></div></div><span class="chev">›</span></button></div></div>
 
       <div class="settings-section"><div class="section-title">アプリ・オフライン</div><div class="settings-card"><button class="setting-row setting-action" id="installAppBtn" type="button"><div><h3>ホーム画面に追加</h3><p id="installAppDescription">FanFolioをアプリのように起動できます。</p></div><span class="chev">›</span></button><div class="setting-row"><div><h3>起動モード</h3><div class="pwa-status"><span class="pwa-dot" id="pwaModeDot"></span><span class="pwa-status-text" id="pwaModeStatus">確認中</span></div></div></div><div class="setting-row"><div><h3>オフライン利用</h3><div class="pwa-status"><span class="pwa-dot" id="pwaOfflineDot"></span><span class="pwa-status-text" id="pwaOfflineStatus">確認中</span></div></div></div><div class="pwa-mini-note" id="pwaHelpText">HTTPSで一度開くと、通信がないときも保存済みのFanFolioを起動できます。</div></div></div>
 
@@ -2277,15 +2339,15 @@ const BETA_ADMIN_KEY='fanfolio_beta_admin_enabled';
 const BETA_PLAN_OVERRIDE_KEY='fanfolio_beta_plan_override';
 const FREE_ACCESS_KEY='fanfolio_v1_free_access';
 const THEME_KEY='fanfolio_v1_theme';
-const APP_VERSION='2026.08.17.19';
+const APP_VERSION='2026.08.17.20';
 const APP_VERSION_DATE='2026.08.17';
 const APP_VERSION_DISPLAY=`ver. ${APP_VERSION}`;
 const RELEASE_NOTES_SEEN_KEY='fanfolio_v1_release_notes_seen';
 const CURRENT_RELEASE_NOTES={
   version:APP_VERSION,date:APP_VERSION_DATE,
   userItems:[
-    {title:'カレンダーの説明をすっきり表示',text:'メンカラが予定のドットに反映されるPremium説明を、スマホでもできるだけ1行で確認できるよう調整しました。'},
-    {title:'名義分析カードをコンパクトに',text:'前回代表当選・経過期間・過去勝率・入会年月・前回関連当選を、情報が追いやすい省スペース表示に整えました。'}
+    {title:'カレンダーと分析の文字を見やすく',text:'1行で見たい説明や前回当選情報は、文字を大きくしながら収まりやすい表示へ調整しました。'},
+    {title:'遠征カードと設定メニューをコンパクトに',text:'ホテル名などの長い情報は読みやすい位置で改行し、アプリについてのメニューも省スペースに整えました。'}
   ],
   internalItems:[]
 };
@@ -4039,7 +4101,7 @@ function tripUpdateRichSummary(){if(!tripRichSummary)return;const counts=[['交�
 function tripTotal(item){return (Number(item.transportCost)||0)+(Number(item.hotelCost)||0)+(Number(item.otherCost)||0)}
 function tripDateLabel(item){const start=item.startDate?formatDateJP(item.startDate):'—';const end=item.endDate?formatDateJP(item.endDate):'';return item.endDate&&item.endDate!==item.startDate?`${start} 〜 ${end}`:start}
 function tripPerformanceLabels(ids=[]){const set=new Set(Array.isArray(ids)?ids:[]);return getPerformances().filter(p=>set.has(p.id)).sort((a,b)=>(a.date||'').localeCompare(b.date||'')).map(performanceDisplay)}
-function tripCardHtml(item){const perfCount=Array.isArray(item.performanceIds)?item.performanceIds.length:0;const meta=[item.destination,item.hotel,perfCount?`関連公演 ${perfCount}件`:null].filter(Boolean).join(' ・ ');return `<button class="trip-card edit-trip" type="button" data-id="${esc(item.id)}"><div class="trip-card-top"><div style="min-width:0;flex:1"><div class="trip-title">${esc(item.title||'遠征')}</div><div class="trip-date">${esc(tripDateLabel(item))}</div><div class="trip-meta">${esc(meta||'旅程を登録')}</div></div><div class="trip-cost"><strong>${esc(formatTradeMoney(tripTotal(item),item.currency||'JPY'))}</strong><span>遠征費</span></div></div></button>`}
+function tripCardHtml(item){const perfCount=Array.isArray(item.performanceIds)?item.performanceIds.length:0,destination=String(item.destination||'').trim(),hotelParts=String(item.hotel||'').split(/\s*\/\s*/).map(x=>x.trim()).filter(Boolean),metaParts=[];if(destination)metaParts.push(`<span>${esc(destination)}</span>`);hotelParts.forEach((hotel,i)=>{if(metaParts.length)metaParts.push(`<i class="trip-meta-sep">${i?'／':'・'}</i>`);metaParts.push(`<span>${esc(hotel)}</span>`)});if(perfCount){if(metaParts.length)metaParts.push('<i class="trip-meta-sep">・</i>');metaParts.push(`<span>関連公演 ${perfCount}件</span>`)}const metaHtml=metaParts.length?metaParts.join(''):'<span>旅程を登録</span>';return `<button class="trip-card edit-trip" type="button" data-id="${esc(item.id)}"><div class="trip-card-top"><div style="min-width:0;flex:1"><div class="trip-title">${esc(item.title||'遠征')}</div><div class="trip-date">${esc(tripDateLabel(item))}</div><div class="trip-meta">${metaHtml}</div></div><div class="trip-cost"><strong>${esc(formatTradeMoney(tripTotal(item),item.currency||'JPY'))}</strong><span>遠征費</span></div></div></button>`}
 function tripPrimaryClassification(item,detail,perfs,tours,oshi){const linked=(Array.isArray(item.performanceIds)?item.performanceIds:[]).map(id=>perfs.find(p=>p.id===id)).filter(Boolean).sort((a,b)=>(a.date||'').localeCompare(b.date||''));let tour=linked[0]?tours.find(t=>t.id===linked[0].tourId):null,manual=(detail?.manualPerformances||[]).slice().sort((a,b)=>(a.date||'').localeCompare(b.date||''))[0];const group=tour?.targetGroup||manual?.group||oshi.find(o=>o.id===(linked[0]?.oshiId||tour?.oshiId))?.group||oshi[0]?.group||oshi[0]?.name||'グループ未設定';const tourLabel=tour?.name||manual?.title||'ツアー未設定';return {group,tour:tourLabel}}
 async function renderTrips(){
   if(!tripFreeView||!tripPremiumView)return;const premium=isPremium();tripFreeView.hidden=premium;tripPremiumView.hidden=!premium;if(tripLegend)tripLegend.hidden=!premium;if(!premium)return;
