@@ -12,7 +12,7 @@
 <link rel="icon" type="image/png" sizes="32x32" href="./favicon-32.png" />
 <link rel="icon" type="image/png" sizes="192x192" href="./icon-192.png" />
 <meta name="mobile-web-app-capable" content="yes" />
-<title>FanFolio ver. 2026.08.17.26</title>
+<title>FanFolio ver. 2026.08.17.27</title>
 <style>
 :root{
   --bg:#f7f5f0;
@@ -1071,7 +1071,7 @@ body{width:100%;overscroll-behavior-x:none}
 @media(max-width:390px){
   #currentPlanFoot{padding-left:14px!important;padding-right:14px!important}
 }
-/* FanFolio ver. 2026.08.17.26 — Premium status is left aligned; Free pricing lines stay centered */
+/* FanFolio ver. 2026.08.17.27 — Premium status is left aligned; Free pricing lines stay centered */
 #currentPlanFoot.plan-foot-status{
   padding-left:0!important;
   padding-right:0!important;
@@ -1089,7 +1089,7 @@ body{width:100%;overscroll-behavior-x:none}
 }
 
 
-/* FanFolio ver. 2026.08.17.26 — Premium modal toast + left-aligned plan foot */
+/* FanFolio ver. 2026.08.17.27 — Premium modal toast + left-aligned plan foot */
 .toast{
   z-index:9999!important;
 }
@@ -1123,6 +1123,25 @@ body{width:100%;overscroll-behavior-x:none}
     padding-left:0!important;
     padding-right:0!important;
   }
+}
+
+
+/* FanFolio ver. 2026.08.17.27 — Premium 推しカルテ hero meta */
+.carte-hero-meta.carte-hero-meta-lines{
+  display:flex!important;
+  flex-direction:column!important;
+  align-items:flex-start!important;
+  gap:1px!important;
+  min-width:0!important;
+  line-height:1.35!important;
+}
+.carte-hero-meta.carte-hero-meta-lines > span{
+  display:block!important;
+  width:100%!important;
+  max-width:100%!important;
+  white-space:nowrap!important;
+  overflow:hidden!important;
+  text-overflow:ellipsis!important;
 }
 
 </style>
@@ -2433,18 +2452,17 @@ const BETA_ADMIN_KEY='fanfolio_beta_admin_enabled';
 const BETA_PLAN_OVERRIDE_KEY='fanfolio_beta_plan_override';
 const FREE_ACCESS_KEY='fanfolio_v1_free_access';
 const THEME_KEY='fanfolio_v1_theme';
-const APP_VERSION='2026.08.17.26';
+const APP_VERSION='2026.08.17.27';
 const APP_VERSION_DATE='2026.08.17';
 const APP_VERSION_DISPLAY=`ver. ${APP_VERSION}`;
 const RELEASE_NOTES_SEEN_KEY='fanfolio_v1_release_notes_seen';
 const CURRENT_RELEASE_NOTES={
   version:APP_VERSION,date:APP_VERSION_DATE,
   userItems:[
-    {title:'Premium料金画面の案内を改善',text:'正式決済の準備中メッセージが料金画面の上でも確認できるようになりました。'},
-    {title:'プラン説明を読みやすく調整',text:'無料体験・Early Access・Founding Memberの案内を左揃えに統一しました。'}
+    {title:'推しカルテのプロフィール表示を整理',text:'事務所・所属グループと推し名を2行に分け、プロフィール情報を読みやすくしました。'}
   ],
   internalItems:[
-    {title:'Premium toast layering',text:'Premium modalよりToastを前面表示し、Live Checkout未設定時も料金画面上で案内します。'}
+    {title:'Carte hero meta layout',text:'Premium推しカルテのhero metadataを固定2行構成に変更しました。'}
   ]
 };
 if(location.search.includes('__fanfolio_refresh')){try{const cleanUrl=new URL(location.href);cleanUrl.searchParams.delete('__fanfolio_refresh');history.replaceState(null,'',cleanUrl.pathname+(cleanUrl.searchParams.toString()?`?${cleanUrl.searchParams}`:'')+cleanUrl.hash)}catch{}}
@@ -3771,7 +3789,7 @@ function oshiFavoriteArtistDisplay(oshi){if(!oshi)return'';if(oshi.favoriteArtis
 function repairOshiProfileLinks(){const items=getOshi();let changed=false;items.forEach(o=>{if((o.oshiType||'individual')==='group')return;const group=oshiCleanText(o.group),name=oshiCleanText(o.name),info=oshiGroupInfo(group);if(!info)return;if(!o.category&&info.category){o.category=info.category;changed=true}if(!o.favoriteArtist&&name&&info.members?.has(name)){o.favoriteArtist=name;changed=true}});if(changed)saveOshi(items);return changed}
 function carteProfileRows(oshi){const rows=[['種類',(oshi.oshiType||'individual')==='group'?'グループ':'個人'],['カテゴリ・事務所',oshi.category||'—'],['所属グループ',oshi.group||'—'],['好きなアーティスト',oshiFavoriteArtistDisplay(oshi)||'—'],['誕生日',oshi.birthday?formatDateJP(oshi.birthday):'—'],['メンカラ',oshi.memberColor?memberColorLabel(oshi.memberColor):'未設定']];return rows.map(([k,v])=>`<div class="carte-detail-row"><span>${esc(k)}</span><strong>${esc(v)}</strong></div>`).join('')}
 function memberColorLabel(key=''){return ({red:'赤',pink:'ピンク',orange:'オレンジ',yellow:'黄色',green:'緑',blue:'青',lime:'黄緑',purple:'紫',gray:'グレー',white:'白',black:'黒'})[key]||key||'未設定'}
-function renderOshiCarte(){const o=carteOshi();if(!o)return;const perfs=oshiCartePerformances(o),memories=oshiCarteMemories(o),attended=memories.filter(m=>m.attended!==false),membershipN=getMemberships().filter(m=>m.oshiId===o.id).length,fanN=carteFanCount(o.id),photoN=cartePhotoCount(o.id),colorHex=isPremium()?getOshiMemberColorHex(o.memberColor):'',avStyle=o.photo?`background-image:url('${o.photo}')`:(colorHex?`background:${colorHex}22;color:${colorHex}`:'');const favoriteArtistDisplay=oshiFavoriteArtistDisplay(o),meta=[o.category,o.group,favoriteArtistDisplay?`推し：${favoriteArtistDisplay}`:''].filter(Boolean).join(' ・ ')||'Premiumカルテ';oshiCarteHero.innerHTML=`<div class="carte-avatar" style="${avStyle}">${o.photo?'':'♡'}</div><div class="carte-hero-main"><div class="carte-hero-name">${colorHex?`<span class="oshi-color-dot" style="background:${colorHex}"></span>`:''}${esc(o.name)}</div><div class="carte-hero-meta">${esc(meta)}</div></div>`;oshiCarteProfilePanel.innerHTML=`<div class="carte-kpis"><div class="carte-kpi"><span>FC・Membership</span><strong>${membershipN}</strong></div><div class="carte-kpi"><span>参戦記録</span><strong>${attended.length}</strong></div><div class="carte-kpi"><span>写真</span><strong>${photoN}</strong></div><div class="carte-kpi"><span>ファンサ</span><strong>${fanN}</strong></div></div><div class="carte-section"><div class="carte-section-title"><span>プロフィール</span><button class="carte-mini-btn" id="editCarteProfileBtn" type="button">編集</button></div>${carteProfileRows(o)}</div>${o.memo?`<div class="carte-section"><div class="carte-section-title">メモ</div><div style="font-size:12.5px;line-height:1.6">${esc(o.memo)}</div></div>`:''}`;document.getElementById('editCarteProfileBtn')?.addEventListener('click',()=>{closeOshiCarte();openOshiModal(o)});renderCartePhotos();renderFanserviceList();renderCarteStats()}
+function renderOshiCarte(){const o=carteOshi();if(!o)return;const perfs=oshiCartePerformances(o),memories=oshiCarteMemories(o),attended=memories.filter(m=>m.attended!==false),membershipN=getMemberships().filter(m=>m.oshiId===o.id).length,fanN=carteFanCount(o.id),photoN=cartePhotoCount(o.id),colorHex=isPremium()?getOshiMemberColorHex(o.memberColor):'',avStyle=o.photo?`background-image:url('${o.photo}')`:(colorHex?`background:${colorHex}22;color:${colorHex}`:'');const favoriteArtistDisplay=oshiFavoriteArtistDisplay(o),metaPrimary=[o.category,o.group].filter(Boolean).join(' ・ '),metaSecondary=favoriteArtistDisplay?`推し：${favoriteArtistDisplay}`:'';oshiCarteHero.innerHTML=`<div class="carte-avatar" style="${avStyle}">${o.photo?'':'♡'}</div><div class="carte-hero-main"><div class="carte-hero-name">${colorHex?`<span class="oshi-color-dot" style="background:${colorHex}"></span>`:''}${esc(o.name)}</div><div class="carte-hero-meta carte-hero-meta-lines">${metaPrimary?`<span>${esc(metaPrimary)}</span>`:''}${metaSecondary?`<span>${esc(metaSecondary)}</span>`:''}${!metaPrimary&&!metaSecondary?'<span>Premiumカルテ</span>':''}</div></div>`;oshiCarteProfilePanel.innerHTML=`<div class="carte-kpis"><div class="carte-kpi"><span>FC・Membership</span><strong>${membershipN}</strong></div><div class="carte-kpi"><span>参戦記録</span><strong>${attended.length}</strong></div><div class="carte-kpi"><span>写真</span><strong>${photoN}</strong></div><div class="carte-kpi"><span>ファンサ</span><strong>${fanN}</strong></div></div><div class="carte-section"><div class="carte-section-title"><span>プロフィール</span><button class="carte-mini-btn" id="editCarteProfileBtn" type="button">編集</button></div>${carteProfileRows(o)}</div>${o.memo?`<div class="carte-section"><div class="carte-section-title">メモ</div><div style="font-size:12.5px;line-height:1.6">${esc(o.memo)}</div></div>`:''}`;document.getElementById('editCarteProfileBtn')?.addEventListener('click',()=>{closeOshiCarte();openOshiModal(o)});renderCartePhotos();renderFanserviceList();renderCarteStats()}
 function openOshiCarte(oshiId=''){if(!isPremium()){openPremiumModal();return}const items=getOshi();if(!items.length){showToast('先に推しを登録してください。');return}fillOshiCarteSelect(oshiId);activeOshiCarteTab='profile';renderOshiCarte();setOshiCarteTab('profile');oshiCarteModal.classList.add('open');oshiCarteModal.setAttribute('aria-hidden','false');document.body.style.overflow='hidden'}
 function closeOshiCarte(){oshiCarteModal.classList.remove('open');oshiCarteModal.setAttribute('aria-hidden','true');document.body.style.overflow='';fanserviceForm.hidden=true;fanserviceForm.reset();fanserviceId.value='';fanservicePendingMemoryId=''}
 async function resizeCartePhoto(file){const src=await new Promise((resolve,reject)=>{const r=new FileReader();r.onload=()=>resolve(r.result);r.onerror=reject;r.readAsDataURL(file)});return await new Promise(resolve=>{const img=new Image();img.onload=()=>{const max=640,scale=Math.min(1,max/Math.max(img.width,img.height)),w=Math.max(1,Math.round(img.width*scale)),h=Math.max(1,Math.round(img.height*scale)),canvas=document.createElement('canvas');canvas.width=w;canvas.height=h;const ctx=canvas.getContext('2d');ctx.drawImage(img,0,0,w,h);resolve(canvas.toDataURL('image/jpeg',.68))};img.onerror=()=>resolve(src);img.src=src})}
