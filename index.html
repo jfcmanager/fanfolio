@@ -11,8 +11,9 @@
 <link rel="apple-touch-icon" href="./apple-touch-icon.png" />
 <link rel="icon" type="image/png" sizes="32x32" href="./favicon-32.png" />
 <link rel="icon" type="image/png" sizes="192x192" href="./icon-192.png" />
+<script src="https://cdn.paddle.com/paddle/v2/paddle.js"></script>
 <meta name="mobile-web-app-capable" content="yes" />
-<title>FanFolio ver. 2026.08.17.27</title>
+<title>FanFolio ver. 2026.08.17.28</title>
 <style>
 :root{
   --bg:#f7f5f0;
@@ -2084,7 +2085,7 @@ body{width:100%;overscroll-behavior-x:none}
     <div class="premium-lead">推し活を全部まとめて、もっと自分らしく。</div>
     <div class="early-access-price-badge">EARLY ACCESS PRICE</div>
     <div class="trial-banner" id="premiumTrialBanner">
-      <div class="trial-banner-head"><span class="trial-banner-badge">2日間無料</span><strong>Premiumをすべて試せます</strong></div>
+      <div class="trial-banner-head"><span class="trial-banner-badge">5日間無料</span><strong>Premiumをすべて試せます</strong></div>
       <p>無料体験中はPremium機能を利用できます。2日間の無料体験終了後は、選択したプランで自動更新されます。無料期間中にキャンセルすると初回料金はかかりません。</p>
       <div class="trial-disclosure">※ 自動更新型の無料体験です。開始時にお支払い方法の登録が必要です。</div>
     </div>
@@ -2123,7 +2124,7 @@ body{width:100%;overscroll-behavior-x:none}
     <div class="checkout-test-badge">SANDBOX</div>
     <div class="modal-title" id="checkoutModalTitle">Premium テスト決済</div>
     <div class="checkout-summary" id="checkoutSummary"></div>
-    <div class="checkout-test-admin-note">管理者テストモード専用です。ここで入力するカード情報はLemon Squeezyへ送信されず、FanFolio内のSandbox体験だけを再現します。</div>
+    <div class="checkout-test-admin-note">管理者テストモード専用です。旧ローカルSandbox画面です。Paddle Sandbox決済の確認にはPremium料金画面のボタンをご利用ください。</div>
     <div class="checkout-method"><strong>支払い方法（テスト）</strong><div class="checkout-method-row"><span class="checkout-card-icon">CARD</span><div><b>テストカード</b><small>実在するカード情報は入力しないでください</small></div></div>
       <div class="sandbox-card-form">
         <div class="sandbox-card-field"><label for="sandboxCardName">カード名義</label><input class="form-control" id="sandboxCardName" autocomplete="off" placeholder="MEI TEST"></div>
@@ -2452,17 +2453,18 @@ const BETA_ADMIN_KEY='fanfolio_beta_admin_enabled';
 const BETA_PLAN_OVERRIDE_KEY='fanfolio_beta_plan_override';
 const FREE_ACCESS_KEY='fanfolio_v1_free_access';
 const THEME_KEY='fanfolio_v1_theme';
-const APP_VERSION='2026.08.17.27';
+const APP_VERSION='2026.08.17.28';
 const APP_VERSION_DATE='2026.08.17';
 const APP_VERSION_DISPLAY=`ver. ${APP_VERSION}`;
 const RELEASE_NOTES_SEEN_KEY='fanfolio_v1_release_notes_seen';
 const CURRENT_RELEASE_NOTES={
   version:APP_VERSION,date:APP_VERSION_DATE,
   userItems:[
-    {title:'推しカルテのプロフィール表示を整理',text:'事務所・所属グループと推し名を2行に分け、プロフィール情報を読みやすくしました。'}
+    {title:'Premium無料体験を5日間に変更',text:'月額・年額プランの無料体験を5日間に統一しました。'},
+    {title:'Paddle Sandbox決済に対応',text:'Premium料金画面からPaddleのSandbox Checkoutを開いてテストできるようにしました。'}
   ],
   internalItems:[
-    {title:'Carte hero meta layout',text:'Premium推しカルテのhero metadataを固定2行構成に変更しました。'}
+    {title:'Paddle Sandbox checkout',text:'Sandbox client-side tokenと月額・年額Price IDを使い、Paddle.js overlay checkoutを統合しました。'}
   ]
 };
 if(location.search.includes('__fanfolio_refresh')){try{const cleanUrl=new URL(location.href);cleanUrl.searchParams.delete('__fanfolio_refresh');history.replaceState(null,'',cleanUrl.pathname+(cleanUrl.searchParams.toString()?`?${cleanUrl.searchParams}`:'')+cleanUrl.hash)}catch{}}
@@ -2475,11 +2477,66 @@ const PREMIUM_PRICES={
   hk:{monthly:'HK$20',annual:'HK$158',annualMonthly:'約HK$13',annualSave:'HK$82'},
   cn:{monthly:'CN¥17',annual:'CN¥138',annualMonthly:'約CN¥12',annualSave:'CN¥66'}
 };
-// Live Checkout URLs are intentionally blank until Lemon Squeezy Live variants are available.
-// Live Checkout stays unavailable until Lemon Squeezy Live variant URLs are supplied.
-// Any state inside 管理者テストモード (including Free/Premium preview) may use the local Sandbox checkout.
-const LEMON_LIVE_CHECKOUT_URLS={monthly:'',annual:''};
+// Paddle Sandbox checkout configuration.
+// Client-side tokens are safe for frontend use; never place Paddle API keys in this file.
+const PADDLE_ENVIRONMENT='sandbox';
+const PADDLE_CLIENT_TOKEN='test_824892a02578c6e0070e4dcc106';
+const PADDLE_PRICE_IDS={
+  monthly:'pri_01m0821b3s2ezergv5w1tg25nr',
+  annual:'pri_01m0829xpcsjrtw2vt3ma1pc11'
+};
+const PADDLE_TRIAL_DAYS=5;
+let paddleReady=false;
+let pendingPaddleBilling='';
 function isAdminSandboxMode(){return isBetaAdminEnabled()}
+function initPaddleSandbox(){
+  if(paddleReady)return true;
+  if(!window.Paddle){console.error('Paddle.js is not loaded.');return false}
+  if(PADDLE_ENVIRONMENT!=='sandbox'){console.error('FanFolio Paddle environment must be sandbox in this build.');return false}
+  if(!PADDLE_CLIENT_TOKEN||!PADDLE_CLIENT_TOKEN.startsWith('test_')){console.error('Valid Paddle Sandbox client-side token is missing.');return false}
+  try{
+    Paddle.Environment.set('sandbox');
+    Paddle.Initialize({
+      token:PADDLE_CLIENT_TOKEN,
+      checkout:{settings:{displayMode:'overlay',variant:'one-page',theme:'light',locale:'ja'}},
+      eventCallback:handlePaddleCheckoutEvent
+    });
+    paddleReady=true;
+    return true
+  }catch(err){console.error('Paddle initialization failed',err);return false}
+}
+function handlePaddleCheckoutEvent(event){
+  if(!event)return;
+  if(event.name==='checkout.completed'){
+    const billing=pendingPaddleBilling==='monthly'?'monthly':'annual';
+    const d=selectedPlanDetails();
+    const now=new Date(),trialEnd=addTrialDays(now,PADDLE_TRIAL_DAYS),previous=getPlanState();
+    savePlanState({tier:'premium',billing,region:d.region,founding:billing==='annual',foundingBadge:Boolean(previous.foundingBadge||billing==='annual'),renewalDate:addPlanPeriod(trialEnd,billing),status:'on_trial',cancelAtPeriodEnd:false,startedAt:now.toISOString(),trialStartedAt:now.toISOString(),trialEndsAt:trialEnd.toISOString(),subscriptionSource:'paddle-sandbox'});
+    try{localStorage.removeItem(BETA_PLAN_OVERRIDE_KEY)}catch{}
+    pendingPaddleBilling='';
+    closePremiumModal();
+    syncFreeAccessPlanState();
+    refreshAfterBetaPlanChange();
+    showToast('Paddle Sandbox：Premiumの5日間無料体験を開始しました。');
+  }
+}
+function openPaddleSandboxCheckout(){
+  const d=selectedPlanDetails();
+  const priceId=PADDLE_PRICE_IDS[d.billing];
+  if(!priceId){showToast('PaddleのPrice IDが設定されていません。');return}
+  if(!initPaddleSandbox()){showToast('Paddle Sandboxを初期化できませんでした。');return}
+  pendingPaddleBilling=d.billing;
+  try{
+    Paddle.Checkout.open({
+      items:[{priceId,quantity:1}],
+      settings:{displayMode:'overlay',variant:'one-page',theme:'light',locale:'ja'}
+    });
+  }catch(err){
+    pendingPaddleBilling='';
+    console.error('Paddle checkout open failed',err);
+    showToast('Paddle Sandboxの決済画面を開けませんでした。');
+  }
+}
 
 const oshiList=document.getElementById('oshiList');
 const oshiCount=document.getElementById('oshiCount');
@@ -2716,13 +2773,13 @@ function renderPlanState(){
   if(tier==='premium'){
     const trial=isTrialPlan(plan)&&!betaOverride;
     currentPlanName.textContent='FanFolio Premium';
-    currentPlanPrice.textContent=betaOverride==='premium'?'Betaテストモード':trial?'2日間無料体験中':(plan.billing==='monthly'?'月額プラン':'年間プラン');
+    currentPlanPrice.textContent=betaOverride==='premium'?'Betaテストモード':trial?'5日間無料体験中':(plan.billing==='monthly'?'月額プラン':'年間プラン');
     currentPlanBadge.textContent=betaOverride==='premium'?'TEST':trial?'TRIAL':(plan.foundingBadge?'FOUNDING':'PREMIUM');
     currentPlanDescription.textContent=betaOverride==='premium'?'管理者テストとしてPremium機能をすべて有効にしています。':trial?'無料体験中もPremium機能をすべて利用できます。無料期間中にキャンセルすると初回料金はかかりません。':plan.cancelAtPeriodEnd?'更新日まではPremium機能を利用できます。既存データはFreeへ戻っても削除されません。':'Premium機能がすべて利用できます。';
     currentPlanFoot.textContent=betaOverride==='premium'?'決済は発生しません。テスト専用です。':trial?`無料体験終了 ${trialEndLabel(plan)} ・ 終了後は${plan.billing==='monthly'?'月額':'年額'}プランで自動更新`:(plan.renewalDate?`${plan.cancelAtPeriodEnd?'利用終了予定':'次回更新日'} ${formatDateJP(plan.renewalDate)}${plan.subscriptionSource==='sandbox'?' ・ SANDBOX':''}`:'Premium契約中');
     upgradePlanBtn.textContent=betaOverride==='premium'?'料金プランを見る':trial?'無料体験を管理':'プランを管理';
   }else{
-    const price=PREMIUM_PRICES[plan.region]||PREMIUM_PRICES.jp;currentPlanName.textContent='FanFolio Free';currentPlanPrice.textContent='¥0 ・ 広告なし';currentPlanBadge.textContent='CURRENT';currentPlanDescription.textContent=hasFreeOverflow()?'Freeの上限を超える既存データは削除されず、閲覧のみで保管されています。':'Premiumなら推し・公演・名義が無制限。メンカラ、取引、遠征、詳細分析も利用できます。';currentPlanFoot.innerHTML=`<span class="plan-foot-line">2日間無料体験あり ・ 期間終了後は選択プランで自動更新</span><span class="plan-foot-line">EARLY ACCESS ・ 月額 ${price.monthly} ／ 年額 ${price.annual}</span><span class="plan-foot-line">年額加入で Founding Member Badge</span>`;upgradePlanBtn.textContent='Premiumにアップグレード';
+    const price=PREMIUM_PRICES[plan.region]||PREMIUM_PRICES.jp;currentPlanName.textContent='FanFolio Free';currentPlanPrice.textContent='¥0 ・ 広告なし';currentPlanBadge.textContent='CURRENT';currentPlanDescription.textContent=hasFreeOverflow()?'Freeの上限を超える既存データは削除されず、閲覧のみで保管されています。':'Premiumなら推し・公演・名義が無制限。メンカラ、取引、遠征、詳細分析も利用できます。';currentPlanFoot.innerHTML=`<span class="plan-foot-line">5日間無料体験あり ・ 期間終了後は選択プランで自動更新</span><span class="plan-foot-line">EARLY ACCESS ・ 月額 ${price.monthly} ／ 年額 ${price.annual}</span><span class="plan-foot-line">年額加入で Founding Member Badge</span>`;upgradePlanBtn.textContent='Premiumにアップグレード';
   }
   if(moneyPlanBadge)moneyPlanBadge.textContent=tier==='premium'?'PREMIUM':'FREE';
   if(oshiPremiumSection)oshiPremiumSection.hidden=false;
@@ -2744,7 +2801,7 @@ function renderPlanState(){
   fitPlanFootLines();
 }
 function renderPremiumPrices(){const key=premiumRegion.value in PREMIUM_PRICES?premiumRegion.value:'jp';const p=PREMIUM_PRICES[key];monthlyPrice.textContent=p.monthly;annualPrice.textContent=p.annual;annualMonthlyNote.textContent=`月額換算 ${p.annualMonthly}`;if(annualSaveNote)annualSaveNote.textContent=`年間 ${p.annualSave} おトク`}
-function renderPremiumChoice(){const sandbox=isAdminSandboxMode();document.querySelectorAll('[data-plan-choice]').forEach(btn=>{const active=btn.dataset.planChoice===selectedPremiumChoice;btn.classList.toggle('selected',active);btn.setAttribute('aria-pressed',active?'true':'false')});if(startPremiumBtn){startPremiumBtn.disabled=false;startPremiumBtn.dataset.checkoutMode=sandbox?'sandbox':'live';startPremiumBtn.textContent=selectedPremiumChoice==='monthly'?'月額プランを2日間無料で試す':'年額プランを2日間無料で試す'}if(premiumPaymentModeNote){premiumPaymentModeNote.dataset.checkoutMode=sandbox?'sandbox':'live';premiumPaymentModeNote.textContent=sandbox?(isBetaUserPreviewActive()?'管理者テストモード：Free／Premium確認中でも、このボタンはSandboxテスト決済を開きます。実際の請求は発生しません。':'管理者テストモード：このボタンはSandboxテスト決済を開きます。実際の請求は発生しません。'):'正式版ではLemon Squeezyの安全な決済画面へ進みます。'}}
+function renderPremiumChoice(){document.querySelectorAll('[data-plan-choice]').forEach(btn=>{const active=btn.dataset.planChoice===selectedPremiumChoice;btn.classList.toggle('selected',active);btn.setAttribute('aria-pressed',active?'true':'false')});if(startPremiumBtn){startPremiumBtn.disabled=false;startPremiumBtn.dataset.checkoutMode='paddle-sandbox';startPremiumBtn.textContent=selectedPremiumChoice==='monthly'?'月額プランを5日間無料で試す':'年額プランを5日間無料で試す'}if(premiumPaymentModeNote){premiumPaymentModeNote.dataset.checkoutMode='paddle-sandbox';premiumPaymentModeNote.textContent='Paddle Sandboxの安全なテスト決済を開きます。実際の請求は発生しません。'}}
 function openPremiumModal(){const plan=getPlanState();premiumRegion.value=plan.region in PREMIUM_PRICES?plan.region:'jp';selectedPremiumChoice=plan.tier==='premium'&&plan.billing==='monthly'?'monthly':'annual';renderPremiumPrices();renderPremiumChoice();premiumModal.classList.add('open');premiumModal.setAttribute('aria-hidden','false');document.body.style.overflow='hidden'}
 function closePremiumModal(){premiumModal.classList.remove('open');premiumModal.setAttribute('aria-hidden','true');document.body.style.overflow=''}
 function addPlanPeriod(date,billing){const d=new Date(date);if(billing==='monthly')d.setMonth(d.getMonth()+1);else d.setFullYear(d.getFullYear()+1);return dateKeyFromDate(d)}
@@ -2756,13 +2813,13 @@ function sandboxCardIsValid(){const number=normalizeSandboxCardNumber(sandboxCar
 function syncSandboxCheckoutButton(){if(!completeCheckoutBtn)return;completeCheckoutBtn.disabled=!(checkoutConfirm?.checked&&sandboxCardIsValid())}
 function resetSandboxCardForm(){if(sandboxCardName)sandboxCardName.value='';if(sandboxCardNumber)sandboxCardNumber.value='';if(sandboxCardExpiry)sandboxCardExpiry.value='';if(sandboxCardCvc)sandboxCardCvc.value='';if(sandboxCardError)sandboxCardError.textContent=''}
 function fillSandboxTestCard(){if(sandboxCardName)sandboxCardName.value='MEI TEST';if(sandboxCardNumber)sandboxCardNumber.value='4242 4242 4242 4242';if(sandboxCardExpiry)sandboxCardExpiry.value='12/35';if(sandboxCardCvc)sandboxCardCvc.value='123';syncSandboxCheckoutButton()}
-function openSandboxCheckoutModal(force=false){if(!force&&!isAdminSandboxMode()){showToast('Sandbox決済は管理者テストモード専用です。');return}const d=selectedPlanDetails(),now=new Date(),trialEnd=addTrialDays(now,2);setOverlayOpen(premiumModal,false,true);if(checkoutConfirm)checkoutConfirm.checked=false;resetSandboxCardForm();if(completeCheckoutBtn)completeCheckoutBtn.disabled=true;const title=document.getElementById('checkoutModalTitle');if(title)title.textContent='Premium 2日間無料体験（Sandbox）';checkoutSummary.innerHTML=`<div class="checkout-summary-row"><span>プラン</span><strong>${esc(d.label)}</strong></div><div class="checkout-summary-row"><span>今日</span><strong>¥0</strong></div><div class="checkout-summary-row"><span>無料体験終了</span><strong>${esc(formatDateJP(trialEnd))}</strong></div><div class="checkout-summary-row"><span>体験終了後</span><strong>${esc(d.price)}で自動更新（テスト）</strong></div>${d.foundingBadge?'<div class="checkout-summary-row"><span>特典</span><strong>Founding Member Badge</strong></div>':''}`;if(completeCheckoutBtn)completeCheckoutBtn.textContent='テストカードで2日間無料体験を開始';setOverlayOpen(checkoutModal,true);requestAnimationFrame(()=>{checkoutModal.scrollTop=0;checkoutModal.querySelector('.modal-sheet')?.scrollTo?.(0,0)})}
-function openLiveCheckout(){const d=selectedPlanDetails(),url=LEMON_LIVE_CHECKOUT_URLS[d.billing]||'';if(!url){showToast('Lemon Squeezyの正式決済は準備中です。Freeはそのまま利用できます。');return}try{const target=new URL(url,location.href);target.searchParams.set('checkout[custom][fanfolio_plan]',d.billing);location.href=target.toString()}catch{location.href=url}}
-function startPremiumTrialFlow(e){e?.preventDefault?.();e?.stopPropagation?.();if(isAdminSandboxMode()){openSandboxCheckoutModal(true);return}const d=selectedPlanDetails(),url=LEMON_LIVE_CHECKOUT_URLS[d.billing]||'';if(!url){showToast('Lemon Squeezyの正式決済は準備中です。Freeはそのまま利用できます。');return}openLiveCheckout()}
+function openSandboxCheckoutModal(force=false){if(!force&&!isAdminSandboxMode()){showToast('Sandbox決済は管理者テストモード専用です。');return}const d=selectedPlanDetails(),now=new Date(),trialEnd=addTrialDays(now,5);setOverlayOpen(premiumModal,false,true);if(checkoutConfirm)checkoutConfirm.checked=false;resetSandboxCardForm();if(completeCheckoutBtn)completeCheckoutBtn.disabled=true;const title=document.getElementById('checkoutModalTitle');if(title)title.textContent='Premium 5日間無料体験（Sandbox）';checkoutSummary.innerHTML=`<div class="checkout-summary-row"><span>プラン</span><strong>${esc(d.label)}</strong></div><div class="checkout-summary-row"><span>今日</span><strong>¥0</strong></div><div class="checkout-summary-row"><span>無料体験終了</span><strong>${esc(formatDateJP(trialEnd))}</strong></div><div class="checkout-summary-row"><span>体験終了後</span><strong>${esc(d.price)}で自動更新（テスト）</strong></div>${d.foundingBadge?'<div class="checkout-summary-row"><span>特典</span><strong>Founding Member Badge</strong></div>':''}`;if(completeCheckoutBtn)completeCheckoutBtn.textContent='テストカードで5日間無料体験を開始';setOverlayOpen(checkoutModal,true);requestAnimationFrame(()=>{checkoutModal.scrollTop=0;checkoutModal.querySelector('.modal-sheet')?.scrollTo?.(0,0)})}
+function openLiveCheckout(){openPaddleSandboxCheckout()}
+function startPremiumTrialFlow(e){e?.preventDefault?.();e?.stopPropagation?.();openPaddleSandboxCheckout()}
 function closeCheckoutModal(){checkoutModal.classList.remove('open');checkoutModal.setAttribute('aria-hidden','true');document.body.style.overflow=''}
-function completeSandboxCheckout(){if(!isAdminSandboxMode()){showToast('管理者表示でのみSandbox決済を実行できます。');return}if(!checkoutConfirm?.checked||!sandboxCardIsValid()){syncSandboxCheckoutButton();return}const d=selectedPlanDetails(),now=new Date(),trialEnd=addTrialDays(now,2),previous=getPlanState();savePlanState({tier:'premium',billing:d.billing,region:d.region,founding:d.founding,foundingBadge:Boolean(previous.foundingBadge||d.foundingBadge),renewalDate:addPlanPeriod(trialEnd,d.billing),status:'on_trial',cancelAtPeriodEnd:false,startedAt:now.toISOString(),trialStartedAt:now.toISOString(),trialEndsAt:trialEnd.toISOString(),subscriptionSource:'sandbox'});try{localStorage.removeItem(BETA_PLAN_OVERRIDE_KEY)}catch{}closeCheckoutModal();syncFreeAccessPlanState();refreshAfterBetaPlanChange();showToast('Sandbox：Premiumの2日間無料体験を開始しました。')}
+function completeSandboxCheckout(){if(!isAdminSandboxMode()){showToast('管理者表示でのみSandbox決済を実行できます。');return}if(!checkoutConfirm?.checked||!sandboxCardIsValid()){syncSandboxCheckoutButton();return}const d=selectedPlanDetails(),now=new Date(),trialEnd=addTrialDays(now,5),previous=getPlanState();savePlanState({tier:'premium',billing:d.billing,region:d.region,founding:d.founding,foundingBadge:Boolean(previous.foundingBadge||d.foundingBadge),renewalDate:addPlanPeriod(trialEnd,d.billing),status:'on_trial',cancelAtPeriodEnd:false,startedAt:now.toISOString(),trialStartedAt:now.toISOString(),trialEndsAt:trialEnd.toISOString(),subscriptionSource:'sandbox'});try{localStorage.removeItem(BETA_PLAN_OVERRIDE_KEY)}catch{}closeCheckoutModal();syncFreeAccessPlanState();refreshAfterBetaPlanChange();showToast('Sandbox：Premiumの5日間無料体験を開始しました。')}
 function planPriceLabel(plan){const p=PREMIUM_PRICES[plan.region]||PREMIUM_PRICES.jp;return plan.billing==='monthly'?p.monthly:p.annual}
-function renderSubscriptionManager(){const plan=getPlanState();if(plan.tier!=='premium'){closeSubscriptionModal();return}const trial=isTrialPlan(plan),baseLabel=plan.billing==='monthly'?'月額プラン':'年額プラン',label=plan.foundingBadge?`${baseLabel} ・ Founding Member`:baseLabel;const status=trial?(plan.cancelAtPeriodEnd?'無料体験・終了予約中':'無料体験中'):(plan.cancelAtPeriodEnd?'解約予約中':'契約中');subscriptionSummary.innerHTML=`<div class="subscription-plan-name">FanFolio Premium</div><div class="subscription-plan-meta">${esc(label)} ・ ${trial?'2日間無料':esc(planPriceLabel(plan))}<br>${trial?`無料体験終了 ${esc(trialEndLabel(plan))}<br>終了後 ${esc(planPriceLabel(plan))}で自動更新`:plan.renewalDate?`${plan.cancelAtPeriodEnd?'利用終了予定':'次回更新日'} ${esc(formatDateJP(plan.renewalDate))}`:'更新日未設定'}</div><span class="subscription-status">${status}</span>`;cancelAtPeriodBtn.hidden=plan.cancelAtPeriodEnd;resumeSubscriptionBtn.hidden=!plan.cancelAtPeriodEnd;if(cancelAtPeriodBtn)cancelAtPeriodBtn.textContent=trial?'無料体験をキャンセルする':'次回更新で解約する';if(resumeSubscriptionBtn)resumeSubscriptionBtn.textContent=trial?'無料体験のキャンセルを取り消す':'解約予約を取り消す'}
+function renderSubscriptionManager(){const plan=getPlanState();if(plan.tier!=='premium'){closeSubscriptionModal();return}const trial=isTrialPlan(plan),baseLabel=plan.billing==='monthly'?'月額プラン':'年額プラン',label=plan.foundingBadge?`${baseLabel} ・ Founding Member`:baseLabel;const status=trial?(plan.cancelAtPeriodEnd?'無料体験・終了予約中':'無料体験中'):(plan.cancelAtPeriodEnd?'解約予約中':'契約中');subscriptionSummary.innerHTML=`<div class="subscription-plan-name">FanFolio Premium</div><div class="subscription-plan-meta">${esc(label)} ・ ${trial?'5日間無料':esc(planPriceLabel(plan))}<br>${trial?`無料体験終了 ${esc(trialEndLabel(plan))}<br>終了後 ${esc(planPriceLabel(plan))}で自動更新`:plan.renewalDate?`${plan.cancelAtPeriodEnd?'利用終了予定':'次回更新日'} ${esc(formatDateJP(plan.renewalDate))}`:'更新日未設定'}</div><span class="subscription-status">${status}</span>`;cancelAtPeriodBtn.hidden=plan.cancelAtPeriodEnd;resumeSubscriptionBtn.hidden=!plan.cancelAtPeriodEnd;if(cancelAtPeriodBtn)cancelAtPeriodBtn.textContent=trial?'無料体験をキャンセルする':'次回更新で解約する';if(resumeSubscriptionBtn)resumeSubscriptionBtn.textContent=trial?'無料体験のキャンセルを取り消す':'解約予約を取り消す'}
 function openSubscriptionModal(){syncSandboxTrialState();renderSubscriptionManager();subscriptionModal.classList.add('open');subscriptionModal.setAttribute('aria-hidden','false');document.body.style.overflow='hidden'}
 function closeSubscriptionModal(){subscriptionModal.classList.remove('open');subscriptionModal.setAttribute('aria-hidden','true');document.body.style.overflow=''}
 function cancelAtPeriodEnd(){const plan=getPlanState();if(plan.tier!=='premium')return;const trial=isTrialPlan(plan);savePlanState({cancelAtPeriodEnd:true,status:trial?'on_trial':'active'});renderSubscriptionManager();renderPlanState();showToast(trial?'無料体験終了時にFreeへ戻る設定にしました。初回料金はかかりません。':'次回更新でFreeへ戻る設定にしました。')}
@@ -4393,7 +4450,7 @@ const DOCUMENT_CONTENTS={
     zh:{title:'關於這個工具',updated:'最後更新：2026.08.15',html:`<h2>關於 FanFolio</h2><p class="doc-lead">FanFolio 是把推し、FC／Membership、抽選結果、公演、行事曆、金錢與回憶等推し活資訊，集中在自己的裝置上管理的推し活工具。</p><h3>FanFolio 重視的設計</h3><div class="doc-privacy-grid"><div class="doc-privacy-item"><strong>保存在自己的裝置</strong><span>推し活記錄原則上只保存在使用者目前使用的裝置內。</span></div><div class="doc-privacy-item"><strong>容易整理、容易查找</strong><span>依推し、團體、名義與公演整理資料，讓需要的資訊可以快速找到。</span></div><div class="doc-privacy-item"><strong>Free 也能持續使用</strong><span>基本功能可使用 Free；Premium 則提供更完整的管理、分析與自訂功能。</span></div></div><h3>關於資料</h3><p>一般使用時，推し、FC 資料、公演、座位、金額、Memories、備註等輸入內容不會傳送給 FanFolio 開發者。詳細內容請參閱「隱私權政策」。</p><h3>非官方工具</h3><p>FanFolio 是供粉絲自行管理推し活的非官方工具，與任何藝人、偶像、所屬事務所、粉絲俱樂部、活動主辦單位、售票平台或其他第三方均無隸屬或合作關係。</p><h3>關於 Beta 版</h3><p>目前 FanFolio 仍為 Beta 版。為了改善服務，功能、畫面、Free／Premium 範圍與價格可能調整。我們會盡可能維持既有資料相容性，但重要資料仍建議使用備份功能自行保存。</p>`}
   },
   features:{
-    ja:{title:'FanFolioでできること',updated:'最終更新：2026.08.17',html:`<h2>FanFolioで、推し活の「覚えておきたい」をひとつに。</h2><p class="feature-showcase-lead">公演予定、FC名義、当落、座席、Memories、取引、遠征まで。バラバラになりがちな推し活の記録を、あとから見返しやすい形にまとめます。</p><div class="feature-showcase-grid"><div class="feature-showcase-card"><strong>推し・FC／Membership</strong><span>推しプロフィール、会員番号、更新期限、更新支払い履歴をまとめて管理。</span></div><div class="feature-showcase-card"><strong>申込・当落</strong><span>ツアー単位で当落を整理。代表者・FC同行者の履歴も分けて確認できます。</span></div><div class="feature-showcase-card"><strong>カレンダー</strong><span>公演、FC更新、誕生日、遠征、Memoriesなど大切な予定をひとつに。</span></div><div class="feature-showcase-card"><strong>Memories</strong><span>参戦した公演の座席、一言感想、写真、ファンサをあとから見返せます。</span></div></div><h3>記録するだけじゃなく、見返すのが楽しくなる</h3><div class="feature-mock-grid"><div class="feature-mock"><small>当落分析</small><b>次回の候補を整理</b><em>過去の履歴をもとに、名義ごとの傾向を見やすく。</em></div><div class="feature-mock"><small>取引ダッシュボード</small><b>公演ごとの損益</b><em>買い手・売り手を分けて、ツアーや公演別に確認。</em></div><div class="feature-mock"><small>座席・チケット</small><b>座席を細かく記録</b><em>ゲート・扉・ブロック・列・番号・見え方まで。</em></div><div class="feature-mock"><small>遠征</small><b>旅程も一緒に管理</b><em>交通・ホテル・予定・費用・チェックリストをまとめて。</em></div></div><div class="feature-premium-box"><div class="feature-premium-head"><span class="premium-chip">PREMIUM</span><strong>もっと自分らしく、もっと詳しく。</strong></div><div class="feature-premium-list"><div class="feature-premium-row">推しのメンカラでテーマや予定のドットをカスタマイズ</div><div class="feature-premium-row">名義別の詳細分析・会場別分析・次回ツアー候補</div><div class="feature-premium-row">写真・ファンサ・詳細Memories・座席／チケット詳細</div><div class="feature-premium-row">取引ダッシュボード、多通貨、遠征のRich Trip管理</div><div class="feature-premium-row">バックアップ・復元・パスコードロック</div></div><div class="trial-banner"><div class="trial-banner-head"><span class="trial-banner-badge">2日間無料</span><strong>Premiumを試してから選べます</strong></div><p>無料体験中はPremium機能をすべて利用できます。期間終了後は選択したプランで自動更新され、無料期間中にキャンセルすると初回料金はかかりません。</p></div><button class="doc-premium-cta" type="button" data-doc-action="premium">Premiumを2日間無料で試す</button></div><h3>あなたの記録は、あなたの端末に。</h3><p>推し・FC情報・公演・座席・Memoriesなどの主要データは、通常の利用では原則としてこの端末内に保存されます。FanFolio運営者へ推し活内容が自動送信される設計ではありません。</p>`},
+    ja:{title:'FanFolioでできること',updated:'最終更新：2026.08.17',html:`<h2>FanFolioで、推し活の「覚えておきたい」をひとつに。</h2><p class="feature-showcase-lead">公演予定、FC名義、当落、座席、Memories、取引、遠征まで。バラバラになりがちな推し活の記録を、あとから見返しやすい形にまとめます。</p><div class="feature-showcase-grid"><div class="feature-showcase-card"><strong>推し・FC／Membership</strong><span>推しプロフィール、会員番号、更新期限、更新支払い履歴をまとめて管理。</span></div><div class="feature-showcase-card"><strong>申込・当落</strong><span>ツアー単位で当落を整理。代表者・FC同行者の履歴も分けて確認できます。</span></div><div class="feature-showcase-card"><strong>カレンダー</strong><span>公演、FC更新、誕生日、遠征、Memoriesなど大切な予定をひとつに。</span></div><div class="feature-showcase-card"><strong>Memories</strong><span>参戦した公演の座席、一言感想、写真、ファンサをあとから見返せます。</span></div></div><h3>記録するだけじゃなく、見返すのが楽しくなる</h3><div class="feature-mock-grid"><div class="feature-mock"><small>当落分析</small><b>次回の候補を整理</b><em>過去の履歴をもとに、名義ごとの傾向を見やすく。</em></div><div class="feature-mock"><small>取引ダッシュボード</small><b>公演ごとの損益</b><em>買い手・売り手を分けて、ツアーや公演別に確認。</em></div><div class="feature-mock"><small>座席・チケット</small><b>座席を細かく記録</b><em>ゲート・扉・ブロック・列・番号・見え方まで。</em></div><div class="feature-mock"><small>遠征</small><b>旅程も一緒に管理</b><em>交通・ホテル・予定・費用・チェックリストをまとめて。</em></div></div><div class="feature-premium-box"><div class="feature-premium-head"><span class="premium-chip">PREMIUM</span><strong>もっと自分らしく、もっと詳しく。</strong></div><div class="feature-premium-list"><div class="feature-premium-row">推しのメンカラでテーマや予定のドットをカスタマイズ</div><div class="feature-premium-row">名義別の詳細分析・会場別分析・次回ツアー候補</div><div class="feature-premium-row">写真・ファンサ・詳細Memories・座席／チケット詳細</div><div class="feature-premium-row">取引ダッシュボード、多通貨、遠征のRich Trip管理</div><div class="feature-premium-row">バックアップ・復元・パスコードロック</div></div><div class="trial-banner"><div class="trial-banner-head"><span class="trial-banner-badge">5日間無料</span><strong>Premiumを試してから選べます</strong></div><p>無料体験中はPremium機能をすべて利用できます。期間終了後は選択したプランで自動更新され、無料期間中にキャンセルすると初回料金はかかりません。</p></div><button class="doc-premium-cta" type="button" data-doc-action="premium">Premiumを5日間無料で試す</button></div><h3>あなたの記録は、あなたの端末に。</h3><p>推し・FC情報・公演・座席・Memoriesなどの主要データは、通常の利用では原則としてこの端末内に保存されます。FanFolio運営者へ推し活内容が自動送信される設計ではありません。</p>`},
     zh:{title:'FanFolio 可以做什麼',updated:'最後更新：2026.08.17',html:`<h2>把推し活中「想好好記住的事」集中在 FanFolio。</h2><p class="feature-showcase-lead">從公演行程、FC 名義、抽選結果、座位、Memories，到票券交易與遠征，把原本散落在各處的推し活資料整理成之後也容易回看的形式。</p><div class="feature-showcase-grid"><div class="feature-showcase-card"><strong>推し・FC／Membership</strong><span>集中管理推し資料、會員編號、更新期限與更新付款紀錄。</span></div><div class="feature-showcase-card"><strong>申請・當落</strong><span>依 Tour／Event 整理抽選結果，也能分開確認代表者與 FC 同行者。</span></div><div class="feature-showcase-card"><strong>Calendar</strong><span>把公演、FC 更新、生日、遠征、Memories 等重要日期集中在一起。</span></div><div class="feature-showcase-card"><strong>Memories</strong><span>記錄參戰公演的座位、感想、照片與ファンサ，之後隨時回味。</span></div></div><h3>不只是記錄，也讓回顧變得更有趣</h3><div class="feature-mock-grid"><div class="feature-mock"><small>當落分析</small><b>整理下次申請候補</b><em>根據過去紀錄，更容易查看每個名義的傾向。</em></div><div class="feature-mock"><small>交易 Dashboard</small><b>查看每場公演損益</b><em>分開買方／賣方，再依 Tour 與公演確認。</em></div><div class="feature-mock"><small>座位・票券</small><b>詳細保存座位資訊</b><em>Gate、扉、Block、列、號碼、視野都能記錄。</em></div><div class="feature-mock"><small>遠征</small><b>行程也一起整理</b><em>交通、飯店、行程、費用、Checklist 集中管理。</em></div></div><div class="feature-premium-box"><div class="feature-premium-head"><span class="premium-chip">PREMIUM</span><strong>更自由，也能記得更詳細。</strong></div><div class="feature-premium-list"><div class="feature-premium-row">使用推し的成員色自訂主題與行事曆提示點</div><div class="feature-premium-row">名義詳細分析、會場分析與下次 Tour 候補</div><div class="feature-premium-row">照片、ファンサ、詳細 Memories 與座位／票券資料</div><div class="feature-premium-row">交易 Dashboard、多幣別、遠征 Rich Trip 管理</div><div class="feature-premium-row">備份／還原與密碼鎖定</div></div><div class="trial-banner"><div class="trial-banner-head"><span class="trial-banner-badge">免費 2 天</span><strong>先體驗 Premium 再決定</strong></div><p>免費體驗期間可使用 Premium 功能。體驗結束後會依所選方案自動續訂；若在免費期間內取消，就不會收取第一次正式費用。</p></div><button class="doc-premium-cta" type="button" data-doc-action="premium">免費體驗 Premium 2 天</button></div><h3>你的紀錄，留在你的裝置。</h3><p>推し、FC、公演、座位、Memories 等主要資料，一般使用時原則上保存在目前裝置內，不會自動把推し活內容傳送給 FanFolio 開發者。</p>`}
   },
   terms:{
@@ -4405,7 +4462,7 @@ const DOCUMENT_CONTENTS={
     zh:{title:'隱私權政策',updated:'最後更新：2026.08.15',html:`<h2>隱私權政策</h2><p class="doc-lead">你的推し活屬於你自己。FanFolio 的設計原則，是讓主要推し活資料保存在使用者自己的裝置內。</p><h3>1. 保存在裝置內的資料</h3><p>推し、團體、FC／Membership、姓名、地址、電話、生年月日、Email、會員編號、登入密碼、公演、座位、金額、交易、遠征、Memories、備註等使用者輸入的主要資料，一般使用時會保存在目前裝置的瀏覽器儲存空間。</p><h3>2. 開發者可以看到什麼</h3><p><strong>一般使用情況下，FanFolio 開發者沒有可以查看上述推し活資料的管理後台或雲端資料庫。</strong>只有在使用者主動於客服或問題回報時提供截圖、備份檔或相關內容的情況下，才可能看到使用者自行提供的資訊。</p><h3>3. 可能傳送到外部服務的情況</h3><ul><li><strong>使用郵遞區號自動查詢地址：</strong>僅會將輸入的郵遞區號傳送至外部地址查詢服務；姓名、電話、FC 資料、密碼等不會一起傳送。</li><li><strong>提交錯誤回報或功能建議：</strong>會前往 Google Forms，使用者自行填寫的內容將傳送給 Google 與表單管理者。請不要填寫密碼、會員編號、完整地址等機密資訊。</li><li><strong>使用 Premium 付款：</strong>付款所需資訊可能由外部付款服務處理；FanFolio 不會直接保存信用卡號。</li></ul><h3>4. 備份檔</h3><p>備份檔會包含使用者登錄至 FanFolio 的資料。如有保存 FC 登入密碼等資訊，這些內容也可能包含在備份中。請勿將備份檔交給他人，並自行保存在安全的位置。</p><h3>5. 刪除裝置內資料</h3><p>可透過各功能的刪除按鈕刪除資料。若清除瀏覽器／PWA 的網站資料，FanFolio 保存在該裝置的資料也可能一併消失。清除前請先建立需要的備份。</p><h3>6. 安全性</h3><p>FanFolio 以裝置內保存為基本原則，但「保存在裝置內」本身不代表資料一定經過加密。建議開啟手機鎖定及 FanFolio 密碼鎖定功能，並避免在多人共用裝置保存敏感資訊。</p><h3>7. 政策變更</h3><p>若因新增功能或外部服務而需要調整本政策，將進行更新；重要變更會透過 App 內等方式告知。</p>`}
   },
   faq:{
-    ja:{title:'よくある質問',updated:'最終更新：2026.08.15',html:`<h2>よくある質問</h2><details open><summary>運営者に、私が入力した推しやFC情報は見えますか？</summary><p>通常の利用では見えません。推し・FC／Membership・公演・座席・金額・Memories等の主要データは原則として端末内に保存され、運営者が閲覧するクラウド管理画面はありません。ただし、利用者自身が問い合わせでスクリーンショットやバックアップを送った場合、その内容は確認できます。</p></details><details><summary>機種変更したらデータはどうなりますか？</summary><p>自動クラウド同期は行いません。そのため、旧端末でバックアップファイルを作成し、新端末でインポートしてください。バックアップ／復元はPremium機能です。</p></details><details><summary>アプリを削除したり、ブラウザのデータを消すとどうなりますか？</summary><p>端末内データが消える可能性があります。重要な記録がある場合は、削除前にバックアップを作成してください。</p></details><details><summary>オフラインでも使えますか？</summary><p>一度オンラインで必要な画面を読み込み、オフライン利用の準備が完了していれば、保存済みの画面や端末内データを利用できます。外部の住所検索や更新確認など、通信が必要な機能は利用できません。</p></details><details><summary>FreeとPremiumの違いは？</summary><p>Freeは推し・FC／Membership・公演等に登録上限があり、基本的な記録機能を利用できます。Premiumでは登録上限の解除、取引・遠征・詳細分析・バックアップ・セキュリティ・カスタマイズ等を利用できます。</p></details><details><summary>Premiumの2日間無料体験はどうなりますか？</summary><p>無料体験中はPremium機能を利用できます。体験終了後は選択したプランで自動更新されます。無料期間中にキャンセルした場合、初回料金はかかりません。購入画面に表示される終了日と更新条件をご確認ください。</p></details><details><summary>Premiumを解約するとデータは消えますか？</summary><p>削除しません。Freeの上限を超えるデータは閲覧のみになる場合がありますが、再度Premiumへ加入すると対象機能を利用できる設計です。</p></details><details><summary>FCのパスワードを保存しても大丈夫ですか？</summary><p>FanFolioから運営者へ自動送信はしませんが、端末内保存自体が暗号化を保証するものではありません。端末ロックやFanFolioのパスコードロックを利用し、バックアップファイルも安全に管理してください。</p></details><details><summary>不具合や欲しい機能を伝えたいです。</summary><p>設定の「不具合の報告・ご要望」からGoogle Formsを開いて送信できます。パスワード、会員番号、住所等の機密情報は送らないでください。</p></details>`},
+    ja:{title:'よくある質問',updated:'最終更新：2026.08.15',html:`<h2>よくある質問</h2><details open><summary>運営者に、私が入力した推しやFC情報は見えますか？</summary><p>通常の利用では見えません。推し・FC／Membership・公演・座席・金額・Memories等の主要データは原則として端末内に保存され、運営者が閲覧するクラウド管理画面はありません。ただし、利用者自身が問い合わせでスクリーンショットやバックアップを送った場合、その内容は確認できます。</p></details><details><summary>機種変更したらデータはどうなりますか？</summary><p>自動クラウド同期は行いません。そのため、旧端末でバックアップファイルを作成し、新端末でインポートしてください。バックアップ／復元はPremium機能です。</p></details><details><summary>アプリを削除したり、ブラウザのデータを消すとどうなりますか？</summary><p>端末内データが消える可能性があります。重要な記録がある場合は、削除前にバックアップを作成してください。</p></details><details><summary>オフラインでも使えますか？</summary><p>一度オンラインで必要な画面を読み込み、オフライン利用の準備が完了していれば、保存済みの画面や端末内データを利用できます。外部の住所検索や更新確認など、通信が必要な機能は利用できません。</p></details><details><summary>FreeとPremiumの違いは？</summary><p>Freeは推し・FC／Membership・公演等に登録上限があり、基本的な記録機能を利用できます。Premiumでは登録上限の解除、取引・遠征・詳細分析・バックアップ・セキュリティ・カスタマイズ等を利用できます。</p></details><details><summary>Premiumの5日間無料体験はどうなりますか？</summary><p>無料体験中はPremium機能を利用できます。体験終了後は選択したプランで自動更新されます。無料期間中にキャンセルした場合、初回料金はかかりません。購入画面に表示される終了日と更新条件をご確認ください。</p></details><details><summary>Premiumを解約するとデータは消えますか？</summary><p>削除しません。Freeの上限を超えるデータは閲覧のみになる場合がありますが、再度Premiumへ加入すると対象機能を利用できる設計です。</p></details><details><summary>FCのパスワードを保存しても大丈夫ですか？</summary><p>FanFolioから運営者へ自動送信はしませんが、端末内保存自体が暗号化を保証するものではありません。端末ロックやFanFolioのパスコードロックを利用し、バックアップファイルも安全に管理してください。</p></details><details><summary>不具合や欲しい機能を伝えたいです。</summary><p>設定の「不具合の報告・ご要望」からGoogle Formsを開いて送信できます。パスワード、会員番号、住所等の機密情報は送らないでください。</p></details>`},
     zh:{title:'常見問題',updated:'最後更新：2026.08.15',html:`<h2>常見問題</h2><details open><summary>開發者看得到我輸入的推し或 FC 資料嗎？</summary><p>一般使用時看不到。推し、FC／Membership、公演、座位、金額、Memories 等主要資料原則上只保存在使用者裝置內，開發者沒有可以查看這些內容的雲端管理後台。但如果使用者主動在問題回報時傳送截圖或備份檔，開發者就能看到該次自行提供的內容。</p></details><details><summary>換手機之後資料怎麼辦？</summary><p>FanFolio 不做自動雲端同步。請先在舊裝置建立備份檔，再到新裝置匯入。備份／還原屬於 Premium 功能。</p></details><details><summary>刪除 App 或清除瀏覽器資料會怎樣？</summary><p>保存在裝置內的資料可能會一起消失。有重要記錄時，請先建立備份再進行清除。</p></details><details><summary>可以離線使用嗎？</summary><p>只要曾在線上載入必要畫面並完成離線準備，就能在沒有網路時使用已快取的畫面與裝置內資料。地址查詢、版本更新確認等需要網路的功能無法離線使用。</p></details><details><summary>Free 和 Premium 有什麼差別？</summary><p>Free 可使用基本記錄功能，但推し、FC／Membership、公演等有數量上限。Premium 會解除部分上限，並提供交易、遠征、詳細分析、備份、安全性與自訂等功能。</p></details><details><summary>Premium 的 2 天免費體驗怎麼運作？</summary><p>免費體驗期間可以使用 Premium 功能；體驗結束後會依所選方案自動續訂。若在免費期間內取消，不會收取第一次正式費用。請以購買頁面顯示的體驗結束日與續訂條件為準。</p></details><details><summary>取消 Premium 後資料會消失嗎？</summary><p>不會刪除。超過 Free 上限的資料可能變成僅能查看；再次加入 Premium 後即可重新使用對應功能。</p></details><details><summary>可以把 FC 密碼存在 FanFolio 嗎？</summary><p>FanFolio 不會自動把密碼傳給開發者，但保存在裝置內並不代表一定經過加密。建議使用手機鎖定與 FanFolio 密碼鎖定，備份檔也要自行妥善保管。</p></details><details><summary>我要回報 Bug 或建議新功能。</summary><p>可從設定的「不具合の報告・ご要望」開啟 Google Forms。請不要送出密碼、會員編號、完整地址等機密資訊。</p></details>`}
   }
 };
