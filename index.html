@@ -13,7 +13,7 @@
 <link rel="icon" type="image/png" sizes="192x192" href="./icon-192.png" />
 <script src="https://cdn.paddle.com/paddle/v2/paddle.js"></script>
 <meta name="mobile-web-app-capable" content="yes" />
-<title>FanFolio ver. 2026.08.18.01</title>
+<title>FanFolio ver. 2026.08.18.03</title>
 <style>
 :root{
   --bg:#f7f5f0;
@@ -2454,7 +2454,7 @@ const BETA_PLAN_OVERRIDE_KEY='fanfolio_beta_plan_override';
 const FREE_ACCESS_KEY='fanfolio_v1_free_access';
 const THEME_KEY='fanfolio_v1_theme';
 const FANFOLIO_USER_ID_KEY='fanfolio_v1_user_id';
-const APP_VERSION='2026.08.18.02';
+const APP_VERSION='2026.08.18.03';
 const APP_VERSION_DATE='2026.08.18';
 const APP_VERSION_DISPLAY=`ver. ${APP_VERSION}`;
 const RELEASE_NOTES_SEEN_KEY='fanfolio_v1_release_notes_seen';
@@ -2466,7 +2466,8 @@ const CURRENT_RELEASE_NOTES={
   ],
   internalItems:[
     {title:'Paddle Trial / No Trial Price切替',text:'初回はTrial Price、利用済みはNo Trial Priceを自動選択するSandbox checkoutロジックを追加しました。'},
-    {title:'FanFolio IDをPaddleへ連携',text:'端末内で生成した匿名FanFolio IDをPaddle CheckoutのcustomDataへ渡し、Webhook / KVで契約状態を紐付けられるようにしました。'}
+    {title:'FanFolio IDをPaddleへ連携',text:'端末内で生成した匿名FanFolio IDをPaddle CheckoutのcustomDataへ渡し、Webhook / KVで契約状態を紐付けられるようにしました。'},
+    {title:'Premium契約状態をWorkerと同期',text:'匿名FanFolio IDでCloudflare Workerの契約状態を確認し、Paddle / KVの状態をFanFolio Premium表示へ反映する基盤を追加しました。通信できない場合は端末内の状態を維持します。'}
   ]
 };
 if(location.search.includes('__fanfolio_refresh')){try{const cleanUrl=new URL(location.href);cleanUrl.searchParams.delete('__fanfolio_refresh');history.replaceState(null,'',cleanUrl.pathname+(cleanUrl.searchParams.toString()?`?${cleanUrl.searchParams}`:'')+cleanUrl.hash)}catch{}}
@@ -2503,6 +2504,90 @@ function getFanFolioUserId(){
     return created
   }catch{
     return createFanFolioUserId()
+  }
+}
+
+// Cloudflare Worker endpoint for authoritative Premium status.
+// Only the anonymous FanFolio ID is sent. 推し・FC・公演・座席などの内容は送信しない。
+const FANFOLIO_PREMIUM_STATUS_ENDPOINT='https://fanfolio-paddle.lottiechan-jp.workers.dev/';
+
+function normalizeRemotePremiumStatus(value){
+  return String(value||'').trim().toLowerCase();
+}
+function remoteStatusMeansInactive(status){
+  return ['canceled','cancelled','expired','paused','past_due','unpaid','free','inactive'].includes(normalizeRemotePremiumStatus(status));
+}
+function remoteStatusMeansPremium(status){
+  return ['active','trialing','on_trial'].includes(normalizeRemotePremiumStatus(status));
+}
+async function fetchRemotePremiumStatus(){
+  const fanfolioUserId=getFanFolioUserId();
+  const url=new URL(FANFOLIO_PREMIUM_STATUS_ENDPOINT);
+  url.searchParams.set('fanfolio_user_id',fanfolioUserId);
+  url.searchParams.set('_t',String(Date.now()));
+  const response=await fetch(url.toString(),{
+    method:'GET',
+    cache:'no-store',
+    headers:{'Accept':'application/json'}
+  });
+  if(!response.ok)throw new Error(`Premium status HTTP ${response.status}`);
+  const data=await response.json();
+  return data&&typeof data==='object'?data:{};
+}
+function applyRemotePremiumStatus(data){
+  if(!data||typeof data!=='object')return false;
+  const previous=getPlanState();
+  const status=normalizeRemotePremiumStatus(data.status);
+  const explicitlyPremium=data.premium===true||remoteStatusMeansPremium(status);
+  const explicitlyInactive=data.premium===false&&remoteStatusMeansInactive(status);
+
+  // status:null / unknown means "not found yet". Do not erase a local paid/trial state
+  // because Paddle webhook delivery can be slightly delayed or the device may be offline.
+  if(!explicitlyPremium&&!explicitlyInactive)return false;
+
+  if(explicitlyPremium){
+    savePlanState({
+      tier:'premium',
+      billing:data.billing||previous.billing||'',
+      region:data.region||previous.region||'jp',
+      founding:data.founding!==undefined?Boolean(data.founding):previous.founding,
+      foundingBadge:data.foundingBadge!==undefined?Boolean(data.foundingBadge):previous.foundingBadge,
+      renewalDate:data.renewalDate||data.renewal_date||data.next_billed_at||previous.renewalDate||'',
+      status:status||previous.status||'active',
+      cancelAtPeriodEnd:data.cancelAtPeriodEnd!==undefined?Boolean(data.cancelAtPeriodEnd):
+        (data.cancel_at_period_end!==undefined?Boolean(data.cancel_at_period_end):previous.cancelAtPeriodEnd),
+      startedAt:data.startedAt||data.started_at||previous.startedAt||'',
+      subscriptionSource:'paddle-worker',
+      trialStartedAt:data.trialStartedAt||data.trial_started_at||previous.trialStartedAt||'',
+      trialEndsAt:data.trialEndsAt||data.trial_ends_at||previous.trialEndsAt||'',
+      trialUsed:Boolean(previous.trialUsed||data.trialUsed||data.trial_used||status==='trialing'||status==='on_trial')
+    });
+  }else{
+    savePlanState({
+      tier:'free',
+      status:status||'free',
+      cancelAtPeriodEnd:false,
+      renewalDate:'',
+      subscriptionSource:'paddle-worker',
+      trialUsed:Boolean(previous.trialUsed||previous.trialStartedAt||previous.startedAt)
+    });
+  }
+  return true;
+}
+async function syncRemotePremiumState({silent=true}={}){
+  if(!navigator.onLine)return false;
+  try{
+    const data=await fetchRemotePremiumStatus();
+    const changed=applyRemotePremiumStatus(data);
+    if(changed){
+      syncFreeAccessPlanState();
+      refreshAfterBetaPlanChange();
+    }
+    return changed;
+  }catch(error){
+    console.warn('Premium status sync skipped:',error?.message||error);
+    if(!silent)showToast('Premium契約状態を確認できませんでした。端末内の状態を維持します。');
+    return false;
   }
 }
 
@@ -2557,6 +2642,10 @@ function handlePaddleCheckoutEvent(event){
     syncFreeAccessPlanState();
     refreshAfterBetaPlanChange();
     showToast(useTrial?'Paddle Sandbox：Premiumの5日間無料体験を開始しました。':'Paddle Sandbox：Premiumを開始しました。');
+    // Webhook/KV反映には少し時間がかかる場合があるため、数回だけ静かに再確認。
+    setTimeout(()=>void syncRemotePremiumState({silent:true}),2500);
+    setTimeout(()=>void syncRemotePremiumState({silent:true}),7000);
+    setTimeout(()=>void syncRemotePremiumState({silent:true}),15000);
   }
 }
 function openPaddleSandboxCheckout(){
@@ -4783,6 +4872,7 @@ async function initializeInputHistory(){await loadInputHistory();await seedInput
 
 renderAppVersion();void refreshPerformanceExtensionCache();
 renderPlanState();
+setTimeout(()=>void syncRemotePremiumState({silent:true}),900);
 renderIntegrityCheckStatus();
 initializeSecurityLock();
 setOshiHomeTab('profile');
