@@ -13,7 +13,7 @@
 <link rel="icon" type="image/png" sizes="192x192" href="./icon-192.png" />
 <script src="https://cdn.paddle.com/paddle/v2/paddle.js"></script>
 <meta name="mobile-web-app-capable" content="yes" />
-<title>FanFolio ver. 2026.08.18.05</title>
+<title>FanFolio ver. 2026.08.18.06</title>
 <style>
 :root{
   --bg:#f7f5f0;
@@ -1143,6 +1143,31 @@ body{width:100%;overscroll-behavior-x:none}
   white-space:nowrap!important;
   overflow:hidden!important;
   text-overflow:ellipsis!important;
+}
+
+
+/* FanFolio ver. 2026.08.18.06 — FC名義 summary / renewal count fixes */
+.membership-win-summary{
+  display:flex!important;
+  align-items:center!important;
+  justify-content:space-between!important;
+  flex-wrap:wrap!important;
+  gap:4px 8px!important;
+  min-width:0!important;
+  overflow:hidden!important;
+}
+.membership-win-summary > span{
+  flex:1 1 190px!important;
+  min-width:0!important;
+}
+.membership-win-summary > strong{
+  flex:0 1 auto!important;
+  max-width:100%!important;
+  white-space:nowrap!important;
+  font-size:clamp(10px,2.65vw,12px)!important;
+  letter-spacing:-.035em!important;
+  line-height:1.3!important;
+  margin-left:auto!important;
 }
 
 </style>
@@ -2454,21 +2479,19 @@ const BETA_PLAN_OVERRIDE_KEY='fanfolio_beta_plan_override';
 const FREE_ACCESS_KEY='fanfolio_v1_free_access';
 const THEME_KEY='fanfolio_v1_theme';
 const FANFOLIO_USER_ID_KEY='fanfolio_v1_user_id';
-const APP_VERSION='2026.08.18.05';
+const APP_VERSION='2026.08.18.06';
 const APP_VERSION_DATE='2026.08.18';
 const APP_VERSION_DISPLAY=`ver. ${APP_VERSION}`;
 const RELEASE_NOTES_SEEN_KEY='fanfolio_v1_release_notes_seen';
 const CURRENT_RELEASE_NOTES={
   version:APP_VERSION,date:APP_VERSION_DATE,
   userItems:[
-    {title:'無料体験は初回のみ',text:'5日間無料体験を利用済みの場合、再加入時は無料体験なしの月額・年額プランへ進むようにしました。'},
-    {title:'無料体験キャンセル時の表示を改善',text:'無料体験の終了予約中は、自動更新ではなくFreeへ移行する予定を表示します。'}
+    {title:'FC名義の更新期限カウントを修正',text:'期限チェックの「更新期限」は更新通知日ではなく、実際の有効期限が近い名義だけを数えるように修正しました。'},
+    {title:'当選記録サマリーの表示を改善',text:'代表勝率の表示が画面幅からはみ出さないよう、画面幅に合わせて自動調整するようにしました。'}
   ],
   internalItems:[
-    {title:'Paddle Trial / No Trial Price切替',text:'初回はTrial Price、利用済みはNo Trial Priceを自動選択するSandbox checkoutロジックを追加しました。'},
-    {title:'FanFolio IDをPaddleへ連携',text:'端末内で生成した匿名FanFolio IDをPaddle CheckoutのcustomDataへ渡し、Webhook / KVで契約状態を紐付けられるようにしました。'},
-    {title:'Premium契約状態をWorkerと同期',text:'匿名FanFolio IDでCloudflare Workerの契約状態を確認し、Paddle / KVの状態をFanFolio Premium表示へ反映する基盤を追加しました。通信できない場合は端末内の状態を維持します。'},
-    {title:'Premium接続先を修正・返金ポリシーを復元',text:'Premium状態確認を/premium-statusへ正しく接続し、設定画面の返金ポリシー入口を復元しました。開発者設定に接続診断も追加しました。'}
+    {title:'Renewal deadline source corrected',text:'FC名義ホームの更新期限判定をrenewalNoticeDate基準からexpiry基準（60日以内）へ修正。'},
+    {title:'Membership win summary responsive wrap',text:'代表勝率ラベルをflex-wrap対応し、小画面でのoverflowを防止。'}
   ]
 };
 if(location.search.includes('__fanfolio_refresh')){try{const cleanUrl=new URL(location.href);cleanUrl.searchParams.delete('__fanfolio_refresh');history.replaceState(null,'',cleanUrl.pathname+(cleanUrl.searchParams.toString()?`?${cleanUrl.searchParams}`:'')+cleanUrl.hash)}catch{}}
@@ -3695,7 +3718,7 @@ function renewalRelativeText(dateValue,today=new Date()){if(!dateValue)return'';
 function membershipRenewalPaidHtml(item){const ext=membershipRenewalExtension(item);if(!ext?.renewalPaid)return'';return `<div class="membership-renewal-paid-row"><span>繳費済み</span><button class="membership-renewal-cancel-btn" type="button" data-membership-renewal-paid-cancel="${esc(item.id)}">繳費済み取消</button></div>`}
 async function markMembershipRenewalPaid(membershipId){const item=getMemberships().find(m=>m.id===membershipId);if(!item)return;await refreshIdentityMembershipExtensions().catch(()=>{});const current=membershipRenewalExtension(item)||{},notice=membershipRenewalNoticeValue(item),expiry=item.expiry||'';if(!notice&&!expiry){showToast('更新通知日または有効期限が登録されていません。');return}const nextExpiry=expiry?addOneYearDateKey(expiry):'',nextNotice=notice?addOneYearDateKey(notice):'';const label=item.account||item.name||'この名義';const lines=[`【${label}】を繳費済みとして登録します。`,'', '自動的に有効期限と更新通知を1年後に進めますか？'];if(expiry)lines.push('',`有効期限：${expiry.replaceAll('-','.')} → ${nextExpiry.replaceAll('-','.')}`);if(notice)lines.push(`更新通知：${notice.replaceAll('-','.')} → ${nextNotice.replaceAll('-','.')}`);if(!window.confirm(lines.join('\n'))){renderCalendar();return}const now=new Date().toISOString(),all=getMemberships(),idx=all.findIndex(m=>m.id===membershipId);if(idx<0)return;all[idx]={...all[idx],expiry:nextExpiry||all[idx].expiry,updatedAt:now};saveMemberships(all);const ext={...current,id:membershipId,membershipId,renewalNoticeDate:nextNotice||notice,renewalPaid:true,renewalPaidAt:now,renewalPaidPreviousExpiry:expiry,renewalPaidPreviousNoticeDate:notice,renewalPaidAdvancedExpiry:nextExpiry,renewalPaidAdvancedNoticeDate:nextNotice,updatedAt:now};if(!ext.createdAt)ext.createdAt=now;await identityExtPut(IDENTITY_MEMBERSHIP_STORE,ext);await refreshIdentityMembershipExtensions();renderOshi();refreshOshiHomePanel();renderCalendar();renderMembershipsIfOpen();const year=Number((expiry||notice||String(new Date().getFullYear())).slice(0,4))||new Date().getFullYear();openMembershipPaymentEditor(membershipId,null,{year,paymentDate:dateKeyFromDate(new Date())});showToast('繳費済みとして登録しました。更新支払い履歴も入力できます。')}
 async function cancelMembershipRenewalPaid(membershipId){const item=getMemberships().find(m=>m.id===membershipId);if(!item)return;await refreshIdentityMembershipExtensions().catch(()=>{});const current=membershipRenewalExtension(item);if(!current?.renewalPaid)return;const label=item.account||item.name||'この名義';if(!window.confirm(`【${label}】の繳費済みフラグを取消しますか？\n\n誤ってチェックしてしまった場合に使ってください。`))return;const now=new Date().toISOString(),all=getMemberships(),idx=all.findIndex(m=>m.id===membershipId);if(idx>=0){const shouldRestore=!current.renewalPaidAdvancedExpiry||all[idx].expiry===current.renewalPaidAdvancedExpiry;all[idx]={...all[idx],expiry:shouldRestore?(current.renewalPaidPreviousExpiry||all[idx].expiry):all[idx].expiry,updatedAt:now};saveMemberships(all)}const shouldRestoreNotice=!current.renewalPaidAdvancedNoticeDate||current.renewalNoticeDate===current.renewalPaidAdvancedNoticeDate;const ext={...current,renewalNoticeDate:shouldRestoreNotice?(current.renewalPaidPreviousNoticeDate||current.renewalNoticeDate):current.renewalNoticeDate,renewalPaid:false,renewalPaidAt:'',renewalPaidPreviousExpiry:'',renewalPaidPreviousNoticeDate:'',renewalPaidAdvancedExpiry:'',renewalPaidAdvancedNoticeDate:'',updatedAt:now};await identityExtPut(IDENTITY_MEMBERSHIP_STORE,ext);await refreshIdentityMembershipExtensions();renderOshi();refreshOshiHomePanel();renderCalendar();renderMembershipsIfOpen();showToast('繳費済みを取消しました。近日予定へ戻しました。')}
-function membershipNeedsRenewalAttention(item){if(!item)return false;const notice=membershipRenewalNoticeValue(item);if(notice){const noticeDate=new Date(`${notice}T00:00:00`),today=new Date();today.setHours(0,0,0,0);const expiry=item.expiry?new Date(`${item.expiry}T23:59:59`):null;if(expiry&&expiry<today)return false;const diff=Math.ceil((noticeDate-today)/86400000);return diff<=60}return dateWithinDays(item.expiry,60)}
+function membershipNeedsRenewalAttention(item){if(!item)return false;return dateWithinDays(item.expiry,60)}
 function fanfolioStartoAutoRenewal(joinMonth){const match=String(joinMonth||'').match(/^(\d{4})-(\d{2})$/);if(!match)return null;const joinMonthNum=Number(match[2]);let expiryMonth=joinMonthNum-1;if(expiryMonth===0)expiryMonth=12;const today=new Date();today.setHours(0,0,0,0);let expiryYear=today.getFullYear();let expiryDate=new Date(expiryYear,expiryMonth,0);expiryDate.setHours(23,59,59,999);if(expiryDate<today){expiryYear+=1;expiryDate=new Date(expiryYear,expiryMonth,0)}const ymd=d=>`${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}-${String(d.getDate()).padStart(2,'0')}`;let noticeYear=expiryYear,noticeMonth=expiryMonth-1;if(noticeMonth===0){noticeMonth=12;noticeYear-=1}const noticeDate=new Date(noticeYear,noticeMonth-1,2);return{expiry:ymd(expiryDate),renewalNoticeDate:ymd(noticeDate)}}
 function membershipExpiryState(item){if(!item?.expiry)return 'active';const end=new Date(`${item.expiry}T23:59:59`),today=new Date();today.setHours(0,0,0,0);const days=Math.ceil((end-today)/86400000);if(days<0)return 'expired';if(days<=60)return 'soon';return 'active'}
 function membershipMatchesSearch(item,q){if(!q)return true;const text=[item.name,item.account,item.memberNumber,item.realName,item.phone,item.email,item.postalCode,item.prefecture,item.address].filter(Boolean).join(' ').toLocaleLowerCase('ja');return text.includes(q.toLocaleLowerCase('ja'))}
