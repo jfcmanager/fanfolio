@@ -115,7 +115,6 @@ button{cursor:pointer}
 .switch{width:58px;height:34px;border-radius:999px;background:var(--surface-soft-2);border:1px solid var(--line);position:relative;flex:none}.switch:before{content:"";position:absolute;width:26px;height:26px;border-radius:50%;background:var(--surface);left:3px;top:3px;box-shadow:0 2px 7px rgba(0,0,0,.08)}
 .locked{opacity:.55}.premium-chip{font-size:12px;border-radius:999px;padding:4px 8px;background:var(--accent-pale);color:var(--accent-strong);font-weight:800}
 .footer-note{text-align:center;color:var(--muted);font-size:14px;letter-spacing:.13em;padding:20px 0 8px}
-.public-legal-links{display:flex;flex-wrap:wrap;align-items:center;justify-content:center;gap:8px 14px;margin:10px auto 2px;padding:12px 8px 2px;max-width:620px;font-size:11px;line-height:1.5;color:var(--muted)}.public-legal-links a{color:var(--accent-strong);text-decoration:none;border-bottom:1px solid color-mix(in srgb,var(--accent-strong) 35%,transparent);padding:2px 0}.public-legal-links a:active{opacity:.65}.public-legal-contact{width:100%;text-align:center;margin-top:3px;font-size:10.5px;letter-spacing:.01em}@media(max-width:390px){.public-legal-links{gap:7px 11px;font-size:10.5px}}
 .setting-action{width:100%;appearance:none;-webkit-appearance:none;border:0;background:transparent;text-align:left;color:inherit;font:inherit;cursor:pointer}
 .setting-action:active{background:var(--surface-soft)}
 .setting-action-side{display:flex;align-items:center;gap:8px;flex:none}
@@ -1336,20 +1335,12 @@ body{width:100%;overscroll-behavior-x:none}
 
       <div class="settings-section" id="developerSettingsSection"><div class="section-title">開発者設定</div><div class="settings-card"><div class="beta-admin-panel" id="betaAdminPanel" hidden><div class="beta-admin-head"><strong>管理者テストモード</strong><span class="premium-chip">BETA</span></div><div class="beta-admin-note">Free／Premiumの実機確認用です。保存済みデータは削除しません。</div><div class="beta-admin-actions"><button class="ghost-btn" id="testAsFreeBtn" type="button">Freeとして確認</button><button class="solid-btn" id="testAsPremiumBtn" type="button">Premiumとして確認</button></div><div class="beta-admin-status" id="betaAdminStatus">通常モード</div><button class="beta-admin-exit" id="resetBetaPreviewBtn" type="button" hidden>管理者表示に戻る</button><button class="beta-admin-exit" id="disableBetaAdminBtn" type="button">管理者テストモードを終了</button></div></div></div>
 
-      <div class="settings-section"><div class="section-title">アプリについて</div><div class="settings-card about-settings-card"><button class="setting-row setting-action" id="aboutToolBtn" type="button"><div class="setting-main"><span class="setting-line-icon" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M20.8 4.6a5.5 5.5 0 0 0-7.8 0L12 5.6l-1-1a5.5 5.5 0 0 0-7.8 7.8l1 1L12 21l7.8-7.6 1-1a5.5 5.5 0 0 0 0-7.8Z"/></svg></span><div class="setting-content"><h3>このツールについて</h3></div></div><span class="chev">›</span></button><button class="setting-row setting-action" id="featuresBtn" type="button"><div class="setting-main"><span class="setting-line-icon" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M4 5.5c2.5-.8 5-.5 8 1.3v12c-3-1.8-5.5-2.1-8-1.3z"/><path d="M20 5.5c-2.5-.8-5-.5-8 1.3v12c3-1.8 5.5-2.1 8-1.3z"/><path d="M9.7 10.2c.7-.8 1.8-.7 2.3.2.5-.9 1.6-1 2.3-.2.8 1 .1 2.1-2.3 3.7-2.4-1.6-3.1-2.7-2.3-3.7Z"/></svg></span><div class="setting-content"><h3>FanFolioでできること</h3><p>FreeからPremiumまで、推し活管理の魅力を紹介します。</p></div></div><span class="chev">›</span></button><button class="setting-row setting-action" id="termsBtn" type="button"><div class="setting-main"><span class="setting-line-icon" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M6 2.8h8l4 4V21H6z"/><path d="M14 2.8V7h4M9 11h6M9 15h6"/></svg></span><div class="setting-content"><h3>利用規約</h3></div></div><span class="chev">›</span></button><button class="setting-row setting-action" id="privacyBtn" type="button"><div class="setting-main"><span class="setting-line-icon" aria-hidden="true"><svg viewBox="0 0 24 24"><rect x="5" y="10" width="14" height="10" rx="2"/><path d="M8 10V7a4 4 0 0 1 8 0v3"/></svg></span><div class="setting-content"><h3>プライバシーポリシー</h3></div></div><span class="chev">›</span></button><a href="./refunds.html" target="_blank" rel="noopener" class="setting-row setting-action" style="text-decoration:none"><div class="setting-main"><span class="setting-line-icon" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M5 7h14v10H5z"/><path d="M8 10h8M8 14h5"/></svg></span><div class="setting-content"><h3>返金ポリシー</h3></div></div><span class="chev">›</span></a><button class="setting-row setting-action" id="faqBtn" type="button"><div class="setting-main"><span class="setting-line-icon" aria-hidden="true"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M9.8 9.2a2.4 2.4 0 1 1 4.2 1.6c-1.1 1-2 1.4-2 3M12 17h.01"/></svg></span><div class="setting-content"><h3>よくある質問</h3></div></div><span class="chev">›</span></button><button class="setting-row setting-action" id="feedbackBtn" type="button"><div class="setting-main"><span class="setting-line-icon" aria-hidden="true"><svg viewBox="0 0 24 24"><rect x="3" y="5" width="18" height="14" rx="2"/><path d="m4 7 8 6 8-6"/></svg></span><div class="setting-content"><h3>不具合の報告・ご要望</h3></div></div><span class="chev">›</span></button></div></div>
+      <div class="settings-section"><div class="section-title">アプリについて</div><div class="settings-card about-settings-card"><button class="setting-row setting-action" id="aboutToolBtn" type="button"><div class="setting-main"><span class="setting-line-icon" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M20.8 4.6a5.5 5.5 0 0 0-7.8 0L12 5.6l-1-1a5.5 5.5 0 0 0-7.8 7.8l1 1L12 21l7.8-7.6 1-1a5.5 5.5 0 0 0 0-7.8Z"/></svg></span><div class="setting-content"><h3>このツールについて</h3></div></div><span class="chev">›</span></button><button class="setting-row setting-action" id="featuresBtn" type="button"><div class="setting-main"><span class="setting-line-icon" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M4 5.5c2.5-.8 5-.5 8 1.3v12c-3-1.8-5.5-2.1-8-1.3z"/><path d="M20 5.5c-2.5-.8-5-.5-8 1.3v12c3-1.8 5.5-2.1 8-1.3z"/><path d="M9.7 10.2c.7-.8 1.8-.7 2.3.2.5-.9 1.6-1 2.3-.2.8 1 .1 2.1-2.3 3.7-2.4-1.6-3.1-2.7-2.3-3.7Z"/></svg></span><div class="setting-content"><h3>FanFolioでできること</h3><p>FreeからPremiumまで、推し活管理の魅力を紹介します。</p></div></div><span class="chev">›</span></button><button class="setting-row setting-action" id="termsBtn" type="button"><div class="setting-main"><span class="setting-line-icon" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M6 2.8h8l4 4V21H6z"/><path d="M14 2.8V7h4M9 11h6M9 15h6"/></svg></span><div class="setting-content"><h3>利用規約</h3></div></div><span class="chev">›</span></button><button class="setting-row setting-action" id="privacyBtn" type="button"><div class="setting-main"><span class="setting-line-icon" aria-hidden="true"><svg viewBox="0 0 24 24"><rect x="5" y="10" width="14" height="10" rx="2"/><path d="M8 10V7a4 4 0 0 1 8 0v3"/></svg></span><div class="setting-content"><h3>プライバシーポリシー</h3></div></div><span class="chev">›</span></button><button class="setting-row setting-action" id="faqBtn" type="button"><div class="setting-main"><span class="setting-line-icon" aria-hidden="true"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M9.8 9.2a2.4 2.4 0 1 1 4.2 1.6c-1.1 1-2 1.4-2 3M12 17h.01"/></svg></span><div class="setting-content"><h3>よくある質問</h3></div></div><span class="chev">›</span></button><button class="setting-row setting-action" id="feedbackBtn" type="button"><div class="setting-main"><span class="setting-line-icon" aria-hidden="true"><svg viewBox="0 0 24 24"><rect x="3" y="5" width="18" height="14" rx="2"/><path d="m4 7 8 6 8-6"/></svg></span><div class="setting-content"><h3>不具合の報告・ご要望</h3></div></div><span class="chev">›</span></button></div></div>
 
       <div class="settings-section"><div class="section-title">アプリ・オフライン</div><div class="settings-card"><button class="setting-row setting-action" id="installAppBtn" type="button"><div><h3>ホーム画面に追加</h3><p id="installAppDescription">FanFolioをアプリのように起動できます。</p></div><span class="chev">›</span></button><div class="setting-row"><div><h3>起動モード</h3><div class="pwa-status"><span class="pwa-dot" id="pwaModeDot"></span><span class="pwa-status-text" id="pwaModeStatus">確認中</span></div></div></div><div class="setting-row"><div><h3>オフライン利用</h3><div class="pwa-status"><span class="pwa-dot" id="pwaOfflineDot"></span><span class="pwa-status-text" id="pwaOfflineStatus">確認中</span></div></div></div><div class="pwa-mini-note" id="pwaHelpText">HTTPSで一度開くと、通信がないときも保存済みのFanFolioを起動できます。</div></div></div>
 
       <div class="settings-section"><div class="section-title">バージョン</div><div class="settings-card"><div class="setting-row" id="versionInfoRow"><div><h3>FanFolio</h3></div><div class="subtle" id="currentVersionLabel">ver. --</div></div><button class="setting-row setting-action" id="releaseNotesBtn" type="button"><div><h3>今回のアップデート</h3><p>このバージョンで追加・変更した内容を確認します。</p></div><span class="chev">›</span></button><button class="setting-row setting-action" id="checkUpdateBtn" type="button"><div><h3>更新を確認</h3><p id="updateStatusText">サーバー上の最新版を確認します。</p></div><span class="chev">›</span></button></div></div>
       <div class="footer-note">— ✦ —<br><br>Made with ♡ by めいぷりん</div>
-      <nav class="public-legal-links" aria-label="FanFolio public information">
-        <a href="./pricing.html" target="_blank" rel="noopener">料金</a>
-        <a href="./terms.html" target="_blank" rel="noopener">利用規約</a>
-        <a href="./privacy.html" target="_blank" rel="noopener">プライバシー</a>
-        <a href="./refunds.html" target="_blank" rel="noopener">返金ポリシー</a>
-        <a href="./contact.html" target="_blank" rel="noopener">お問い合わせ</a>
-        <span class="public-legal-contact">Contact: <a href="mailto:fanfolio@svk.jp">fanfolio@svk.jp</a></span>
-      </nav>
     </main>
   </section>
 </div>
@@ -2462,19 +2453,20 @@ const BETA_ADMIN_KEY='fanfolio_beta_admin_enabled';
 const BETA_PLAN_OVERRIDE_KEY='fanfolio_beta_plan_override';
 const FREE_ACCESS_KEY='fanfolio_v1_free_access';
 const THEME_KEY='fanfolio_v1_theme';
-const APP_VERSION='2026.08.18.04';
+const FANFOLIO_USER_ID_KEY='fanfolio_v1_user_id';
+const APP_VERSION='2026.08.18.02';
 const APP_VERSION_DATE='2026.08.18';
 const APP_VERSION_DISPLAY=`ver. ${APP_VERSION}`;
 const RELEASE_NOTES_SEEN_KEY='fanfolio_v1_release_notes_seen';
 const CURRENT_RELEASE_NOTES={
   version:APP_VERSION,date:APP_VERSION_DATE,
   userItems:[
-    {title:'公開ポリシー・料金ページを追加',text:'Paddleのドメイン審査に必要な料金・利用規約・プライバシー・返金・お問い合わせの公開ページへのリンクを設定に追加しました。'},
     {title:'無料体験は初回のみ',text:'5日間無料体験を利用済みの場合、再加入時は無料体験なしの月額・年額プランへ進むようにしました。'},
     {title:'無料体験キャンセル時の表示を改善',text:'無料体験の終了予約中は、自動更新ではなくFreeへ移行する予定を表示します。'}
   ],
   internalItems:[
-    {title:'Paddle Trial / No Trial Price切替',text:'初回はTrial Price、利用済みはNo Trial Priceを自動選択するSandbox checkoutロジックを追加しました。'}
+    {title:'Paddle Trial / No Trial Price切替',text:'初回はTrial Price、利用済みはNo Trial Priceを自動選択するSandbox checkoutロジックを追加しました。'},
+    {title:'FanFolio IDをPaddleへ連携',text:'端末内で生成した匿名FanFolio IDをPaddle CheckoutのcustomDataへ渡し、Webhook / KVで契約状態を紐付けられるようにしました。'}
   ]
 };
 if(location.search.includes('__fanfolio_refresh')){try{const cleanUrl=new URL(location.href);cleanUrl.searchParams.delete('__fanfolio_refresh');history.replaceState(null,'',cleanUrl.pathname+(cleanUrl.searchParams.toString()?`?${cleanUrl.searchParams}`:'')+cleanUrl.hash)}catch{}}
@@ -2487,6 +2479,33 @@ const PREMIUM_PRICES={
   hk:{monthly:'HK$20',annual:'HK$158',annualMonthly:'約HK$13',annualSave:'HK$82'},
   cn:{monthly:'CN¥17',annual:'CN¥138',annualMonthly:'約CN¥12',annualSave:'CN¥66'}
 };
+// Anonymous FanFolio ID used only to associate this device with Paddle Premium status.
+// Existing FanFolio content/data keys are not changed.
+function createFanFolioUserId(){
+  try{
+    if(globalThis.crypto&&typeof crypto.randomUUID==='function')return `ff_${crypto.randomUUID()}`
+  }catch{}
+  const bytes=new Uint8Array(16);
+  try{
+    if(globalThis.crypto&&typeof crypto.getRandomValues==='function'){
+      crypto.getRandomValues(bytes);
+      return `ff_${Array.from(bytes,b=>b.toString(16).padStart(2,'0')).join('')}`
+    }
+  }catch{}
+  return `ff_${Date.now().toString(36)}_${Math.random().toString(36).slice(2,14)}`
+}
+function getFanFolioUserId(){
+  try{
+    const existing=localStorage.getItem(FANFOLIO_USER_ID_KEY);
+    if(existing&&/^ff_[A-Za-z0-9_-]{12,}$/.test(existing))return existing;
+    const created=createFanFolioUserId();
+    localStorage.setItem(FANFOLIO_USER_ID_KEY,created);
+    return created
+  }catch{
+    return createFanFolioUserId()
+  }
+}
+
 // Paddle Sandbox checkout configuration.
 // Client-side tokens are safe for frontend use; never place Paddle API keys in this file.
 const PADDLE_ENVIRONMENT='sandbox';
@@ -2549,8 +2568,12 @@ function openPaddleSandboxCheckout(){
   pendingPaddleBilling=d.billing;
   pendingPaddleHasTrial=useTrial;
   try{
+    const fanfolioUserId=getFanFolioUserId();
     Paddle.Checkout.open({
       items:[{priceId,quantity:1}],
+      customData:{
+        fanfolio_user_id:fanfolioUserId
+      },
       settings:{displayMode:'overlay',variant:'one-page',theme:'light',locale:'ja'}
     });
   }catch(err){
