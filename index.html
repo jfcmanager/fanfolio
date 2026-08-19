@@ -13,7 +13,7 @@
 <link rel="icon" type="image/png" sizes="192x192" href="./icon-192.png" />
 <script src="https://cdn.paddle.com/paddle/v2/paddle.js"></script>
 <meta name="mobile-web-app-capable" content="yes" />
-<title>FanFolio ver. 2026.08.19.03</title>
+<title>FanFolio ver. 2026.08.19.04</title>
 <style>
 :root{
   --bg:#f7f5f0;
@@ -2479,7 +2479,7 @@ const BETA_PLAN_OVERRIDE_KEY='fanfolio_beta_plan_override';
 const FREE_ACCESS_KEY='fanfolio_v1_free_access';
 const THEME_KEY='fanfolio_v1_theme';
 const FANFOLIO_USER_ID_KEY='fanfolio_v1_user_id';
-const APP_VERSION='2026.08.19.03';
+const APP_VERSION='2026.08.19.04';
 const APP_VERSION_DATE='2026.08.19';
 const APP_VERSION_DISPLAY=`ver. ${APP_VERSION}`;
 const RELEASE_NOTES_SEEN_KEY='fanfolio_v1_release_notes_seen';
@@ -2489,7 +2489,7 @@ const CURRENT_RELEASE_NOTES={
     {title:'旧Folioデータ移行の安定性を改善',text:'新しいドメインでも、管理者救援モードからFolio完全バックアップを安全に再移行できるよう改善しました。'}
   ],
   internalItems:[
-    {title:'Legacy migration rescue gate fix',text:'管理者表示中のPhase 1〜6・Dry Run・完全バックアップからPremium契約判定を分離。通常ユーザーには非表示のまま、管理者救援時のみ実行可能。'}
+    {title:'Admin display / Free prompt isolation',text:'管理者表示へ戻る際はFree編集対象モーダルを起動せず、管理者専用のデータ移行・検証UIをそのまま表示。Free／Premiumプレビュー中および通常モードでは管理者専用UIを非表示。'}
   ]
 };
 if(location.search.includes('__fanfolio_refresh')){try{const cleanUrl=new URL(location.href);cleanUrl.searchParams.delete('__fanfolio_refresh');history.replaceState(null,'',cleanUrl.pathname+(cleanUrl.searchParams.toString()?`?${cleanUrl.searchParams}`:'')+cleanUrl.hash)}catch{}}
@@ -2897,11 +2897,11 @@ function freeAccessLabel(kind,item){if(kind==='oshi'){const groupMode=(item.oshi
 function freeAccessSection(kind,section,listEl,countEl){const items=freeItemsFor(kind);const limit=freeLimitFor(kind);const selected=new Set(normalizedFreeIds(kind));section.classList.toggle('free-access-hidden',items.length<=limit);countEl.textContent=`${selected.size} / ${Math.min(limit,items.length)}`;listEl.innerHTML=items.map(item=>{const label=freeAccessLabel(kind,item);return `<label class="free-access-option"><input type="checkbox" data-free-kind="${esc(kind)}" value="${esc(item.id)}" ${selected.has(item.id)?'checked':''}><span><strong>${esc(label.title)}</strong>${label.meta?`<small>${esc(label.meta)}</small>`:''}</span></label>`}).join('')}
 function updateFreeAccessCounts(){[['oshi',freeAccessOshiList,freeAccessOshiCount],['membership',freeAccessMembershipList,freeAccessMembershipCount],['performance',freeAccessPerformanceList,freeAccessPerformanceCount]].forEach(([kind,list,count])=>{const checked=list.querySelectorAll('input:checked').length;count.textContent=`${checked} / ${Math.min(freeLimitFor(kind),freeItemsFor(kind).length)}`})}
 function renderFreeAccessModal(){freeAccessSection('oshi',freeAccessOshiSection,freeAccessOshiList,freeAccessOshiCount);freeAccessSection('membership',freeAccessMembershipSection,freeAccessMembershipList,freeAccessMembershipCount);freeAccessSection('performance',freeAccessPerformanceSection,freeAccessPerformanceList,freeAccessPerformanceCount);updateFreeAccessCounts()}
-function openFreeAccessModal(){if(isPremium()||!hasFreeOverflow())return;renderFreeAccessModal();freeAccessModal.classList.add('open');freeAccessModal.setAttribute('aria-hidden','false');document.body.style.overflow='hidden'}
+function openFreeAccessModal(){if((isBetaAdminEnabled()&&!isBetaUserPreviewActive())||isPremium()||!hasFreeOverflow())return;renderFreeAccessModal();freeAccessModal.classList.add('open');freeAccessModal.setAttribute('aria-hidden','false');document.body.style.overflow='hidden'}
 function closeFreeAccessModal(){freeAccessModal.classList.remove('open');freeAccessModal.setAttribute('aria-hidden','true');document.body.style.overflow=''}
 function saveFreeAccessChoices(){const patch={};for(const [kind,list] of [['oshi',freeAccessOshiList],['membership',freeAccessMembershipList],['performance',freeAccessPerformanceList]]){const items=freeItemsFor(kind),required=Math.min(freeLimitFor(kind),items.length);const ids=[...list.querySelectorAll('input:checked')].map(x=>x.value);if(items.length>freeLimitFor(kind)&&ids.length!==required){showToast(`${kind==='oshi'?'推し':kind==='membership'?'FC・Membership':'公演'}は${required}件選んでください。`);return}patch[freeAccessKeyFor(kind)]=ids}saveFreeAccessState({...patch,prompted:true,initialized:true,lastTier:'free'});closeFreeAccessModal();renderOshi();renderMembershipsIfOpen();renderLottery();renderCalendar();updateFreeAccessButton();showToast('Freeで編集するデータを更新しました。')}
 function renderMembershipsIfOpen(){if(activeMembershipOshiId&&membershipModal.classList.contains('open'))renderMemberships()}
-function syncFreeAccessPlanState(){const tier=getEffectiveTier();const state=getFreeAccessState();if(tier==='premium'){saveFreeAccessState({lastTier:'premium',initialized:true,prompted:false});updateFreeAccessButton();return}const changedFromPremium=state.lastTier==='premium';const firstOverflow=!state.initialized&&hasFreeOverflow();const shouldPrompt=hasFreeOverflow()&&(changedFromPremium||firstOverflow)&&!state.prompted;saveFreeAccessState({lastTier:'free',initialized:true,prompted:shouldPrompt?true:state.prompted});updateFreeAccessButton();if(shouldPrompt)setTimeout(openFreeAccessModal,160)}
+function syncFreeAccessPlanState(){const tier=getEffectiveTier();const state=getFreeAccessState();if(isBetaAdminEnabled()&&!isBetaUserPreviewActive()){closeFreeAccessModal();updateFreeAccessButton();return}if(tier==='premium'){saveFreeAccessState({lastTier:'premium',initialized:true,prompted:false});updateFreeAccessButton();return}const changedFromPremium=state.lastTier==='premium';const firstOverflow=!state.initialized&&hasFreeOverflow();const shouldPrompt=hasFreeOverflow()&&(changedFromPremium||firstOverflow)&&!state.prompted;saveFreeAccessState({lastTier:'free',initialized:true,prompted:shouldPrompt?true:state.prompted});updateFreeAccessButton();if(shouldPrompt)setTimeout(openFreeAccessModal,160)}
 function canAddMore(kind,count){if(isPremium())return true;const limits={oshi:FREE_OSHI_LIMIT,membership:FREE_MEMBERSHIP_LIMIT,performance:FREE_PERFORMANCE_LIMIT};return count<(limits[kind]??Infinity)}
 function planLimitText(kind,count){if(isPremium())return `${count} / 無制限`;const limits={oshi:FREE_OSHI_LIMIT,membership:FREE_MEMBERSHIP_LIMIT,performance:FREE_PERFORMANCE_LIMIT};return `${count} / ${limits[kind]}`}
 function renderBetaAdminPanel(){const enabled=isBetaAdminEnabled(),override=getBetaPlanOverride();renderLegacyMigrationAccess();if(!betaAdminPanel)return;const section=betaAdminPanel.closest('.settings-section');betaAdminPanel.hidden=!enabled;if(section)section.hidden=!enabled;if(betaAdminStatus)betaAdminStatus.textContent=!enabled?'通常モード':override==='premium'?'現在：Premiumとしてテスト中（管理者専用UIは非表示）':override==='free'?'現在：Freeとしてテスト中（管理者専用UIは非表示）':'現在：管理者表示／契約状態どおり';testAsPremiumBtn?.classList.toggle('active-test',enabled&&override==='premium');testAsFreeBtn?.classList.toggle('active-test',enabled&&override==='free');if(resetBetaPreviewBtn)resetBetaPreviewBtn.hidden=!enabled||!override}
