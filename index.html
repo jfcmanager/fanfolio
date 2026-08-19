@@ -13,7 +13,7 @@
 <link rel="icon" type="image/png" sizes="192x192" href="./icon-192.png" />
 <script src="https://cdn.paddle.com/paddle/v2/paddle.js"></script>
 <meta name="mobile-web-app-capable" content="yes" />
-<title>FanFolio ver. 2026.08.19.02</title>
+<title>FanFolio ver. 2026.08.19.03</title>
 <style>
 :root{
   --bg:#f7f5f0;
@@ -1146,7 +1146,7 @@ body{width:100%;overscroll-behavior-x:none}
 }
 
 
-/* FanFolio ver. 2026.08.19.02 — Paddle review policy wording */
+/* FanFolio ver. 2026.08.19.03 — Legacy migration Phase 1 rescue hotfix */
 .membership-win-summary{
   display:flex!important;
   align-items:center!important;
@@ -2479,7 +2479,7 @@ const BETA_PLAN_OVERRIDE_KEY='fanfolio_beta_plan_override';
 const FREE_ACCESS_KEY='fanfolio_v1_free_access';
 const THEME_KEY='fanfolio_v1_theme';
 const FANFOLIO_USER_ID_KEY='fanfolio_v1_user_id';
-const APP_VERSION='2026.08.19.02';
+const APP_VERSION='2026.08.19.03';
 const APP_VERSION_DATE='2026.08.19';
 const APP_VERSION_DISPLAY=`ver. ${APP_VERSION}`;
 const RELEASE_NOTES_SEEN_KEY='fanfolio_v1_release_notes_seen';
@@ -3132,7 +3132,6 @@ async function phase1RecoverPartialState(sourceHash){
 async function handleFolioIdentityImportFile(file){if(!file)return;if(file.size>FOLIO_IDENTITY_IMPORT_MAX_BYTES){showToast('完全バックアップファイルが大きすぎます。');folioIdentityImportInput.value='';return}folioIdentityImportBtn.disabled=true;try{showToast('Phase 1の書き込み前チェックをしています…');const text=await file.text(),payload=validateFolioMigrationBackup(JSON.parse(text)),sourceHash=await migrationSha256(text);const recovery=await phase1RecoverPartialState(sourceHash),plan=await buildFolioIdentityImportPlan(payload,sourceHash);currentFolioIdentityImportPayload=payload;currentFolioIdentityImportSourceHash=sourceHash;renderFolioIdentityImportPlan(plan);if(recovery.removedOrphanLedgers){folioIdentityImportRiskList.insertAdjacentHTML('afterbegin',`<div class="migration-risk-item"><strong>Recovery</strong><span>前回の途中停止で残った移行先なしLedger ${recovery.removedOrphanLedgers}件だけを整理しました。既存データは削除していません。</span></div>`)}showToast(plan.canImport?'Phase 1の移行準備ができました。':'人工確認が必要なため移行を停止しました。')}catch(err){console.error('phase1 import precheck failed',err?.message||err);showToast(err?.message==='not-complete-folio'?'「FanFolio移行用・完全バックアップ」のJSONを選択してください。':'Folio完全バックアップを確認してください。');folioIdentityImportInput.value=''}finally{folioIdentityImportBtn.disabled=false}}
 async function phase1WriteLedger(sourceHash,dataset,sourceId,targetType,targetId,status){const now=new Date().toISOString(),record={id:phase1LedgerId(sourceHash,dataset,sourceId),phase:'identity',sourceApp:'FCfolio',sourceHash,dataset,sourceId,targetType,targetId,status,importedAt:now,appVersion:APP_VERSION};await identityExtPut(IDENTITY_LEDGER_STORE,record);return record}
 async function executeFolioIdentityImport(){if(!requireLegacyMigrationAdmin())return;
-  if(!isPremium()){openPremiumModal();return}
   if(!currentFolioIdentityImportPayload||!currentFolioIdentityImportSourceHash)return;
   confirmFolioIdentityImportBtn.disabled=true;cancelFolioIdentityImportBtn.disabled=true;
   let phase1Stage='precheck';
