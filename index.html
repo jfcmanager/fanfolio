@@ -13,7 +13,7 @@
 <link rel="icon" type="image/png" sizes="192x192" href="./icon-192.png" />
 <script src="https://cdn.paddle.com/paddle/v2/paddle.js"></script>
 <meta name="mobile-web-app-capable" content="yes" />
-<title>FanFolio ver. 2026.08.19.04</title>
+<title>FanFolio ver. 2026.08.19.05</title>
 <style>
 :root{
   --bg:#f7f5f0;
@@ -1146,6 +1146,7 @@ body{width:100%;overscroll-behavior-x:none}
 }
 
 
+/* FanFolio ver. 2026.08.19.05 — Admin migration visibility across Free/Premium preview */
 /* FanFolio ver. 2026.08.19.03 — Legacy migration Phase 1 rescue hotfix */
 .membership-win-summary{
   display:flex!important;
@@ -2479,17 +2480,17 @@ const BETA_PLAN_OVERRIDE_KEY='fanfolio_beta_plan_override';
 const FREE_ACCESS_KEY='fanfolio_v1_free_access';
 const THEME_KEY='fanfolio_v1_theme';
 const FANFOLIO_USER_ID_KEY='fanfolio_v1_user_id';
-const APP_VERSION='2026.08.19.04';
+const APP_VERSION='2026.08.19.05';
 const APP_VERSION_DATE='2026.08.19';
 const APP_VERSION_DISPLAY=`ver. ${APP_VERSION}`;
 const RELEASE_NOTES_SEEN_KEY='fanfolio_v1_release_notes_seen';
 const CURRENT_RELEASE_NOTES={
   version:APP_VERSION,date:APP_VERSION_DATE,
   userItems:[
-    {title:'旧Folioデータ移行の安定性を改善',text:'新しいドメインでも、管理者救援モードからFolio完全バックアップを安全に再移行できるよう改善しました。'}
+    {title:'管理者向けデータ移行ツールを修正',text:'管理者テストモード中は、Free／Premiumの表示確認中でもデータ移行・検証ツールを利用できるよう修正しました。'}
   ],
   internalItems:[
-    {title:'Admin display / Free prompt isolation',text:'管理者表示へ戻る際はFree編集対象モーダルを起動せず、管理者専用のデータ移行・検証UIをそのまま表示。Free／Premiumプレビュー中および通常モードでは管理者専用UIを非表示。'}
+    {title:'Admin migration access persistence',text:'管理者テストモードが有効な間はFree／Premium override中でもLegacy Migration UIと実行権限を維持。通常モードへ退出した時だけ非表示・実行不可にする。'}
   ]
 };
 if(location.search.includes('__fanfolio_refresh')){try{const cleanUrl=new URL(location.href);cleanUrl.searchParams.delete('__fanfolio_refresh');history.replaceState(null,'',cleanUrl.pathname+(cleanUrl.searchParams.toString()?`?${cleanUrl.searchParams}`:'')+cleanUrl.hash)}catch{}}
@@ -2847,8 +2848,8 @@ function hasUsedPremiumTrial(plan=getPlanState()){return Boolean(plan.trialUsed|
 function isBetaAdminEnabled(){try{return localStorage.getItem(BETA_ADMIN_KEY)==='1'}catch{return false}}
 function getBetaPlanOverride(){try{const v=localStorage.getItem(BETA_PLAN_OVERRIDE_KEY)||'';return v==='premium'||v==='free'?v:''}catch{return ''}}
 function isBetaUserPreviewActive(){return isBetaAdminEnabled()&&Boolean(getBetaPlanOverride())}
-function requireLegacyMigrationAdmin(){if(isBetaAdminEnabled()&&!isBetaUserPreviewActive())return true;showToast(isBetaUserPreviewActive()?'Free／Premiumプレビュー中は管理者専用機能を利用できません。管理者表示に戻してください。':'管理者専用機能です。');return false}
-function renderLegacyMigrationAccess(){const visible=isBetaAdminEnabled()&&!isBetaUserPreviewActive();if(legacyMigrationSection)legacyMigrationSection.hidden=!visible;if(!visible&&legacyMigrationDetails)legacyMigrationDetails.open=false}
+function requireLegacyMigrationAdmin(){if(isBetaAdminEnabled())return true;showToast('管理者専用機能です。');return false}
+function renderLegacyMigrationAccess(){const visible=isBetaAdminEnabled();if(legacyMigrationSection)legacyMigrationSection.hidden=!visible;if(!visible&&legacyMigrationDetails)legacyMigrationDetails.open=false}
 function getEffectiveTier(){const override=isBetaAdminEnabled()?getBetaPlanOverride():'';return override||getPlanState().tier}
 function isPremium(){return getEffectiveTier()==='premium'}
 const THEME_PALETTES={
@@ -2904,7 +2905,7 @@ function renderMembershipsIfOpen(){if(activeMembershipOshiId&&membershipModal.cl
 function syncFreeAccessPlanState(){const tier=getEffectiveTier();const state=getFreeAccessState();if(isBetaAdminEnabled()&&!isBetaUserPreviewActive()){closeFreeAccessModal();updateFreeAccessButton();return}if(tier==='premium'){saveFreeAccessState({lastTier:'premium',initialized:true,prompted:false});updateFreeAccessButton();return}const changedFromPremium=state.lastTier==='premium';const firstOverflow=!state.initialized&&hasFreeOverflow();const shouldPrompt=hasFreeOverflow()&&(changedFromPremium||firstOverflow)&&!state.prompted;saveFreeAccessState({lastTier:'free',initialized:true,prompted:shouldPrompt?true:state.prompted});updateFreeAccessButton();if(shouldPrompt)setTimeout(openFreeAccessModal,160)}
 function canAddMore(kind,count){if(isPremium())return true;const limits={oshi:FREE_OSHI_LIMIT,membership:FREE_MEMBERSHIP_LIMIT,performance:FREE_PERFORMANCE_LIMIT};return count<(limits[kind]??Infinity)}
 function planLimitText(kind,count){if(isPremium())return `${count} / 無制限`;const limits={oshi:FREE_OSHI_LIMIT,membership:FREE_MEMBERSHIP_LIMIT,performance:FREE_PERFORMANCE_LIMIT};return `${count} / ${limits[kind]}`}
-function renderBetaAdminPanel(){const enabled=isBetaAdminEnabled(),override=getBetaPlanOverride();renderLegacyMigrationAccess();if(!betaAdminPanel)return;const section=betaAdminPanel.closest('.settings-section');betaAdminPanel.hidden=!enabled;if(section)section.hidden=!enabled;if(betaAdminStatus)betaAdminStatus.textContent=!enabled?'通常モード':override==='premium'?'現在：Premiumとしてテスト中（管理者専用UIは非表示）':override==='free'?'現在：Freeとしてテスト中（管理者専用UIは非表示）':'現在：管理者表示／契約状態どおり';testAsPremiumBtn?.classList.toggle('active-test',enabled&&override==='premium');testAsFreeBtn?.classList.toggle('active-test',enabled&&override==='free');if(resetBetaPreviewBtn)resetBetaPreviewBtn.hidden=!enabled||!override}
+function renderBetaAdminPanel(){const enabled=isBetaAdminEnabled(),override=getBetaPlanOverride();renderLegacyMigrationAccess();if(!betaAdminPanel)return;const section=betaAdminPanel.closest('.settings-section');betaAdminPanel.hidden=!enabled;if(section)section.hidden=!enabled;if(betaAdminStatus)betaAdminStatus.textContent=!enabled?'通常モード':override==='premium'?'現在：Premiumとしてテスト中（管理者機能は利用可能）':override==='free'?'現在：Freeとしてテスト中（管理者機能は利用可能）':'現在：管理者表示／契約状態どおり';testAsPremiumBtn?.classList.toggle('active-test',enabled&&override==='premium');testAsFreeBtn?.classList.toggle('active-test',enabled&&override==='free');if(resetBetaPreviewBtn)resetBetaPreviewBtn.hidden=!enabled||!override}
 function refreshAfterBetaPlanChange(){renderPlanState();renderOshi();refreshOshiHomePanel();renderMembershipsIfOpen();renderLottery();renderCalendar();renderMoney();renderTrades();renderTrips();renderAnnualSummary();if(isPremium())renderAnalysis()}
 function setBetaPlanOverride(tier){if(!isBetaAdminEnabled())return;try{localStorage.setItem(BETA_PLAN_OVERRIDE_KEY,tier)}catch{}refreshAfterBetaPlanChange();showToast(tier==='premium'?'Premiumテストを有効にしました。':'Freeテストに切り替えました。')}
 function addTrialDays(date,days=2){const d=new Date(date);d.setDate(d.getDate()+days);return d}
