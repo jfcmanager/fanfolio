@@ -13,7 +13,7 @@
 <link rel="icon" type="image/png" sizes="192x192" href="./icon-192.png" />
 <script src="https://cdn.paddle.com/paddle/v2/paddle.js"></script>
 <meta name="mobile-web-app-capable" content="yes" />
-<title>FanFolio ver. 2026.08.21.06</title>
+<title>FanFolio ver. 2026.08.21.07</title>
 <style>
 :root{
   --bg:#f7f5f0;
@@ -1204,7 +1204,7 @@ body{width:100%;overscroll-behavior-x:none}
 @media(max-width:390px){.trade-entry-mode-tabs{top:54px}}
 
 /* FanFolio ver. 2026.08.21.05 — seller trade parity / receipt summary */
-/* FanFolio ver. 2026.08.21.06 — seller receipt flow aligned with Folio */
+/* FanFolio ver. 2026.08.21.07 — seller add-trade modal hotfix */
 .trade-seller-fields[hidden]{display:none!important}
 .trade-seller-fields select.form-control{background-color:var(--surface)}
 #tradeSellerTicketTypeOtherGroup[hidden],#tradeSellerTwdFields[hidden],#tradeSellerPaymentFields[hidden],#tradeSellerPartialFields[hidden],#tradeSellerPaymentMethodOther1Group[hidden],#tradeSellerPaymentMethodOther2Group[hidden]{display:none!important}
@@ -2613,17 +2613,17 @@ const BETA_PLAN_OVERRIDE_KEY='fanfolio_beta_plan_override';
 const FREE_ACCESS_KEY='fanfolio_v1_free_access';
 const THEME_KEY='fanfolio_v1_theme';
 const FANFOLIO_USER_ID_KEY='fanfolio_v1_user_id';
-const APP_VERSION='2026.08.21.06';
+const APP_VERSION='2026.08.21.07';
 const APP_VERSION_DATE='2026.08.21';
 const APP_VERSION_DISPLAY=`ver. ${APP_VERSION}`;
 const RELEASE_NOTES_SEEN_KEY='fanfolio_v1_release_notes_seen';
 const CURRENT_RELEASE_NOTES={
   version:APP_VERSION,date:APP_VERSION_DATE,
   userItems:[
-    {title:'売り手の受取入力をFolio仕様に整理',text:'売り手から相手名義メモ・会員番号下3桁を外し、全額／一部の受取フローを売り手専用に整理しました。一部では第1回取引金額、残りの取引金額、受取通貨、参考換算、第1回／残金の受取済みを管理できます。'}
+    {title:'売り手の「＋取引を追加」を修正',text:'売り手タブを選択した状態でも「＋取引を追加」から新規取引画面を正常に開けるよう修正しました。'}
   ],
   internalItems:[
-    {title:'Seller trade parity + receipt dashboard',text:'既存localStorageのTrade本体を維持し、sellerSchemaVersion拡張で公演メタ・取引段階・TWD併記を保存。旧売り手詳細は編集時に読み込み・保持し、ダッシュボードはJPY/TWDを分離集計。'}
+    {title:'Seller new-trade null safety',text:'新規売り手取引では既存itemがないため、受取段階判定をnull-safe化。既存取引の受取済み判定・保存ロジックは維持。'}
   ]
 };
 if(location.search.includes('__fanfolio_refresh')){try{const cleanUrl=new URL(location.href);cleanUrl.searchParams.delete('__fanfolio_refresh');history.replaceState(null,'',cleanUrl.pathname+(cleanUrl.searchParams.toString()?`?${cleanUrl.searchParams}`:'')+cleanUrl.hash)}catch{}}
@@ -4558,7 +4558,7 @@ function populateTradePerformance(selected=''){const items=getPerformances().sli
 function syncTradePartialFields(){const partial=tradePaymentMode.value==='partial';tradePartialFields.hidden=!partial;if(!partial){tradeFirstAmount.value='';tradeFirstDate.value='';tradeSecondAmount.value='';tradeSecondDate.value='';if(tradePaymentMethod2)tradePaymentMethod2.value='';if(tradeFee2)tradeFee2.value=''}}
 function summarizeTradeCurrency(items){const map={};items.forEach(x=>{const c=x.currency||'JPY';map[c]=(map[c]||0)+(Number(x.amount)||0)});return map}
 function currencySummaryHtml(map){const entries=Object.entries(map);return entries.length?entries.map(([c,v])=>`<div class="trade-currency-line"><span>${esc(c)}</span><strong>${esc(formatTradeMoney(v,c))}</strong></div>`).join(''):'<div class="trade-currency-line"><span>—</span><strong>0</strong></div>'}
-function tradeStageState(item,d,index){const legacy=d?.legacySource||{},key=index===1?'completed1':'completed2';if(typeof d?.[key]==='boolean')return d[key];if(typeof legacy?.[key]==='boolean')return legacy[key];if(index===1){if(item.paymentMode==='partial')return item.paymentStatus==='partial'||item.paymentStatus==='paid';return item.paymentStatus==='paid'}return item.paymentMode==='partial'&&item.paymentStatus==='paid'}
+function tradeStageState(item,d,index){const core=item||{},legacy=d?.legacySource||{},key=index===1?'completed1':'completed2';if(typeof d?.[key]==='boolean')return d[key];if(typeof legacy?.[key]==='boolean')return legacy[key];if(index===1){if(core.paymentMode==='partial')return core.paymentStatus==='partial'||core.paymentStatus==='paid';return core.paymentStatus==='paid'}return core.paymentMode==='partial'&&core.paymentStatus==='paid'}
 function tradeRichContext(item){const d=tradeDetailDisplayCache.get(item.id)||{},legacy=d.legacySource||{},perfs=getPerformances(),tours=getTours(),oshis=getOshi(),p=perfs.find(x=>x.id===item.performanceId),t=p?tours.find(x=>x.id===p.tourId):null,o=p?oshis.find(x=>x.id===p.oshiId):null;const group=String(d.sourceFcName||t?.targetGroup||o?.group||o?.name||legacy.fcName||'').trim(),tour=String(d.sourceTourName||t?.name||legacy.tourName||'').trim(),venue=String(d.sourceVenue||p?.venue||legacy.venue||'').trim(),date=String(d.sourcePerformanceDate||p?.date||legacy.performanceDate||item.date||'').trim(),time=String(d.sourcePerformanceTime||sessionLabel(p?.session)||legacy.performance||'').trim(),ticketType=String(d.ticketType||legacy.ticketType||legacy.ticketTypeSelect||'').trim(),ticketCount=String(d.ticketCount||legacy.ticketCount||legacy.ticketCountSelect||'').trim(),ticketSource=String(d.ticketSource||legacy.ticketSource||'').trim(),lineName=String(d.lineName||legacy.lineName||'').trim(),handover=[d.handoverPlaceType,d.handoverPlaceDetail].map(v=>String(v||'').trim()).filter(Boolean).join('・'),handoverDate=String(d.handoverDate||legacy.handoverDate||'').trim(),memberLast3=String(d.memberNumberLast3||legacy.memberNumberLast3||'').trim(),memo=String(d.counterpartMemo||item.memo||'').trim();const receiveCurrency=String(d.receiveCurrency||d.altCurrency||item.currency||'JPY').trim();return{d,legacy,p,t,o,group,tour,venue,date,time,ticketType,ticketCount,ticketSource,lineName,handover,handoverDate,memberLast3,memo,receiveCurrency}}
 function tradeRichLine(label,value,em=false){if(value===undefined||value===null||String(value).trim()==='')return'';return `<div class="trade-rich-line"><div class="trade-rich-line-label">${esc(label)}</div><div class="trade-rich-line-value${em?' em':''}">${value}</div></div>`}
 function tradeStageSummary(item,c,index){const d=c.d,legacy=c.legacy,isPartial=item.paymentMode==='partial',amount=index===1?(isPartial?Number(item.firstAmount||0):Number(item.amount||0)):Number(item.secondAmount||0),date=index===1?(isPartial?(item.firstDate||legacy.transactionDate1||''):(item.date||legacy.transactionDate1||'')):(item.secondDate||legacy.transactionDate2||''),rawMethod=index===1?String(d.paymentMethod1||legacy.method1||item.method||'').trim():String(d.paymentMethod2||legacy.method2||'').trim(),other=index===1?String(d.paymentMethodOther1||legacy.method1Other||'').trim():String(d.paymentMethodOther2||legacy.method2Other||'').trim(),method=rawMethod==='その他'&&other?other:rawMethod;return [method,amount>0?formatTradeMoney(amount,item.currency):'',date?formatDateJP(date):''].filter(Boolean).join(' ・ ')}
