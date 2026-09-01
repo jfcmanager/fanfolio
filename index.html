@@ -13,7 +13,7 @@
 <link rel="icon" type="image/png" sizes="192x192" href="./icon-192.png" />
 <script src="https://cdn.paddle.com/paddle/v2/paddle.js"></script>
 <meta name="mobile-web-app-capable" content="yes" />
-<title>FanFolio ver. 2026.08.26.01</title>
+<title>FanFolio ver. 2026.09.02.01</title>
 <style>
 :root{
   --bg:#f7f5f0;
@@ -2274,7 +2274,7 @@ body{width:100%;overscroll-behavior-x:none}
       <div>✓ 年間推し活レポート・バックアップ・セキュリティ</div>
     </div>
     <div class="premium-free-note">Freeは永久無料・広告なし。Premiumをやめても既存データは削除されません。Early Access価格は正式公開時に変更する場合があります。</div>
-    <div class="form-actions premium-actions"><button class="ghost-btn" id="closePremiumBtn" type="button">閉じる</button><button class="solid-btn" id="startPremiumBtn" type="button">テスト決済へ進む</button></div>
+    <div class="form-actions premium-actions"><button class="ghost-btn" id="closePremiumBtn" type="button">閉じる</button><button class="solid-btn" id="startPremiumBtn" type="button">Paddle決済へ進む</button></div>
     <div class="modal-note" id="premiumPaymentModeNote" style="text-align:center;margin-top:10px">決済方法を確認しています。</div>
   </div>
 </div>
@@ -2285,7 +2285,7 @@ body{width:100%;overscroll-behavior-x:none}
     <div class="checkout-test-badge">SANDBOX</div>
     <div class="modal-title" id="checkoutModalTitle">Premium テスト決済</div>
     <div class="checkout-summary" id="checkoutSummary"></div>
-    <div class="checkout-test-admin-note">管理者テストモード専用です。旧ローカルSandbox画面です。Paddle Sandbox決済の確認にはPremium料金画面のボタンをご利用ください。</div>
+    <div class="checkout-test-admin-note">管理者テストモード専用です。旧ローカルSandbox画面です。本番購入はPremium料金画面からPaddle Checkoutを開いてください。</div>
     <div class="checkout-method"><strong>支払い方法（テスト）</strong><div class="checkout-method-row"><span class="checkout-card-icon">CARD</span><div><b>テストカード</b><small>実在するカード情報は入力しないでください</small></div></div>
       <div class="sandbox-card-form">
         <div class="sandbox-card-field"><label for="sandboxCardName">カード名義</label><input class="form-control" id="sandboxCardName" autocomplete="off" placeholder="MEI TEST"></div>
@@ -2306,7 +2306,7 @@ body{width:100%;overscroll-behavior-x:none}
     <div class="modal-handle"></div>
     <div class="modal-title" id="subscriptionModalTitle">Premiumプラン管理</div>
     <div class="subscription-card" id="subscriptionSummary"></div>
-    <div class="subscription-info">Premiumを解約しても、更新日まではPremium機能を利用できます。Freeへ戻っても既存データは削除されません。</div>
+    <div class="subscription-info">Premiumの解約・更新管理はPaddleのCustomer Portalで行います。解約後もPaddleに表示される利用終了日まではPremium機能を利用できます。Freeへ戻っても既存データは削除されません。</div>
     <button class="ghost-btn wide" id="cancelAtPeriodBtn" type="button">次回更新で解約する</button>
     <button class="solid-btn wide" id="resumeSubscriptionBtn" type="button" hidden>解約予約を取り消す</button>
     <button class="danger-btn wide" id="sandboxEndNowBtn" type="button">テスト：今すぐFreeへ戻す</button>
@@ -2649,17 +2649,18 @@ const BETA_PLAN_OVERRIDE_KEY='fanfolio_beta_plan_override';
 const FREE_ACCESS_KEY='fanfolio_v1_free_access';
 const THEME_KEY='fanfolio_v1_theme';
 const FANFOLIO_USER_ID_KEY='fanfolio_v1_user_id';
-const APP_VERSION='2026.08.26.01';
-const APP_VERSION_DATE='2026.08.26';
+const APP_VERSION='2026.09.02.01';
+const APP_VERSION_DATE='2026.09.02';
 const APP_VERSION_DISPLAY=`ver. ${APP_VERSION}`;
 const RELEASE_NOTES_SEEN_KEY='fanfolio_v1_release_notes_seen';
 const CURRENT_RELEASE_NOTES={
   version:APP_VERSION,date:APP_VERSION_DATE,
   userItems:[
-    {title:'名義カードに更新月を表示',text:'名義管理の折りたたみカードに「9月更新」のような更新月ラベルを追加し、一覧のまま更新時期を確認できるようにしました。'}
+    {title:'Premiumの本番決済を開始',text:'Paddle Live Checkoutへ切り替え、初回5日間無料体験付きの月額・年額プランを正式に購入できるようにしました。'},
+    {title:'契約管理をPaddleへ接続',text:'解約・更新管理はPaddle Customer Portalから安全に行えるようにしました。'}
   ],
   internalItems:[
-    {title:'Membership renewal month badge',text:'FC／Membershipカードに更新通知月を表示。更新通知日を優先し、未設定時は有効期限から更新月を補完。'}
+    {title:'Paddle Live integration',text:'Live client-side token、Live Price ID、Customer Portalを設定。Sandboxの管理者テスト機能は維持。'}
   ]
 };
 if(location.search.includes('__fanfolio_refresh')){try{const cleanUrl=new URL(location.href);cleanUrl.searchParams.delete('__fanfolio_refresh');history.replaceState(null,'',cleanUrl.pathname+(cleanUrl.searchParams.toString()?`?${cleanUrl.searchParams}`:'')+cleanUrl.hash)}catch{}}
@@ -2783,32 +2784,32 @@ async function syncRemotePremiumState({silent=true}={}){
   }
 }
 
-// Paddle Sandbox checkout configuration.
+// Paddle Live checkout configuration.
 // Client-side tokens are safe for frontend use; never place Paddle API keys in this file.
-const PADDLE_ENVIRONMENT='sandbox';
-const PADDLE_CLIENT_TOKEN='test_824892a02578c6e0070e4dcc106';
+const PADDLE_ENVIRONMENT='live';
+const PADDLE_CLIENT_TOKEN='live_5f604ddddf8d35feb0c028f74e3';
 const PADDLE_PRICE_IDS={
   trial:{
-    monthly:'pri_01m0821b3s2ezergv5w1tg25nr',
-    annual:'pri_01m0829xpcsjrtw2vt3ma1pc11'
+    monthly:'pri_01m08nx6scyz3kegqrtmxg2an7',
+    annual:'pri_01m08p3pgtpfcpx7cvjg0f4stz'
   },
   noTrial:{
-    monthly:'pri_01m08cnw7z1kg5yp8ba3d3tmjt',
-    annual:'pri_01m08ct84jbxh7cjb67b7r2t0z'
+    monthly:'pri_01m08nsy85gqk21nc3tbnh5rg7',
+    annual:'pri_01m08p1d1mg74tsb0e4jamdaky'
   }
 };
+const PADDLE_CUSTOMER_PORTAL_URL='https://customer-portal.paddle.com/cpl_01m07w4kimdets5bb721gk4922';
 const PADDLE_TRIAL_DAYS=5;
 let paddleReady=false;
 let pendingPaddleBilling='';
 let pendingPaddleHasTrial=false;
 function isAdminSandboxMode(){return isBetaAdminEnabled()}
-function initPaddleSandbox(){
+function initPaddleLive(){
   if(paddleReady)return true;
   if(!window.Paddle){console.error('Paddle.js is not loaded.');return false}
-  if(PADDLE_ENVIRONMENT!=='sandbox'){console.error('FanFolio Paddle environment must be sandbox in this build.');return false}
-  if(!PADDLE_CLIENT_TOKEN||!PADDLE_CLIENT_TOKEN.startsWith('test_')){console.error('Valid Paddle Sandbox client-side token is missing.');return false}
+  if(PADDLE_ENVIRONMENT!=='live'){console.error('FanFolio Paddle environment must be live in this build.');return false}
+  if(!PADDLE_CLIENT_TOKEN||!PADDLE_CLIENT_TOKEN.startsWith('live_')){console.error('Valid Paddle Live client-side token is missing.');return false}
   try{
-    Paddle.Environment.set('sandbox');
     Paddle.Initialize({
       token:PADDLE_CLIENT_TOKEN,
       checkout:{settings:{displayMode:'overlay',variant:'one-page',theme:'light',locale:'ja'}},
@@ -2826,26 +2827,26 @@ function handlePaddleCheckoutEvent(event){
     const d=selectedPlanDetails();
     const now=new Date(),previous=getPlanState();
     const trialEnd=useTrial?addTrialDays(now,PADDLE_TRIAL_DAYS):null;
-    savePlanState({tier:'premium',billing,region:d.region,founding:billing==='annual',foundingBadge:Boolean(previous.foundingBadge||billing==='annual'),renewalDate:addPlanPeriod(trialEnd||now,billing),status:useTrial?'on_trial':'active',cancelAtPeriodEnd:false,startedAt:now.toISOString(),trialStartedAt:useTrial?now.toISOString():'',trialEndsAt:useTrial?trialEnd.toISOString():'',trialUsed:Boolean(previous.trialUsed||useTrial||hasUsedPremiumTrial(previous)),subscriptionSource:'paddle-sandbox'});
+    savePlanState({tier:'premium',billing,region:d.region,founding:billing==='annual',foundingBadge:Boolean(previous.foundingBadge||billing==='annual'),renewalDate:addPlanPeriod(trialEnd||now,billing),status:useTrial?'on_trial':'active',cancelAtPeriodEnd:false,startedAt:now.toISOString(),trialStartedAt:useTrial?now.toISOString():'',trialEndsAt:useTrial?trialEnd.toISOString():'',trialUsed:Boolean(previous.trialUsed||useTrial||hasUsedPremiumTrial(previous)),subscriptionSource:'paddle-live'});
     try{localStorage.removeItem(BETA_PLAN_OVERRIDE_KEY)}catch{}
     pendingPaddleBilling='';
     pendingPaddleHasTrial=false;
     closePremiumModal();
     syncFreeAccessPlanState();
     refreshAfterBetaPlanChange();
-    showToast(useTrial?'Paddle Sandbox：Premiumの5日間無料体験を開始しました。':'Paddle Sandbox：Premiumを開始しました。');
+    showToast(useTrial?'Premiumの5日間無料体験を開始しました。':'FanFolio Premiumを開始しました。');
     // Webhook/KV反映には少し時間がかかる場合があるため、数回だけ静かに再確認。
     setTimeout(()=>void syncRemotePremiumState({silent:true}),2500);
     setTimeout(()=>void syncRemotePremiumState({silent:true}),7000);
     setTimeout(()=>void syncRemotePremiumState({silent:true}),15000);
   }
 }
-function openPaddleSandboxCheckout(){
+function openPaddleLiveCheckout(){
   const d=selectedPlanDetails();
   const useTrial=!hasUsedPremiumTrial();
   const priceId=(useTrial?PADDLE_PRICE_IDS.trial:PADDLE_PRICE_IDS.noTrial)[d.billing];
   if(!priceId){showToast('PaddleのPrice IDが設定されていません。');return}
-  if(!initPaddleSandbox()){showToast('Paddle Sandboxを初期化できませんでした。');return}
+  if(!initPaddleLive()){showToast('Paddleの決済画面を初期化できませんでした。');return}
   pendingPaddleBilling=d.billing;
   pendingPaddleHasTrial=useTrial;
   try{
@@ -2853,7 +2854,9 @@ function openPaddleSandboxCheckout(){
     Paddle.Checkout.open({
       items:[{priceId,quantity:1}],
       customData:{
-        fanfolio_user_id:fanfolioUserId
+        fanfolio_user_id:fanfolioUserId,
+        fanfolio_billing:d.billing,
+        fanfolio_region:d.region
       },
       settings:{displayMode:'overlay',variant:'one-page',theme:'light',locale:'ja'}
     });
@@ -2861,8 +2864,12 @@ function openPaddleSandboxCheckout(){
     pendingPaddleBilling='';
     pendingPaddleHasTrial=false;
     console.error('Paddle checkout open failed',err);
-    showToast('Paddle Sandboxの決済画面を開けませんでした。');
+    showToast('Paddleの決済画面を開けませんでした。');
   }
+}
+function openPaddleCustomerPortal(){
+  try{window.open(PADDLE_CUSTOMER_PORTAL_URL,'_blank','noopener,noreferrer')}
+  catch{location.href=PADDLE_CUSTOMER_PORTAL_URL}
 }
 
 const oshiList=document.getElementById('oshiList');
@@ -3132,7 +3139,7 @@ function renderPlanState(){
   fitPlanFootLines();
 }
 function renderPremiumPrices(){const key=premiumRegion.value in PREMIUM_PRICES?premiumRegion.value:'jp';const p=PREMIUM_PRICES[key];monthlyPrice.textContent=p.monthly;annualPrice.textContent=p.annual;annualMonthlyNote.textContent=`月額換算 ${p.annualMonthly}`;if(annualSaveNote)annualSaveNote.textContent=`年間 ${p.annualSave} おトク`}
-function renderPremiumChoice(){document.querySelectorAll('[data-plan-choice]').forEach(btn=>{const active=btn.dataset.planChoice===selectedPremiumChoice;btn.classList.toggle('selected',active);btn.setAttribute('aria-pressed',active?'true':'false')});const trialUsed=hasUsedPremiumTrial();if(startPremiumBtn){startPremiumBtn.disabled=false;startPremiumBtn.dataset.checkoutMode='paddle-sandbox';startPremiumBtn.textContent=trialUsed?(selectedPremiumChoice==='monthly'?'月額プランに加入':'年額プランに加入'):(selectedPremiumChoice==='monthly'?'月額プランを5日間無料で試す':'年額プランを5日間無料で試す')}if(premiumPaymentModeNote){premiumPaymentModeNote.dataset.checkoutMode='paddle-sandbox';premiumPaymentModeNote.textContent=trialUsed?'5日間無料体験は利用済みです。Paddle Sandboxで選択プランのテスト決済を開きます。':'Paddle Sandboxの安全なテスト決済を開きます。実際の請求は発生しません。'}}
+function renderPremiumChoice(){document.querySelectorAll('[data-plan-choice]').forEach(btn=>{const active=btn.dataset.planChoice===selectedPremiumChoice;btn.classList.toggle('selected',active);btn.setAttribute('aria-pressed',active?'true':'false')});const trialUsed=hasUsedPremiumTrial();if(startPremiumBtn){startPremiumBtn.disabled=false;startPremiumBtn.dataset.checkoutMode='paddle-live';startPremiumBtn.textContent=trialUsed?(selectedPremiumChoice==='monthly'?'月額プランに加入':'年額プランに加入'):(selectedPremiumChoice==='monthly'?'月額プランを5日間無料で試す':'年額プランを5日間無料で試す')}if(premiumPaymentModeNote){premiumPaymentModeNote.dataset.checkoutMode='paddle-live';premiumPaymentModeNote.textContent=trialUsed?'5日間無料体験は利用済みです。Paddleの安全な決済画面で選択プランを購入します。':'初回5日間は無料です。無料体験終了後は、選択したプランで自動更新されます。'}}
 function openPremiumModal(){const plan=getPlanState();premiumRegion.value=plan.region in PREMIUM_PRICES?plan.region:'jp';selectedPremiumChoice=plan.tier==='premium'&&plan.billing==='monthly'?'monthly':'annual';renderPremiumPrices();renderPremiumChoice();premiumModal.classList.add('open');premiumModal.setAttribute('aria-hidden','false');document.body.style.overflow='hidden'}
 function closePremiumModal(){premiumModal.classList.remove('open');premiumModal.setAttribute('aria-hidden','true');document.body.style.overflow=''}
 function addPlanPeriod(date,billing){const d=new Date(date);if(billing==='monthly')d.setMonth(d.getMonth()+1);else d.setFullYear(d.getFullYear()+1);return dateKeyFromDate(d)}
@@ -3145,16 +3152,16 @@ function syncSandboxCheckoutButton(){if(!completeCheckoutBtn)return;completeChec
 function resetSandboxCardForm(){if(sandboxCardName)sandboxCardName.value='';if(sandboxCardNumber)sandboxCardNumber.value='';if(sandboxCardExpiry)sandboxCardExpiry.value='';if(sandboxCardCvc)sandboxCardCvc.value='';if(sandboxCardError)sandboxCardError.textContent=''}
 function fillSandboxTestCard(){if(sandboxCardName)sandboxCardName.value='MEI TEST';if(sandboxCardNumber)sandboxCardNumber.value='4242 4242 4242 4242';if(sandboxCardExpiry)sandboxCardExpiry.value='12/35';if(sandboxCardCvc)sandboxCardCvc.value='123';syncSandboxCheckoutButton()}
 function openSandboxCheckoutModal(force=false){if(!force&&!isAdminSandboxMode()){showToast('Sandbox決済は管理者テストモード専用です。');return}const d=selectedPlanDetails(),now=new Date(),trialEnd=addTrialDays(now,5);setOverlayOpen(premiumModal,false,true);if(checkoutConfirm)checkoutConfirm.checked=false;resetSandboxCardForm();if(completeCheckoutBtn)completeCheckoutBtn.disabled=true;const title=document.getElementById('checkoutModalTitle');if(title)title.textContent='Premium 5日間無料体験（Sandbox）';checkoutSummary.innerHTML=`<div class="checkout-summary-row"><span>プラン</span><strong>${esc(d.label)}</strong></div><div class="checkout-summary-row"><span>今日</span><strong>¥0</strong></div><div class="checkout-summary-row"><span>無料体験終了</span><strong>${esc(formatDateJP(trialEnd))}</strong></div><div class="checkout-summary-row"><span>体験終了後</span><strong>${esc(d.price)}で自動更新（テスト）</strong></div>${d.foundingBadge?'<div class="checkout-summary-row"><span>特典</span><strong>Founding Member Badge</strong></div>':''}`;if(completeCheckoutBtn)completeCheckoutBtn.textContent='テストカードで5日間無料体験を開始';setOverlayOpen(checkoutModal,true);requestAnimationFrame(()=>{checkoutModal.scrollTop=0;checkoutModal.querySelector('.modal-sheet')?.scrollTo?.(0,0)})}
-function openLiveCheckout(){openPaddleSandboxCheckout()}
-function startPremiumTrialFlow(e){e?.preventDefault?.();e?.stopPropagation?.();openPaddleSandboxCheckout()}
+function openLiveCheckout(){openPaddleLiveCheckout()}
+function startPremiumTrialFlow(e){e?.preventDefault?.();e?.stopPropagation?.();openPaddleLiveCheckout()}
 function closeCheckoutModal(){checkoutModal.classList.remove('open');checkoutModal.setAttribute('aria-hidden','true');document.body.style.overflow=''}
 function completeSandboxCheckout(){if(!isAdminSandboxMode()){showToast('管理者表示でのみSandbox決済を実行できます。');return}if(!checkoutConfirm?.checked||!sandboxCardIsValid()){syncSandboxCheckoutButton();return}const d=selectedPlanDetails(),now=new Date(),trialEnd=addTrialDays(now,5),previous=getPlanState();savePlanState({tier:'premium',billing:d.billing,region:d.region,founding:d.founding,foundingBadge:Boolean(previous.foundingBadge||d.foundingBadge),renewalDate:addPlanPeriod(trialEnd,d.billing),status:'on_trial',cancelAtPeriodEnd:false,startedAt:now.toISOString(),trialStartedAt:now.toISOString(),trialEndsAt:trialEnd.toISOString(),trialUsed:true,subscriptionSource:'sandbox'});try{localStorage.removeItem(BETA_PLAN_OVERRIDE_KEY)}catch{}closeCheckoutModal();syncFreeAccessPlanState();refreshAfterBetaPlanChange();showToast('Sandbox：Premiumの5日間無料体験を開始しました。')}
 function planPriceLabel(plan){const p=PREMIUM_PRICES[plan.region]||PREMIUM_PRICES.jp;return plan.billing==='monthly'?p.monthly:p.annual}
-function renderSubscriptionManager(){const plan=getPlanState();if(plan.tier!=='premium'){closeSubscriptionModal();return}const trial=isTrialPlan(plan),baseLabel=plan.billing==='monthly'?'月額プラン':'年額プラン',label=plan.foundingBadge?`${baseLabel} ・ Founding Member`:baseLabel;const status=trial?(plan.cancelAtPeriodEnd?'無料体験・終了予約中':'無料体験中'):(plan.cancelAtPeriodEnd?'解約予約中':'契約中');subscriptionSummary.innerHTML=`<div class="subscription-plan-name">FanFolio Premium</div><div class="subscription-plan-meta">${esc(label)} ・ ${trial?'5日間無料':esc(planPriceLabel(plan))}<br>${trial?(plan.cancelAtPeriodEnd?`無料体験終了 ${esc(trialEndLabel(plan))}<br>${esc(trialEndLabel(plan))}にFreeプランへ移行`:`無料体験終了 ${esc(trialEndLabel(plan))}<br>終了後 ${esc(planPriceLabel(plan))}で自動更新`):plan.renewalDate?`${plan.cancelAtPeriodEnd?'利用終了予定':'次回更新日'} ${esc(formatDateJP(plan.renewalDate))}`:'更新日未設定'}</div><span class="subscription-status">${status}</span>`;cancelAtPeriodBtn.hidden=plan.cancelAtPeriodEnd;resumeSubscriptionBtn.hidden=!plan.cancelAtPeriodEnd;if(cancelAtPeriodBtn)cancelAtPeriodBtn.textContent=trial?'無料体験をキャンセルする':'次回更新で解約する';if(resumeSubscriptionBtn)resumeSubscriptionBtn.textContent=trial?'無料体験のキャンセルを取り消す':'解約予約を取り消す'}
+function renderSubscriptionManager(){const plan=getPlanState();if(plan.tier!=='premium'){closeSubscriptionModal();return}const trial=isTrialPlan(plan),baseLabel=plan.billing==='monthly'?'月額プラン':'年額プラン',label=plan.foundingBadge?`${baseLabel} ・ Founding Member`:baseLabel;const status=trial?(plan.cancelAtPeriodEnd?'無料体験・終了予約中':'無料体験中'):(plan.cancelAtPeriodEnd?'解約予約中':'契約中');subscriptionSummary.innerHTML=`<div class="subscription-plan-name">FanFolio Premium</div><div class="subscription-plan-meta">${esc(label)} ・ ${trial?'5日間無料':esc(planPriceLabel(plan))}<br>${trial?(plan.cancelAtPeriodEnd?`無料体験終了 ${esc(trialEndLabel(plan))}<br>${esc(trialEndLabel(plan))}にFreeプランへ移行`:`無料体験終了 ${esc(trialEndLabel(plan))}<br>終了後 ${esc(planPriceLabel(plan))}で自動更新`):plan.renewalDate?`${plan.cancelAtPeriodEnd?'利用終了予定':'次回更新日'} ${esc(formatDateJP(plan.renewalDate))}`:'更新日未設定'}</div><span class="subscription-status">${status}</span>`;const liveSource=['paddle-live','paddle-worker'].includes(plan.subscriptionSource);if(liveSource){cancelAtPeriodBtn.hidden=false;resumeSubscriptionBtn.hidden=true;if(cancelAtPeriodBtn)cancelAtPeriodBtn.textContent='Paddleで契約を管理';}else{cancelAtPeriodBtn.hidden=plan.cancelAtPeriodEnd;resumeSubscriptionBtn.hidden=!plan.cancelAtPeriodEnd;if(cancelAtPeriodBtn)cancelAtPeriodBtn.textContent=trial?'無料体験をキャンセルする':'次回更新で解約する';if(resumeSubscriptionBtn)resumeSubscriptionBtn.textContent=trial?'無料体験のキャンセルを取り消す':'解約予約を取り消す'}}
 function openSubscriptionModal(){syncSandboxTrialState();renderSubscriptionManager();subscriptionModal.classList.add('open');subscriptionModal.setAttribute('aria-hidden','false');document.body.style.overflow='hidden'}
 function closeSubscriptionModal(){subscriptionModal.classList.remove('open');subscriptionModal.setAttribute('aria-hidden','true');document.body.style.overflow=''}
-function cancelAtPeriodEnd(){const plan=getPlanState();if(plan.tier!=='premium')return;const trial=isTrialPlan(plan);savePlanState({cancelAtPeriodEnd:true,status:trial?'on_trial':'active'});renderSubscriptionManager();renderPlanState();showToast(trial?'無料体験終了時にFreeへ戻る設定にしました。初回料金はかかりません。':'次回更新でFreeへ戻る設定にしました。')}
-function resumeSubscription(){const plan=getPlanState();if(plan.tier!=='premium')return;const trial=isTrialPlan(plan);savePlanState({cancelAtPeriodEnd:false,status:trial?'on_trial':'active'});renderSubscriptionManager();renderPlanState();showToast(trial?'無料体験後の自動更新を再開しました。':'Premiumの継続を再開しました。')}
+function cancelAtPeriodEnd(){const plan=getPlanState();if(plan.tier!=='premium')return;if(['paddle-live','paddle-worker'].includes(plan.subscriptionSource)){openPaddleCustomerPortal();return}const trial=isTrialPlan(plan);savePlanState({cancelAtPeriodEnd:true,status:trial?'on_trial':'active'});renderSubscriptionManager();renderPlanState();showToast(trial?'無料体験終了時にFreeへ戻る設定にしました。初回料金はかかりません。':'次回更新でFreeへ戻る設定にしました。')}
+function resumeSubscription(){const plan=getPlanState();if(plan.tier!=='premium')return;if(['paddle-live','paddle-worker'].includes(plan.subscriptionSource)){openPaddleCustomerPortal();return}const trial=isTrialPlan(plan);savePlanState({cancelAtPeriodEnd:false,status:trial?'on_trial':'active'});renderSubscriptionManager();renderPlanState();showToast(trial?'無料体験後の自動更新を再開しました。':'Premiumの継続を再開しました。')}
 function sandboxEndSubscriptionNow(){const plan=getPlanState();if(plan.tier!=='premium')return;if(!confirm('Sandboxテストとして今すぐFreeへ戻しますか？データは削除されません。'))return;savePlanState({tier:'free',billing:'',founding:false,renewalDate:'',status:'free',cancelAtPeriodEnd:false,subscriptionSource:'sandbox',trialStartedAt:'',trialEndsAt:'',trialUsed:true});closeSubscriptionModal();syncFreeAccessPlanState();refreshAfterBetaPlanChange();showToast('Freeへ戻しました。既存データは保持されています。')}
 
 function getSecurityState(){
