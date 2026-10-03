@@ -13,7 +13,7 @@
 <link rel="icon" type="image/png" sizes="192x192" href="./icon-192.png" />
 <script src="https://cdn.paddle.com/paddle/v2/paddle.js"></script>
 <meta name="mobile-web-app-capable" content="yes" />
-<title>FanFolio ver. 2026.10.01.01</title>
+<title>FanFolio ver. 2026.10.03.01</title>
 <style>
 :root{
   --bg:#f7f5f0;
@@ -423,14 +423,14 @@ input.form-control:not([type="hidden"]),select.form-control{height:52px;min-heig
 .countdown-title{font-size:15px;font-weight:750;line-height:1.4}.countdown-meta{font-size:12px;color:var(--muted);margin-top:3px;line-height:1.45}
 .upcoming-item{width:100%;border:0;background:transparent;padding:13px 0;border-bottom:1px solid var(--line);display:flex;align-items:center;gap:12px;text-align:left}
 .upcoming-item:last-child{border-bottom:0;padding-bottom:0}.upcoming-item:first-child{padding-top:0}
-.upcoming-date{width:48px;flex:none;text-align:center;color:var(--accent-strong)}
-.upcoming-date strong{display:block;font-size:17px;line-height:1}.upcoming-date span{display:block;font-size:10.5px;margin-top:4px;color:var(--muted)}
+.upcoming-date{width:54px;min-width:54px;flex:none;text-align:center;color:var(--accent-strong)}
+.upcoming-date strong{display:block;font-size:17px;line-height:1;white-space:nowrap;word-break:keep-all;font-variant-numeric:tabular-nums}.upcoming-date span{display:block;font-size:10.5px;margin-top:4px;color:var(--muted)}
 .upcoming-info{min-width:0;flex:1}.upcoming-title{font-size:14px;font-weight:700;line-height:1.4}.upcoming-meta{font-size:11.5px;color:var(--muted);margin-top:3px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 .event-type-dot{width:9px;height:9px;border-radius:50%;flex:none}.event-type-dot.performance{background:#bd8559}.event-type-dot.membership{background:#bba05f}.event-type-dot.birthday{background:#b48d91}
 .date-event-list{display:grid;gap:9px;margin-top:12px}.date-event-card{width:100%;border:1px solid var(--line);background:var(--surface-soft);border-radius:14px;padding:13px 14px;text-align:left;display:flex;align-items:flex-start;gap:10px}
 .date-event-card .event-body{min-width:0;flex:1}.date-event-card .event-title{font-size:14px;font-weight:750}.date-event-card .event-meta{font-size:11.5px;color:var(--muted);margin-top:4px;line-height:1.45}
 .date-event-card .chev{font-size:20px}
-@media(max-width:520px){.countdown-number{font-size:25px}.countdown-prefix{font-size:15px}.countdown-main{padding:14px}.upcoming-date{width:44px}.form-inline{grid-template-columns:1fr}.photo-row{align-items:flex-start;flex-wrap:wrap}.photo-row>div:last-child{min-width:0;flex:1}.form-actions{grid-template-columns:1fr}}
+@media(max-width:520px){.countdown-number{font-size:25px}.countdown-prefix{font-size:15px}.countdown-main{padding:14px}.upcoming-date{width:54px;min-width:54px}.form-inline{grid-template-columns:1fr}.photo-row{align-items:flex-start;flex-wrap:wrap}.photo-row>div:last-child{min-width:0;flex:1}.form-actions{grid-template-columns:1fr}}
 
 /* FanFolio v0.8.0 — Memories Free CRUD */
 .money-period{display:flex;align-items:center;justify-content:space-between;gap:9px;margin:0 0 13px}.money-period-title{text-align:center;min-width:0}.money-period-title strong{display:block;font-size:18px;color:var(--accent-strong);line-height:1.25}.money-period-title span{display:block;font-size:10.5px;color:var(--muted);margin-top:2px}.money-circle{width:36px;height:36px;font-size:18px}.money-today{padding:9px 12px;font-size:12px}.money-box.total{background:var(--accent-pale)}
@@ -2663,16 +2663,18 @@ const BETA_PLAN_OVERRIDE_KEY='fanfolio_beta_plan_override';
 const FREE_ACCESS_KEY='fanfolio_v1_free_access';
 const THEME_KEY='fanfolio_v1_theme';
 const FANFOLIO_USER_ID_KEY='fanfolio_v1_user_id';
-const APP_VERSION='2026.10.01.01';
-const APP_VERSION_DATE='2026.10.01';
+const APP_VERSION='2026.10.03.01';
+const APP_VERSION_DATE='2026.10.03';
 const APP_VERSION_DISPLAY=`ver. ${APP_VERSION}`;
 const RELEASE_NOTES_SEEN_KEY='fanfolio_v1_release_notes_seen';
 const CURRENT_RELEASE_NOTES={
   version:APP_VERSION,date:APP_VERSION_DATE,
   userItems:[
+    {title:'カレンダーの日付表示を調整',text:'近日予定の左側の日付が「10/25」のような2桁日でも改行されず、1行で表示されるように調整しました。'},
     {title:'当選ステータスを追加',text:'「復活当選」「制作開放当選」を状態から選べるようにしました。どちらも通常の当選と同じく、名義の当選履歴・分析・カレンダー・Memories・遠征候補へ反映します。'}
   ],
   internalItems:[
+    {title:'Upcoming date nowrap',text:'近日予定の日付列を54pxに固定し、月/日表示をnowrap・keep-allで1行固定。'},
     {title:'Winning status normalization',text:'won / revival_won / production_won を当選系ステータスとして共通判定し、ツアー単位集計・同行者当選・座席分析・会場分析・履歴・カレンダー等へ反映。'}
   ]
 };
