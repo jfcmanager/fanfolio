@@ -13,7 +13,7 @@
 <link rel="icon" type="image/png" sizes="192x192" href="./icon-192.png" />
 <script src="https://cdn.paddle.com/paddle/v2/paddle.js"></script>
 <meta name="mobile-web-app-capable" content="yes" />
-<title>FanFolio ver. 2026.10.06.01</title>
+<title>FanFolio ver. 2026.10.06.02</title>
 <style>
 :root{
   --bg:#f7f5f0;
@@ -2005,7 +2005,7 @@ body{width:100%;overscroll-behavior-x:none}
           <div class="form-group"><label class="form-label" for="tradeBuyerTransactionAmountMan">取引金額（万円）</label><input class="form-control trade-buyer-auto-amount" id="tradeBuyerTransactionAmountMan" inputmode="decimal" readonly placeholder="枚数と1枚あたり金額から自動計算" /><div class="trade-buyer-calc-note">枚数 × 1枚あたり金額で自動計算します。</div><div class="trade-buyer-yen-total" id="tradeBuyerYenTotal">換算金額：¥0</div></div>
 
           <div class="form-group"><label class="form-label" id="tradeBuyerPaymentMethod1Label" for="tradeBuyerPaymentMethod1">取引方法</label><select class="form-control" id="tradeBuyerPaymentMethod1"><option value="">-- 選択してください --</option><option value="アズカリ">アズカリ</option><option value="PayPay">PayPay</option><option value="銀行振込">銀行振込</option><option value="現金手渡し">現金手渡し</option><option value="チケジャム">チケジャム</option><option value="チケテン">チケテン</option><option value="チケット流通センター">チケット流通センター</option><option value="プラベル">プラベル</option><option value="その他">その他</option></select></div>
-          <div class="form-group" id="tradeBuyerFirstAmountGroup" hidden><label class="form-label" for="tradeBuyerFirstAmount">第1回取引金額（万円）</label><input class="form-control" id="tradeBuyerFirstAmount" type="number" inputmode="decimal" min="0" step="0.1" placeholder="例：5.0" /></div>
+          <div class="form-group" id="tradeBuyerFirstAmountGroup" hidden><label class="form-label" for="tradeBuyerFirstAmount">第1回取引金額（万円）</label><input class="form-control" id="tradeBuyerFirstAmount" type="number" inputmode="decimal" min="0" step="0.01" placeholder="例：2.04" /></div>
           <div class="form-group"><label class="form-label" id="tradeBuyerFirstDateLabel" for="tradeBuyerFirstDate">取引日</label><input class="form-control" id="tradeBuyerFirstDate" type="date" /></div>
           <div class="form-group"><label class="form-label" id="tradeBuyerFee1Label" for="tradeBuyerFee1">取引手数料（円）</label><input class="form-control" id="tradeBuyerFee1" type="number" inputmode="numeric" min="0" step="1" placeholder="例：500" /></div>
           <div class="form-group" id="tradeBuyerPaymentMethodOther1Group" hidden><label class="form-label" id="tradeBuyerPaymentMethodOther1Label" for="tradeBuyerPaymentMethodOther1">取引方法（その他）</label><input class="form-control" id="tradeBuyerPaymentMethodOther1" maxlength="80" placeholder="取引方法を入力" /></div>
@@ -2013,7 +2013,7 @@ body{width:100%;overscroll-behavior-x:none}
           <div class="trade-buyer-partial-folio" id="tradeBuyerPartialFields" hidden>
             <div class="trade-buyer-partial-head">第2回取引</div>
             <div class="form-group"><label class="form-label" for="tradeBuyerPaymentMethod2">第2回取引方法</label><select class="form-control" id="tradeBuyerPaymentMethod2"><option value="">-- 選択してください --</option><option value="アズカリ">アズカリ</option><option value="PayPay">PayPay</option><option value="銀行振込">銀行振込</option><option value="現金手渡し">現金手渡し</option><option value="チケジャム">チケジャム</option><option value="チケテン">チケテン</option><option value="チケット流通センター">チケット流通センター</option><option value="プラベル">プラベル</option><option value="その他">その他</option></select></div>
-            <div class="form-group"><label class="form-label" for="tradeBuyerSecondAmount">第2回取引金額（残金・万円）</label><input class="form-control trade-buyer-remaining" id="tradeBuyerSecondAmount" type="number" inputmode="decimal" min="0" step="0.1" readonly /></div>
+            <div class="form-group"><label class="form-label" for="tradeBuyerSecondAmount">第2回取引金額（残金・万円）</label><input class="form-control trade-buyer-remaining" id="tradeBuyerSecondAmount" type="number" inputmode="decimal" min="0" step="0.01" readonly /></div>
             <div class="form-group"><label class="form-label" for="tradeBuyerSecondDate">第2回取引日</label><input class="form-control" id="tradeBuyerSecondDate" type="date" /></div>
             <div class="form-group"><label class="form-label" for="tradeBuyerFee2">第2回取引手数料（円）</label><input class="form-control" id="tradeBuyerFee2" type="number" inputmode="numeric" min="0" step="1" placeholder="例：500" /></div>
             <div class="form-group" id="tradeBuyerPaymentMethodOther2Group" hidden><label class="form-label" for="tradeBuyerPaymentMethodOther2">第2回取引方法（その他）</label><input class="form-control" id="tradeBuyerPaymentMethodOther2" maxlength="80" placeholder="取引方法を入力" /></div>
@@ -2074,7 +2074,7 @@ body{width:100%;overscroll-behavior-x:none}
 
         <div class="trade-seller-payment-folio" id="tradeSellerPaymentFields">
           <div class="form-group"><label class="form-label" id="tradeSellerPaymentMethod1Label" for="tradeSellerPaymentMethod1">取引方法</label><select class="form-control" id="tradeSellerPaymentMethod1"><option value="">-- 選択してください --</option><option value="振込">振込</option><option value="銀行振込">銀行振込</option><option value="アズカリ">アズカリ</option><option value="PayPay">PayPay</option><option value="現金手渡し">現金手渡し</option><option value="チケジャム">チケジャム</option><option value="チケテン">チケテン</option><option value="チケット流通センター">チケット流通センター</option><option value="プラベル">プラベル</option><option value="その他">その他</option></select></div>
-          <div class="form-group" id="tradeSellerFirstAmountGroup" hidden><label class="form-label" for="tradeSellerFirstAmount">第1回取引金額（万円）</label><input class="form-control" id="tradeSellerFirstAmount" type="number" inputmode="decimal" min="0" step="0.1" placeholder="例：5.0" /></div>
+          <div class="form-group" id="tradeSellerFirstAmountGroup" hidden><label class="form-label" for="tradeSellerFirstAmount">第1回取引金額（万円）</label><input class="form-control" id="tradeSellerFirstAmount" type="number" inputmode="decimal" min="0" step="0.01" placeholder="例：2.04" /></div>
           <div class="form-group"><label class="form-label" id="tradeSellerFirstDateLabel" for="tradeSellerFirstDate">取引日</label><input class="form-control" id="tradeSellerFirstDate" type="date" /></div>
           <div class="form-group" id="tradeSellerPaymentMethodOther1Group" hidden><label class="form-label" id="tradeSellerPaymentMethodOther1Label" for="tradeSellerPaymentMethodOther1">取引方法（その他）</label><input class="form-control" id="tradeSellerPaymentMethodOther1" maxlength="80" placeholder="取引方法を入力" /></div>
 
@@ -2663,18 +2663,20 @@ const BETA_PLAN_OVERRIDE_KEY='fanfolio_beta_plan_override';
 const FREE_ACCESS_KEY='fanfolio_v1_free_access';
 const THEME_KEY='fanfolio_v1_theme';
 const FANFOLIO_USER_ID_KEY='fanfolio_v1_user_id';
-const APP_VERSION='2026.10.06.01';
+const APP_VERSION='2026.10.06.02';
 const APP_VERSION_DATE='2026.10.06';
 const APP_VERSION_DISPLAY=`ver. ${APP_VERSION}`;
 const RELEASE_NOTES_SEEN_KEY='fanfolio_v1_release_notes_seen';
 const CURRENT_RELEASE_NOTES={
   version:APP_VERSION,date:APP_VERSION_DATE,
   userItems:[
+    {title:'分割取引金額を小数第2位まで入力可能に',text:'第1回・第2回の取引金額（万円）で、2.04のような小数第2位まで扱えるようにしました。2.04万円は20,400円として保存・計算されます。'},
     {title:'STARTO更新日の自動計算を修正',text:'入会年月の「年」を基準に初回の更新周期を計算するよう修正しました。例：2026年11月入会なら、有効期限は2027年10月31日、更新通知日は2027年9月2日になります。'},
     {title:'カレンダーの日付表示を調整',text:'近日予定の左側の日付が「10/25」のような2桁日でも改行されず、1行で表示されるように調整しました。'},
     {title:'当選ステータスを追加',text:'「復活当選」「制作開放当選」を状態から選べるようにしました。どちらも通常の当選と同じく、名義の当選履歴・分析・カレンダー・Memories・遠征候補へ反映します。'}
   ],
   internalItems:[
+    {title:'Partial payment precision',text:'万円単位の分割取引入力をstep=0.01へ変更。既存の保存・残金計算は100円単位の精度を保持。'},
     {title:'STARTO renewal cycle year fix',text:'自動計算の基準年を現在年ではなく入会年＋1から開始し、期限経過時のみ年単位で次周期へ進めるよう修正。'},
     {title:'Upcoming date nowrap',text:'近日予定の日付列を54pxに固定し、月/日表示をnowrap・keep-allで1行固定。'},
     {title:'Winning status normalization',text:'won / revival_won / production_won を当選系ステータスとして共通判定し、ツアー単位集計・同行者当選・座席分析・会場分析・履歴・カレンダー等へ反映。'}
