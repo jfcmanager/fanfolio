@@ -13,7 +13,7 @@
 <link rel="icon" type="image/png" sizes="192x192" href="./icon-192.png" />
 <script src="https://cdn.paddle.com/paddle/v2/paddle.js"></script>
 <meta name="mobile-web-app-capable" content="yes" />
-<title>FanFolio ver. 2026.10.03.01</title>
+<title>FanFolio ver. 2026.10.06.01</title>
 <style>
 :root{
   --bg:#f7f5f0;
@@ -1586,7 +1586,7 @@ body{width:100%;overscroll-behavior-x:none}
         <div class="form-group">
           <label class="form-label" for="membershipRenewalNotice">次回更新のお知らせ予定日 <span class="form-label-note">拡張データ</span></label>
           <input class="form-control" id="membershipRenewalNotice" type="date" />
-          <div class="identity-helper-row"><button class="identity-helper-btn" id="membershipAutoRenewalBtn" type="button">STARTO形式で自動計算</button><span class="identity-helper-note">入会年月を基準に「前月末＝有効期限」「その前月2日＝更新通知日」で計算します。ボタンを押した時だけ反映されます。</span></div>
+          <div class="identity-helper-row"><button class="identity-helper-btn" id="membershipAutoRenewalBtn" type="button">STARTO形式で自動計算</button><span class="identity-helper-note">入会年月を基準に、最初の更新周期は翌年の「前月末＝有効期限」「その前月2日＝更新通知日」で計算します。すでに期限を過ぎている場合は、次の更新年まで進めます。</span></div>
         </div>
 
         <div class="form-section-title">個人情報</div>
@@ -2663,17 +2663,19 @@ const BETA_PLAN_OVERRIDE_KEY='fanfolio_beta_plan_override';
 const FREE_ACCESS_KEY='fanfolio_v1_free_access';
 const THEME_KEY='fanfolio_v1_theme';
 const FANFOLIO_USER_ID_KEY='fanfolio_v1_user_id';
-const APP_VERSION='2026.10.03.01';
-const APP_VERSION_DATE='2026.10.03';
+const APP_VERSION='2026.10.06.01';
+const APP_VERSION_DATE='2026.10.06';
 const APP_VERSION_DISPLAY=`ver. ${APP_VERSION}`;
 const RELEASE_NOTES_SEEN_KEY='fanfolio_v1_release_notes_seen';
 const CURRENT_RELEASE_NOTES={
   version:APP_VERSION,date:APP_VERSION_DATE,
   userItems:[
+    {title:'STARTO更新日の自動計算を修正',text:'入会年月の「年」を基準に初回の更新周期を計算するよう修正しました。例：2026年11月入会なら、有効期限は2027年10月31日、更新通知日は2027年9月2日になります。'},
     {title:'カレンダーの日付表示を調整',text:'近日予定の左側の日付が「10/25」のような2桁日でも改行されず、1行で表示されるように調整しました。'},
     {title:'当選ステータスを追加',text:'「復活当選」「制作開放当選」を状態から選べるようにしました。どちらも通常の当選と同じく、名義の当選履歴・分析・カレンダー・Memories・遠征候補へ反映します。'}
   ],
   internalItems:[
+    {title:'STARTO renewal cycle year fix',text:'自動計算の基準年を現在年ではなく入会年＋1から開始し、期限経過時のみ年単位で次周期へ進めるよう修正。'},
     {title:'Upcoming date nowrap',text:'近日予定の日付列を54pxに固定し、月/日表示をnowrap・keep-allで1行固定。'},
     {title:'Winning status normalization',text:'won / revival_won / production_won を当選系ステータスとして共通判定し、ツアー単位集計・同行者当選・座席分析・会場分析・履歴・カレンダー等へ反映。'}
   ]
@@ -3912,7 +3914,7 @@ function membershipRenewalPaidHtml(item){const ext=membershipRenewalExtension(it
 async function markMembershipRenewalPaid(membershipId){const item=getMemberships().find(m=>m.id===membershipId);if(!item)return;await refreshIdentityMembershipExtensions().catch(()=>{});const current=membershipRenewalExtension(item)||{},notice=membershipRenewalNoticeValue(item),expiry=item.expiry||'';if(!notice&&!expiry){showToast('更新通知日または有効期限が登録されていません。');return}const nextExpiry=expiry?addOneYearDateKey(expiry):'',nextNotice=notice?addOneYearDateKey(notice):'';const label=item.account||item.name||'この名義';const lines=[`【${label}】を入金済みとして登録します。`,'', '自動的に有効期限と更新通知を1年後に進めますか？'];if(expiry)lines.push('',`有効期限：${expiry.replaceAll('-','.')} → ${nextExpiry.replaceAll('-','.')}`);if(notice)lines.push(`更新通知：${notice.replaceAll('-','.')} → ${nextNotice.replaceAll('-','.')}`);if(!window.confirm(lines.join('\n'))){renderCalendar();return}const now=new Date().toISOString(),all=getMemberships(),idx=all.findIndex(m=>m.id===membershipId);if(idx<0)return;all[idx]={...all[idx],expiry:nextExpiry||all[idx].expiry,updatedAt:now};saveMemberships(all);const ext={...current,id:membershipId,membershipId,renewalNoticeDate:nextNotice||notice,renewalPaid:true,renewalPaidAt:now,renewalPaidPreviousExpiry:expiry,renewalPaidPreviousNoticeDate:notice,renewalPaidAdvancedExpiry:nextExpiry,renewalPaidAdvancedNoticeDate:nextNotice,updatedAt:now};if(!ext.createdAt)ext.createdAt=now;await identityExtPut(IDENTITY_MEMBERSHIP_STORE,ext);await refreshIdentityMembershipExtensions();renderOshi();refreshOshiHomePanel();renderCalendar();renderMembershipsIfOpen();const year=Number((expiry||notice||String(new Date().getFullYear())).slice(0,4))||new Date().getFullYear();openMembershipPaymentEditor(membershipId,null,{year,paymentDate:dateKeyFromDate(new Date())});showToast('入金済みとして登録しました。更新支払い履歴も入力できます。')}
 async function cancelMembershipRenewalPaid(membershipId){const item=getMemberships().find(m=>m.id===membershipId);if(!item)return;await refreshIdentityMembershipExtensions().catch(()=>{});const current=membershipRenewalExtension(item);if(!current?.renewalPaid)return;const label=item.account||item.name||'この名義';if(!window.confirm(`【${label}】の入金済みフラグを取消しますか？\n\n誤ってチェックしてしまった場合に使ってください。`))return;const now=new Date().toISOString(),all=getMemberships(),idx=all.findIndex(m=>m.id===membershipId);if(idx>=0){const shouldRestore=!current.renewalPaidAdvancedExpiry||all[idx].expiry===current.renewalPaidAdvancedExpiry;all[idx]={...all[idx],expiry:shouldRestore?(current.renewalPaidPreviousExpiry||all[idx].expiry):all[idx].expiry,updatedAt:now};saveMemberships(all)}const shouldRestoreNotice=!current.renewalPaidAdvancedNoticeDate||current.renewalNoticeDate===current.renewalPaidAdvancedNoticeDate;const ext={...current,renewalNoticeDate:shouldRestoreNotice?(current.renewalPaidPreviousNoticeDate||current.renewalNoticeDate):current.renewalNoticeDate,renewalPaid:false,renewalPaidAt:'',renewalPaidPreviousExpiry:'',renewalPaidPreviousNoticeDate:'',renewalPaidAdvancedExpiry:'',renewalPaidAdvancedNoticeDate:'',updatedAt:now};await identityExtPut(IDENTITY_MEMBERSHIP_STORE,ext);await refreshIdentityMembershipExtensions();renderOshi();refreshOshiHomePanel();renderCalendar();renderMembershipsIfOpen();showToast('入金済みを取消しました。近日予定へ戻しました。')}
 function membershipNeedsRenewalAttention(item){if(!item)return false;return dateWithinDays(item.expiry,60)}
-function fanfolioStartoAutoRenewal(joinMonth){const match=String(joinMonth||'').match(/^(\d{4})-(\d{2})$/);if(!match)return null;const joinMonthNum=Number(match[2]);let expiryMonth=joinMonthNum-1;if(expiryMonth===0)expiryMonth=12;const today=new Date();today.setHours(0,0,0,0);let expiryYear=today.getFullYear();let expiryDate=new Date(expiryYear,expiryMonth,0);expiryDate.setHours(23,59,59,999);if(expiryDate<today){expiryYear+=1;expiryDate=new Date(expiryYear,expiryMonth,0)}const ymd=d=>`${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}-${String(d.getDate()).padStart(2,'0')}`;let noticeYear=expiryYear,noticeMonth=expiryMonth-1;if(noticeMonth===0){noticeMonth=12;noticeYear-=1}const noticeDate=new Date(noticeYear,noticeMonth-1,2);return{expiry:ymd(expiryDate),renewalNoticeDate:ymd(noticeDate)}}
+function fanfolioStartoAutoRenewal(joinMonth){const match=String(joinMonth||'').match(/^(\d{4})-(\d{2})$/);if(!match)return null;const joinYear=Number(match[1]),joinMonthNum=Number(match[2]);if(joinMonthNum<1||joinMonthNum>12)return null;const today=new Date();today.setHours(0,0,0,0);let cycleYear=joinYear+1;let expiryDate=new Date(cycleYear,joinMonthNum-1,0);expiryDate.setHours(23,59,59,999);while(expiryDate<today){cycleYear+=1;expiryDate=new Date(cycleYear,joinMonthNum-1,0);expiryDate.setHours(23,59,59,999)}const ymd=d=>`${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}-${String(d.getDate()).padStart(2,'0')}`;const noticeDate=new Date(expiryDate.getFullYear(),expiryDate.getMonth()-1,2);return{expiry:ymd(expiryDate),renewalNoticeDate:ymd(noticeDate)}}
 function membershipExpiryState(item){if(!item?.expiry)return 'active';const end=new Date(`${item.expiry}T23:59:59`),today=new Date();today.setHours(0,0,0,0);const days=Math.ceil((end-today)/86400000);if(days<0)return 'expired';if(days<=60)return 'soon';return 'active'}
 function membershipMatchesSearch(item,q){if(!q)return true;const text=[item.name,item.account,item.memberNumber,item.realName,item.phone,item.email,item.postalCode,item.prefecture,item.address].filter(Boolean).join(' ').toLocaleLowerCase('ja');return text.includes(q.toLocaleLowerCase('ja'))}
 function homeMembershipSearchMatch(item,q){return membershipMatchesSearch(item,q)}
