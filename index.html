@@ -13,7 +13,7 @@
 <link rel="icon" type="image/png" sizes="192x192" href="./icon-192.png" />
 <script src="https://cdn.paddle.com/paddle/v2/paddle.js"></script>
 <meta name="mobile-web-app-capable" content="yes" />
-<title>FanFolio ver. 2026.10.31.02</title>
+<title>FanFolio ver. 2026.10.31.03</title>
 <style>
 :root{
   --bg:#f7f5f0;
@@ -2666,13 +2666,14 @@ const BETA_PLAN_OVERRIDE_KEY='fanfolio_beta_plan_override';
 const FREE_ACCESS_KEY='fanfolio_v1_free_access';
 const THEME_KEY='fanfolio_v1_theme';
 const FANFOLIO_USER_ID_KEY='fanfolio_v1_user_id';
-const APP_VERSION='2026.10.31.02';
+const APP_VERSION='2026.10.31.03';
 const APP_VERSION_DATE='2026.10.31';
 const APP_VERSION_DISPLAY=`ver. ${APP_VERSION}`;
 const RELEASE_NOTES_SEEN_KEY='fanfolio_v1_release_notes_seen';
 const CURRENT_RELEASE_NOTES={
   version:APP_VERSION,date:APP_VERSION_DATE,
   userItems:[
+    {title:'同行者の名前入力カーソルを安定化',text:'iPhoneの日本語IMEで名前を入力中、片仮名の自動補助が変換途中に干渉してカーソルが動くことがある問題を修正しました。片仮名はIMEの組字完了後に更新します。'},
     {title:'同行者の片仮名自動入力・コピーを追加',text:'同行者の名前入力から片仮名を可能な範囲で自動入力し、名前・片仮名・電話番号・メールアドレスをワンタップでコピーできるようにしました。'},
     {title:'同行者に生年月日を追加',text:'同行者・非会員の登録画面に生年月日を追加しました。電話番号は08012345678のように入力しても、080-1234-5678形式へ自動整形されます。'},
     {title:'分割取引金額を小数第2位まで入力可能に',text:'第1回・第2回の取引金額（万円）で、2.04のような小数第2位まで扱えるようにしました。2.04万円は20,400円として保存・計算されます。'},
@@ -2681,6 +2682,7 @@ const CURRENT_RELEASE_NOTES={
     {title:'当選ステータスを追加',text:'「復活当選」「制作開放当選」を状態から選べるようにしました。どちらも通常の当選と同じく、名義の当選履歴・分析・カレンダー・Memories・遠征候補へ反映します。'}
   ],
   internalItems:[
+    {title:'Companion IME caret stability',text:'名前入力中はcomposition stateを監視し、isComposing中の片仮名同期を停止。compositionend後に非同期で補助入力することでiOS Safariのcaret移動を回避。'},
     {title:'Companion kana / quick copy',text:'IME composition readingを利用したローカル片仮名補助と、同行者カード・編集フォームのcopy actionを追加。漢字読みに外部APIは使用しない。'},
     {title:'Companion profile fields',text:'同行者ディレクトリにbirthdateを追加し、電話番号は入力時・保存時に既存のformatPhoneNumberで正規化。'},
     {title:'Partial payment precision',text:'万円単位の分割取引入力をstep=0.01へ変更。既存の保存・残金計算は100円単位の精度を保持。'},
@@ -4153,7 +4155,7 @@ function companionStatusLabel(v){return v==='member'?'FC会員':v==='nonmember'?
 function hiraganaToKatakana(value=''){return String(value).normalize('NFKC').replace(/[ぁ-ゖ]/g,ch=>String.fromCharCode(ch.charCodeAt(0)+0x60))}
 function normalizeCompanionKana(value=''){return hiraganaToKatakana(value).replace(/[　\s]+/g,' ').trim()}
 function isKanaReading(value=''){const s=String(value||'').normalize('NFKC').trim();return !!s&&/^[ぁ-ゖァ-ヺー・･　\s]+$/.test(s)}
-let companionKanaImeCandidate='',companionKanaAutoBuffer='',companionKanaManual=false,companionKanaInternal=false;
+let companionKanaImeCandidate='',companionKanaAutoBuffer='',companionKanaManual=false,companionKanaInternal=false,companionNameComposing=false;
 function setCompanionKanaAuto(value,append=false){if(!companionKana||companionKanaManual)return;const next=normalizeCompanionKana(value);if(!next)return;let merged=next;if(append&&companionKanaAutoBuffer){const base=normalizeCompanionKana(companionKanaAutoBuffer);merged=base.endsWith(next)?base:`${base} ${next}`.trim()}companionKanaAutoBuffer=merged;companionKanaInternal=true;companionKana.value=merged;companionKanaInternal=false}
 function openCompanionDb(){if(companionDbPromise)return companionDbPromise;companionDbPromise=new Promise((resolve,reject)=>{if(!('indexedDB'in window)){reject(new Error('indexeddb-unavailable'));return}const req=indexedDB.open(COMPANION_DB_NAME,COMPANION_DB_VERSION);req.onupgradeneeded=()=>{const db=req.result;if(!db.objectStoreNames.contains(COMPANION_STORE))db.createObjectStore(COMPANION_STORE,{keyPath:'id'})};req.onsuccess=()=>resolve(req.result);req.onerror=()=>reject(req.error||new Error('indexeddb-open-failed'));req.onblocked=()=>reject(new Error('indexeddb-blocked'))});return companionDbPromise}
 async function getManualCompanions(){const db=await openCompanionDb();return await new Promise((resolve,reject)=>{const tx=db.transaction(COMPANION_STORE,'readonly'),req=tx.objectStore(COMPANION_STORE).getAll();req.onsuccess=()=>resolve(Array.isArray(req.result)?req.result:[]);req.onerror=()=>reject(req.error)})}
@@ -4185,8 +4187,8 @@ function renderNameManager(){const ms=getMemberships(),ps=getPerformances();if(a
 function renderFcFolders(){const q=normalizeSearchText(nameManagerSearch.value),items=getMemberships().filter(m=>!q||normalizeSearchText([m.account,m.name,m.memberNumber,m.realName].filter(Boolean).join(' ')).includes(q)),g=new Map();if(nameManagerSearchClear)nameManagerSearchClear.hidden=!q;items.forEach(m=>{const k=m.name||'FC未設定';if(!g.has(k))g.set(k,[]);g.get(k).push(m)});fcFolderList.innerHTML=g.size?[...g.entries()].sort((a,b)=>a[0].localeCompare(b[0],'ja')).map(([n,list])=>{const open=nameManagerExpandedFolders.has(n)||Boolean(q);return`<div class="fc-folder"><button class="fc-folder-head" type="button" data-fc-folder="${esc(n)}"><strong>${esc(n)}</strong><span>${list.length}名義 ・ ${open?'閉じる':'開く'}</span></button><div class="fc-folder-body" ${open?'':'hidden'}>${list.map(m=>`<button class="fc-name-row" type="button" data-membership-open="${esc(m.id)}"><strong>${esc(m.account||m.realName||'名義')}</strong><span>${m.memberNumber?`No.${esc(m.memberNumber)} ・ `:''}${m.expiry?`有効期限 ${esc(m.expiry.replaceAll('-','.'))}`:'有効期限未設定'}</span></button>`).join('')}</div></div>`}).join(''):'<div class="lottery-empty">条件に一致する名義はありません。</div>'}
 function openNameManager(){nameManagerModal.classList.add('open');nameManagerModal.setAttribute('aria-hidden','false');document.body.style.overflow='hidden';if(nameManagerSearch)nameManagerSearch.value='';if(nameManagerSearchClear)nameManagerSearchClear.hidden=true;setNameManagerTab('fc')}
 function closeNameManager(){nameManagerModal.classList.remove('open');nameManagerModal.setAttribute('aria-hidden','true');document.body.style.overflow=''}
-function openCompanionEditor(item=null){companionForm.reset();companionRecordId.value=item?.manualId||'';companionOriginalName.value=item?.name||'';companionName.value=item?.name||'';companionKana.value=normalizeCompanionKana(item?.kana||'');companionKanaImeCandidate='';companionKanaAutoBuffer=companionKana.value;companionKanaManual=Boolean(companionKana.value);companionFcStatus.value=item?.fcStatus||'unknown';companionBirthdate.value=item?.birthdate||'';companionPhone.value=formatPhoneNumber(item?.phone||'');companionEmail.value=item?.email||'';companionContact.value=item?.contact||'';companionMemo.value=item?.memo||'';companionModalTitle.textContent=item?'同行者を編集':'同行者を追加';companionModal.classList.add('open');companionModal.setAttribute('aria-hidden','false');document.body.style.overflow='hidden';setTimeout(()=>companionName.focus(),60)}
-function closeCompanionEditor(){companionModal.classList.remove('open');companionModal.setAttribute('aria-hidden','true');companionForm.reset();companionRecordId.value='';companionOriginalName.value='';document.body.style.overflow=(nameManagerModal?.classList.contains('open'))?'hidden':''}
+function openCompanionEditor(item=null){companionForm.reset();companionRecordId.value=item?.manualId||'';companionOriginalName.value=item?.name||'';companionName.value=item?.name||'';companionKana.value=normalizeCompanionKana(item?.kana||'');companionKanaImeCandidate='';companionNameComposing=false;companionKanaAutoBuffer=companionKana.value;companionKanaManual=Boolean(companionKana.value);companionFcStatus.value=item?.fcStatus||'unknown';companionBirthdate.value=item?.birthdate||'';companionPhone.value=formatPhoneNumber(item?.phone||'');companionEmail.value=item?.email||'';companionContact.value=item?.contact||'';companionMemo.value=item?.memo||'';companionModalTitle.textContent=item?'同行者を編集':'同行者を追加';companionModal.classList.add('open');companionModal.setAttribute('aria-hidden','false');document.body.style.overflow='hidden';setTimeout(()=>companionName.focus(),60)}
+function closeCompanionEditor(){companionModal.classList.remove('open');companionModal.setAttribute('aria-hidden','true');companionForm.reset();companionRecordId.value='';companionOriginalName.value='';companionNameComposing=false;document.body.style.overflow=(nameManagerModal?.classList.contains('open'))?'hidden':''}
 function syncCompanionNameToPerformances(oldName,newName,fcStatus){const oldKey=normalizeCompanionName(oldName),newKey=normalizeCompanionName(newName);if(!oldKey)return false;const items=getPerformances();let changed=false;items.forEach(p=>{const original=String(p.companion||'').split('\n').map(x=>x.trim()).filter(Boolean);if(!original.some(n=>normalizeCompanionName(n)===oldKey))return;const next=[],seen=new Set();original.forEach(n=>{const value=normalizeCompanionName(n)===oldKey?newName:n,key=normalizeCompanionName(value);if(key&&!seen.has(key)){seen.add(key);next.push(value)}});const nextText=next.join('\n');if(nextText!==String(p.companion||'')){p.companion=nextText;changed=true}if(original.length===1&&['member','nonmember','unknown'].includes(fcStatus)&&p.companionFcStatus!==fcStatus){p.companionFcStatus=fcStatus;changed=true}});if(changed)savePerformances(items);return changed}
 function removeCompanionFromPerformances(name){const key=normalizeCompanionName(name);if(!key)return false;const items=getPerformances();let changed=false;items.forEach(p=>{const original=String(p.companion||'').split('\n').map(x=>x.trim()).filter(Boolean),next=original.filter(n=>normalizeCompanionName(n)!==key);if(next.length===original.length)return;p.companion=next.join('\n');if(!next.length){p.companionFcStatus='';p.companionRegistration=''}changed=true});if(changed)savePerformances(items);return changed}
 openNameManagerBtn?.addEventListener('click',openNameManager);closeNameManagerBtn.addEventListener('click',closeNameManager);nameManagerModal.addEventListener('click',e=>{if(e.target===nameManagerModal)closeNameManager()});nameManagerTabs.addEventListener('click',e=>{const b=e.target.closest('[data-name-tab]');if(b)setNameManagerTab(b.dataset.nameTab)});
@@ -4196,10 +4198,10 @@ nameManagerAddBtn.addEventListener('click',()=>{closeNameManager();const first=g
 fcFolderList.addEventListener('click',e=>{const h=e.target.closest('[data-fc-folder]');if(h){const n=h.dataset.fcFolder;if(nameManagerExpandedFolders.has(n))nameManagerExpandedFolders.delete(n);else nameManagerExpandedFolders.add(n);renderFcFolders();return}const r=e.target.closest('[data-membership-open]');if(r){const m=getMemberships().find(x=>x.id===r.dataset.membershipOpen);if(m){closeNameManager();openMembershipManager(m.oshiId);setTimeout(()=>openMembershipForm(m),120)}}});
 document.querySelectorAll('.companion-form-copy').forEach(btn=>{btn.innerHTML=copyIconSvg()});
 addCompanionBtn?.addEventListener('click',()=>openCompanionEditor());
-companionName?.addEventListener('compositionstart',()=>{companionKanaImeCandidate=''});
+companionName?.addEventListener('compositionstart',()=>{companionNameComposing=true;companionKanaImeCandidate=''});
 companionName?.addEventListener('compositionupdate',e=>{if(isKanaReading(e.data))companionKanaImeCandidate=e.data});
-companionName?.addEventListener('compositionend',()=>{if(companionKanaImeCandidate)setCompanionKanaAuto(companionKanaImeCandidate,Boolean(companionKanaAutoBuffer));else if(isKanaReading(companionName.value))setCompanionKanaAuto(companionName.value,false);companionKanaImeCandidate=''});
-companionName?.addEventListener('input',()=>{if(isKanaReading(companionName.value))setCompanionKanaAuto(companionName.value,false)});
+companionName?.addEventListener('compositionend',()=>{const reading=companionKanaImeCandidate||(isKanaReading(companionName.value)?companionName.value:'');companionKanaImeCandidate='';companionNameComposing=false;if(reading)setTimeout(()=>{if(!companionNameComposing)setCompanionKanaAuto(reading,Boolean(companionKanaAutoBuffer))},0)});
+companionName?.addEventListener('input',e=>{if(companionNameComposing||e.isComposing)return;if(isKanaReading(companionName.value))setCompanionKanaAuto(companionName.value,false)});
 companionKana?.addEventListener('input',()=>{if(companionKanaInternal)return;companionKanaManual=true;const pos=companionKana.selectionStart;companionKana.value=normalizeCompanionKana(companionKana.value);try{companionKana.setSelectionRange(pos,pos)}catch{}companionKanaAutoBuffer=companionKana.value});
 companionPhone?.addEventListener('input',()=>{companionPhone.value=formatPhoneNumber(companionPhone.value)});
 companionForm?.addEventListener('click',e=>{const btn=e.target.closest('[data-companion-form-copy]');if(!btn)return;const kind=btn.dataset.companionFormCopy,map={name:[companionName?.value,'名前'],kana:[companionKana?.value,'片仮名'],phone:[formatPhoneNumber(companionPhone?.value||''),'電話番号'],email:[companionEmail?.value,'メールアドレス']},entry=map[kind];if(entry)void copyMembershipValue(String(entry[0]||'').trim(),entry[1])});
